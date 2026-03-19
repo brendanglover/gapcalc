@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>GapCalc — Workshop Spacing & Cut List Calculator</title>
+<title>GapCalc — Workshop Calculator for Welders & Makers</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KEMY3NEYCQ"></script>
 <script>
@@ -274,6 +274,79 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   .rh-value { font-size: 56px; }
   .stat-grid { grid-template-columns: 1fr; }
 }
+/* WEIGHT CALCULATOR */
+.profile-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  margin-bottom: 4px;
+}
+.profile-btn {
+  padding: 10px 6px;
+  border: 2px solid var(--border); background: var(--surface2);
+  color: var(--text2); border-radius: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  cursor: pointer; text-align: center; transition: all 0.2s;
+  line-height: 1.3;
+}
+.profile-btn .picon { font-size: 18px; display: block; margin-bottom: 4px; }
+.profile-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+.profile-btn:not(.active):hover { border-color: #555; color: var(--text); }
+
+.w-select {
+  width: 100%;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 16px; font-weight: 500;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.w-select:focus { border-color: var(--accent); }
+.w-select option { background: var(--surface2); color: var(--text); }
+
+/* BAKKIE BAR */
+.bakkie-wrap {
+  background: var(--surface2);
+  border-radius: 8px; padding: 14px;
+  margin-bottom: 10px;
+}
+.bakkie-label-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 8px;
+}
+.bakkie-title { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+.bakkie-kg { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text2); }
+.bakkie-track {
+  width: 100%; height: 18px;
+  background: var(--surface3); border-radius: 20px;
+  overflow: hidden; position: relative;
+}
+.bakkie-fill {
+  height: 100%; border-radius: 20px;
+  transition: width 0.5s ease, background-color 0.3s;
+  min-width: 4px;
+}
+.bakkie-markers {
+  display: flex; justify-content: space-between;
+  margin-top: 5px; font-size: 10px; color: var(--text3);
+  font-family: 'DM Mono', monospace;
+}
+.bakkie-note {
+  font-size: 12px; margin-top: 8px; padding: 8px 10px;
+  border-radius: 6px; line-height: 1.4;
+}
+.bakkie-note.ok { background: var(--green-dim); color: var(--green); }
+.bakkie-note.warn { background: var(--accent-dim); color: var(--accent); }
+.bakkie-note.over { background: var(--red-dim); color: var(--red); }
+
+/* DIM ROWS */
+.dim-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.dim-row:last-child { margin-bottom: 0; }
+.dim-row .input-group { flex: 1; margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -289,13 +362,14 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   </div>
   <div>
     <div class="logo-title">GapCalc</div>
-    <div class="logo-tagline">Workshop Spacing & Cut List Calculator</div>
+    <div class="logo-tagline">Workshop Calculator for Welders & Makers</div>
   </div>
 </header>
 
 <div class="nav">
-  <button class="nav-btn active" onclick="switchTab('gaps')">📐 GAP CALCULATOR</button>
+  <button class="nav-btn active" onclick="switchTab('gaps')">GAP CALCULATOR</button>
   <button class="nav-btn" onclick="switchTab('cutlist')">✂ CUT LIST</button>
+  <button class="nav-btn" onclick="switchTab('weight')">⚖ WEIGHT</button>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -481,10 +555,114 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
 </div>
 
+<!-- ═══════════════════════════════════════
+     TAB 3 — WEIGHT CALCULATOR
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-weight">
+
+  <div style="height:8px"></div>
+
+  <div class="note">
+    <strong>Know before you go.</strong> Calculate the total weight of your steel or timber order before heading to the supplier — so you know if your bakkie can handle it.
+  </div>
+
+  <!-- Material toggle -->
+  <div class="card">
+    <div class="card-label">Material</div>
+    <div style="display:flex;gap:8px;">
+      <button class="mat-btn active" id="wmat-steel" onclick="setWMaterial('steel')" style="flex:1;padding:12px;border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;">STEEL</button>
+      <button class="mat-btn" id="wmat-wood" onclick="setWMaterial('wood')" style="flex:1;padding:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text2);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;">TIMBER</button>
+    </div>
+  </div>
+
+  <!-- Profile selector (steel) -->
+  <div class="card" id="w-profile-card">
+    <div class="card-label">Steel Profile</div>
+    <div class="profile-grid">
+      <button class="profile-btn active" onclick="setProfile('flatbar')"><span class="picon">▬</span>Flat Bar</button>
+      <button class="profile-btn" onclick="setProfile('sqtube')"><span class="picon">□</span>Square Tube</button>
+      <button class="profile-btn" onclick="setProfile('roundbar')"><span class="picon">●</span>Round Bar</button>
+      <button class="profile-btn" onclick="setProfile('roundtube')"><span class="picon">◯</span>Round Tube</button>
+      <button class="profile-btn" onclick="setProfile('angle')"><span class="picon">∟</span>Angle Iron</button>
+    </div>
+  </div>
+
+  <!-- Timber species (wood) - hidden by default -->
+  <div class="card" id="w-species-card" style="display:none">
+    <div class="card-label">Timber Species</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Select species for accurate density</span>
+      </div>
+      <select class="w-select" id="w-species" onchange="updateSpeciesNote()">
+        <option value="0.55">SA Pine (0.55 g/cm³)</option>
+        <option value="0.65">Meranti (0.65 g/cm³)</option>
+        <option value="0.75">Saligna / Eucalyptus (0.75 g/cm³)</option>
+        <option value="0.75">Oak (0.75 g/cm³)</option>
+        <option value="0.80">Hardwood — general (0.80 g/cm³)</option>
+        <option value="custom">Custom density...</option>
+      </select>
+    </div>
+    <div class="input-group" id="w-custom-density-wrap" style="display:none">
+      <div class="input-meta">
+        <span class="input-meta-label">Custom density</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="w-custom-density" inputmode="decimal" placeholder="e.g. 0.68">
+        <span class="input-unit">g/cm³</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dimensions — updated dynamically by JS -->
+  <div class="card" id="w-dims-card">
+    <div class="card-label" id="w-dims-label">Dimensions</div>
+    <div id="w-dims-fields"></div>
+  </div>
+
+  <!-- Quantity & length -->
+  <div class="card">
+    <div class="card-label">Order Details</div>
+    <div class="dim-row">
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Length per piece</span>
+          <span class="input-meta-var">L</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="w-length" inputmode="decimal" placeholder="e.g. 752">
+          <span class="input-unit">mm</span>
+        </div>
+        <div class="preset-row">
+          <button class="chip" onclick="setVal('w-length',6000)">6m</button>
+          <button class="chip" onclick="setVal('w-length',3000)">3m</button>
+          <button class="chip" onclick="setVal('w-length',2000)">2m</button>
+          <button class="chip" onclick="setVal('w-length',1200)">1.2m</button>
+        </div>
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label" id="w-qty-label">Number of lengths</span>
+        <span class="input-meta-var">Q</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="w-qty" inputmode="numeric" placeholder="e.g. 3">
+        <span class="input-unit">pcs</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcWeight()">⚖ CALCULATE WEIGHT</button>
+
+  <div class="results" id="w-results"></div>
+
+</div>
+
 <footer>
   <p>GapCalc — free forever. No login. No data stored.</p>
   <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v1.0.2 &nbsp;·&nbsp; Updated 19 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v1.1.3 &nbsp;·&nbsp; Updated 19 March 2026</p>
 </footer>
 
 <script>
@@ -516,12 +694,12 @@ function setVal(id, val) {
 }
 
 // ════════════════════════════════════════
-// TAB SWITCHER
+// TAB SWITCHER — 3 tabs
 // ════════════════════════════════════════
 function switchTab(tab) {
-  document.querySelectorAll('.nav-btn').forEach((b,i)=> b.classList.toggle('active', (i===0)===(tab==='gaps')));
-  document.getElementById('tab-gaps').classList.toggle('active', tab==='gaps');
-  document.getElementById('tab-cutlist').classList.toggle('active', tab==='cutlist');
+  const tabs = ['gaps','cutlist','weight'];
+  document.querySelectorAll('.nav-btn').forEach((b,i) => b.classList.toggle('active', tabs[i] === tab));
+  tabs.forEach(t => { const el = document.getElementById('tab-'+t); if (el) el.classList.toggle('active', t === tab); });
 }
 
 // ════════════════════════════════════════
@@ -842,9 +1020,177 @@ function copy(txt, btn) {
 renderChips('g-w-presets', BAR_PRESETS, 'g-w');
 renderChips('g-gap-presets', GAP_PRESETS, 'g-gap');
 
+
+// ════════════════════════════════════════
+// WEIGHT CALCULATOR
+// ════════════════════════════════════════
+let wMaterial = 'steel';
+let wProfile = 'flatbar';
+const STEEL_DENSITY = 7.85;
+
+const PROFILE_FIELDS = {
+  flatbar: [{id:'w-width',label:'Width',placeholder:'e.g. 40',unit:'mm'},{id:'w-thick',label:'Thickness',placeholder:'e.g. 4.5',unit:'mm'}],
+  sqtube:  [{id:'w-outer',label:'Outer size',placeholder:'e.g. 25',unit:'mm'},{id:'w-wall',label:'Wall thickness',placeholder:'e.g. 1.6',unit:'mm'}],
+  roundbar:[{id:'w-diam',label:'Diameter',placeholder:'e.g. 20',unit:'mm'}],
+  roundtube:[{id:'w-od',label:'Outer diameter',placeholder:'e.g. 33.7',unit:'mm'},{id:'w-wall2',label:'Wall thickness',placeholder:'e.g. 2',unit:'mm'}],
+  angle:   [{id:'w-leg1',label:'Leg 1',placeholder:'e.g. 50',unit:'mm'},{id:'w-leg2',label:'Leg 2',placeholder:'e.g. 50',unit:'mm'},{id:'w-athick',label:'Thickness',placeholder:'e.g. 5',unit:'mm'}],
+  timber:  [{id:'w-tw',label:'Width',placeholder:'e.g. 114',unit:'mm'},{id:'w-tt',label:'Thickness',placeholder:'e.g. 38',unit:'mm'}]
+};
+const TIMBER_PRESETS = [[38,38],[69,69],[38,76],[38,114],[38,152],[69,114],[69,152]];
+
+function setWMaterial(mat) {
+  wMaterial = mat;
+  const isSteel = mat === 'steel';
+  const sb = document.getElementById('wmat-steel'), wb = document.getElementById('wmat-wood');
+  sb.style.cssText = isSteel ? 'flex:1;padding:12px;border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;' : 'flex:1;padding:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text2);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;';
+  wb.style.cssText = !isSteel ? 'flex:1;padding:12px;border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;' : 'flex:1;padding:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text2);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;';
+  document.getElementById('w-profile-card').style.display = isSteel ? '' : 'none';
+  document.getElementById('w-species-card').style.display = isSteel ? 'none' : '';
+  document.getElementById('w-qty-label').textContent = isSteel ? 'Number of lengths' : 'Number of pieces';
+  renderDimFields(isSteel ? wProfile : 'timber');
+  document.getElementById('w-results').className = 'results';
+}
+
+function setProfile(profile) {
+  wProfile = profile;
+  document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderDimFields(profile);
+  document.getElementById('w-results').className = 'results';
+}
+
+function renderDimFields(profile) {
+  const fields = PROFILE_FIELDS[profile] || [];
+  const container = document.getElementById('w-dims-fields');
+  const label = document.getElementById('w-dims-label');
+  const names = {flatbar:'Flat Bar Dimensions',sqtube:'Square Tube Dimensions',roundbar:'Round Bar Dimensions',roundtube:'Round Tube Dimensions',angle:'Angle Iron Dimensions',timber:'Timber Section Dimensions'};
+  label.textContent = names[profile] || 'Dimensions';
+  const field = f => `<div class="input-group"><div class="input-meta"><span class="input-meta-label">${f.label}</span></div><div class="input-wrap"><input type="number" id="${f.id}" inputmode="decimal" placeholder="${f.placeholder}"><span class="input-unit">${f.unit}</span></div></div>`;
+  let html = '';
+  if (fields.length === 2) { html = `<div class="dim-row">${fields.map(field).join('')}</div>`; }
+  else if (fields.length === 3) { html = `<div class="dim-row">${field(fields[0])}${field(fields[1])}</div>${field(fields[2])}`; }
+  else { html = fields.map(field).join(''); }
+  if (profile === 'timber') html += `<div class="preset-row" id="timber-size-presets"></div>`;
+  container.innerHTML = html;
+  if (profile === 'timber') renderTimberPresets();
+}
+
+function renderTimberPresets() {
+  const container = document.getElementById('timber-size-presets');
+  if (!container) return;
+  container.innerHTML = '';
+  TIMBER_PRESETS.forEach(([w,t]) => {
+    const btn = document.createElement('button');
+    btn.className = 'chip'; btn.textContent = `${w}x${t}`;
+    btn.onclick = () => { const wEl=document.getElementById('w-tw'),tEl=document.getElementById('w-tt'); if(wEl)wEl.value=w; if(tEl)tEl.value=t; document.querySelectorAll('#timber-size-presets .chip').forEach(c=>c.classList.remove('on')); btn.classList.add('on'); };
+    container.appendChild(btn);
+  });
+}
+
+function updateSpeciesNote() {
+  document.getElementById('w-custom-density-wrap').style.display = document.getElementById('w-species').value === 'custom' ? '' : 'none';
+}
+
+function getCrossSectionCm2() {
+  const c = v => v/10;
+  if (wMaterial === 'wood') { const w=c(parseFloat(document.getElementById('w-tw')?.value)),t=c(parseFloat(document.getElementById('w-tt')?.value)); return (w&&t)?w*t:null; }
+  switch(wProfile) {
+    case 'flatbar': { const w=c(parseFloat(document.getElementById('w-width')?.value)),t=c(parseFloat(document.getElementById('w-thick')?.value)); return (w&&t)?w*t:null; }
+    case 'sqtube': { const o=c(parseFloat(document.getElementById('w-outer')?.value)),wt=c(parseFloat(document.getElementById('w-wall')?.value)); if(!o||!wt)return null; const i=o-2*wt; return i>0?o*o-i*i:null; }
+    case 'roundbar': { const d=c(parseFloat(document.getElementById('w-diam')?.value)); return d?Math.PI*(d/2)*(d/2):null; }
+    case 'roundtube': { const od=c(parseFloat(document.getElementById('w-od')?.value)),wt=c(parseFloat(document.getElementById('w-wall2')?.value)); if(!od||!wt)return null; const id=od-2*wt; return id>0?Math.PI*((od/2)*(od/2)-(id/2)*(id/2)):null; }
+    case 'angle': { const l1=c(parseFloat(document.getElementById('w-leg1')?.value)),l2=c(parseFloat(document.getElementById('w-leg2')?.value)),t=c(parseFloat(document.getElementById('w-athick')?.value)); return (l1&&l2&&t)?(l1+l2-t)*t:null; }
+  }
+  return null;
+}
+
+function getDensity() {
+  if (wMaterial === 'steel') return STEEL_DENSITY;
+  const sel = document.getElementById('w-species');
+  if (sel.value === 'custom') return parseFloat(document.getElementById('w-custom-density')?.value)||null;
+  return parseFloat(sel.value);
+}
+
+function highlightEmpty(ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const isEmpty = !el.value || isNaN(parseFloat(el.value));
+    el.style.borderColor = isEmpty ? 'var(--red)' : '';
+    el.addEventListener('input', () => { el.style.borderColor = ''; }, { once: true });
+  });
+}
+
+function getDimFieldIds() {
+  if (wMaterial === 'wood') return ['w-tw','w-tt'];
+  const map = { flatbar:['w-width','w-thick'], sqtube:['w-outer','w-wall'], roundbar:['w-diam'], roundtube:['w-od','w-wall2'], angle:['w-leg1','w-leg2','w-athick'] };
+  return map[wProfile] || [];
+}
+
+function calcWeight() {
+  const box = document.getElementById('w-results');
+  box.className = 'results show';
+  // Clear any previous highlights
+  document.querySelectorAll('#tab-weight input').forEach(el => el.style.borderColor = '');
+  const L = parseFloat(document.getElementById('w-length').value);
+  const Q = parseInt(document.getElementById('w-qty').value);
+  const density = getDensity(), area = getCrossSectionCm2();
+  if (!L||!Q||L<=0||Q<=0) {
+    highlightEmpty(['w-length','w-qty']);
+    box.innerHTML = errorBox('Enter the length and quantity to continue.'); return;
+  }
+  if (!area) {
+    highlightEmpty(getDimFieldIds());
+    box.innerHTML = errorBox('Fill in all dimensions above — empty fields are highlighted in red.'); return;
+  }
+  if (!density) { box.innerHTML = errorBox('Enter a valid custom density to continue.'); return; }
+  const weightPerPiece = (area*(L/10)*density)/1000;
+  const weightPerMetre = weightPerPiece/(L/1000);
+  const totalWeight = weightPerPiece*Q;
+  const isSteel = wMaterial==='steel';
+  const BAKKIE_LIMIT = 750;
+  const fillPct = Math.min((totalWeight/BAKKIE_LIMIT)*100,100);
+  const fillColor = fillPct<60?'var(--green)':fillPct<85?'var(--accent)':'var(--red)';
+  const bakkieClass = fillPct<60?'ok':fillPct<85?'warn':'over';
+  const bakkieMsg = totalWeight>BAKKIE_LIMIT ? '✗ Exceeds a standard bakkie payload (~750kg). Consider two trips or delivery.' : fillPct>=85 ? '⚠ Close to the limit — check your bakkie rated payload before loading.' : fillPct>=60 ? '⚠ Getting heavy — double-check your bakkie rated payload.' : '✓ Well within a standard bakkie payload (~750kg). Easy trip.';
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">TOTAL ORDER WEIGHT</div>
+      <div style="display:flex;align-items:baseline;gap:8px"><div class="rh-value">${totalWeight.toFixed(1)}</div><div class="rh-unit">kg</div></div>
+      <div class="rh-sub">${Q} ${isSteel?'length':'piece'}${Q>1?'s':''} × ${weightPerPiece.toFixed(2)}kg each</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-label">Weight per metre</div><div class="stat-val">${weightPerMetre.toFixed(3)} <span class="u">kg/m</span></div></div>
+      <div class="stat"><div class="stat-label">${isSteel?'Weight per length':'Weight per piece'}</div><div class="stat-val">${weightPerPiece.toFixed(2)} <span class="u">kg</span></div></div>
+      <div class="stat"><div class="stat-label">Quantity</div><div class="stat-val">${Q} <span class="u">${isSteel?'lengths':'pieces'}</span></div></div>
+      <div class="stat"><div class="stat-label">Piece length</div><div class="stat-val">${L} <span class="u">mm</span></div></div>
+    </div>
+    <div class="bakkie-wrap">
+      <div class="bakkie-label-row"><span class="bakkie-title">🚗 Bakkie load indicator</span><span class="bakkie-kg">${totalWeight.toFixed(1)}kg / ${BAKKIE_LIMIT}kg</span></div>
+      <div class="bakkie-track"><div class="bakkie-fill" style="width:${fillPct.toFixed(1)}%;background:${fillColor}"></div></div>
+      <div class="bakkie-markers"><span>0</span><span>250kg</span><span>500kg</span><span>750kg</span></div>
+      <div class="bakkie-note ${bakkieClass}">${bakkieMsg}</div>
+    </div>
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">🖨 Print</button>
+      <button class="act-btn" onclick="copyWeightResult(${totalWeight.toFixed(2)},${weightPerPiece.toFixed(2)},${weightPerMetre.toFixed(3)},${Q})">📋 Copy</button>
+    </div>`;
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function copyWeightResult(total,perPiece,perM,qty) {
+  const isSteel = wMaterial==='steel';
+  const txt = `GapCalc — Weight Calculator\n---\nTotal order weight: ${total}kg\n${isSteel?'Weight per length':'Weight per piece'}: ${perPiece}kg\nWeight per metre: ${perM}kg/m\nQuantity: ${qty}\n\ngapcalc-za.netlify.app`;
+  copy(txt, event.target);
+}
+
 // Enter key triggers calculate
 document.getElementById('tab-gaps').addEventListener('keydown', e => { if (e.key==='Enter') calcGaps(); });
 document.getElementById('tab-cutlist').addEventListener('keydown', e => { if (e.key==='Enter') calcCutList(); });
+document.getElementById('tab-weight').addEventListener('keydown', e => { if (e.key==='Enter') calcWeight(); });
+
+// Init weight calculator dimensions
+renderDimFields('flatbar');
 </script>
 </body>
 </html>
