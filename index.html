@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GapCalc — Workshop Spacing & Cut List Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111;
+  --surface: #1c1c1c;
+  --surface2: #252525;
+  --surface3: #2e2e2e;
+  --border: #333;
+  --border2: #444;
+  --accent: #f5820a;
+  --accent-dim: rgba(245,130,10,0.15);
+  --green: #52c47a;
+  --green-dim: rgba(82,196,122,0.12);
+  --blue: #5aabf5;
+  --blue-dim: rgba(90,171,245,0.12);
+  --red: #e05252;
+  --red-dim: rgba(224,82,82,0.12);
+  --text: #efefef;
+  --text2: #888;
+  --text3: #555;
+  --r: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 60px; }
+
+/* HEADER */
+header {
+  background: var(--surface);
+  border-bottom: 3px solid var(--accent);
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo-mark {
+  width: 36px; height: 36px; background: var(--accent); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.logo-mark svg { width: 20px; height: 20px; }
+.logo-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; line-height: 1; }
+.logo-tagline { font-size: 10px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+
+/* NAV TABS */
+.nav {
+  display: flex; gap: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav-btn {
+  flex: 1; min-width: 130px;
+  padding: 14px 10px;
+  border: none; background: none;
+  color: var(--text2);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px; letter-spacing: 1.5px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  text-align: center;
+}
+.nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.nav-btn:not(.active):hover { color: var(--text); }
+
+/* SECTIONS */
+.section { display: none; padding: 16px 18px; max-width: 640px; margin: 0 auto; }
+.section.active { display: block; }
+
+/* FORMULA BOX */
+.formula-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.formula-title { font-size: 10px; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.formula-text { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text); line-height: 1.7; }
+.formula-note { font-size: 12px; color: var(--text2); margin-top: 6px; font-style: italic; }
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.card-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 12px;
+}
+
+/* INPUTS */
+.input-group { margin-bottom: 12px; }
+.input-group:last-child { margin-bottom: 0; }
+.input-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.input-meta-label { font-size: 12px; color: var(--text2); }
+.input-meta-var { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; }
+.input-wrap { position: relative; }
+.input-wrap input {
+  width: 100%;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 22px; font-weight: 500;
+  padding: 14px 56px 14px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.input-wrap input:focus { border-color: var(--accent); }
+.input-wrap input::placeholder { color: var(--text3); font-size: 16px; }
+.input-unit {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text3); font-family: 'DM Mono', monospace; font-size: 13px;
+  pointer-events: none;
+}
+
+/* PRESETS */
+.preset-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.chip {
+  padding: 6px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; color: var(--text2);
+  cursor: pointer; background: var(--surface2);
+  transition: all 0.15s;
+}
+.chip:hover, .chip.on { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+/* CALC BUTTON */
+.go-btn {
+  width: 100%; padding: 17px;
+  background: var(--accent); border: none; border-radius: var(--r);
+  color: #000; font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px;
+  cursor: pointer; transition: all 0.2s;
+  margin-top: 4px;
+}
+.go-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.go-btn:active { transform: none; }
+
+/* RESULTS */
+.results { display: none; margin-top: 14px; }
+.results.show { display: block; }
+
+.result-hero {
+  background: var(--surface);
+  border: 2px solid var(--green);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 10px;
+}
+.result-hero.warn { border-color: var(--accent); }
+.result-hero.error { border-color: var(--red); }
+
+.rh-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); margin-bottom: 4px; }
+.rh-value { font-family: 'Bebas Neue', sans-serif; font-size: 72px; line-height: 1; color: var(--green); }
+.rh-value.warn { color: var(--accent); }
+.rh-value.error-val { color: var(--red); font-size: 28px; line-height: 1.3; }
+.rh-unit { font-family: 'DM Mono', monospace; font-size: 20px; color: var(--text2); }
+.rh-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.stat {
+  background: var(--surface2);
+  border-radius: 8px; padding: 12px;
+}
+.stat-label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.stat-val { font-family: 'DM Mono', monospace; font-size: 17px; color: var(--text); }
+.stat-val .u { font-size: 12px; color: var(--text2); }
+
+.section-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+
+/* DIAGRAM */
+.diagram-card {
+  background: var(--surface2);
+  border-radius: 8px; padding: 14px;
+  margin-bottom: 10px;
+}
+.diagram-card-label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+.diagram-card svg { width: 100%; height: auto; display: block; }
+
+/* ACTION ROW */
+.action-row { display: flex; gap: 8px; }
+.act-btn {
+  flex: 1; padding: 12px 8px;
+  border: 2px solid var(--border); background: var(--surface2);
+  color: var(--text2); border-radius: 8px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.act-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* HIGHLIGHT NOTE */
+.note {
+  background: var(--blue-dim);
+  border: 1px solid var(--blue);
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 12px; color: #8ac8ff;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.note strong { color: var(--blue); }
+
+/* CUT LIST SPECIFIC */
+.cut-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface2); border-radius: 8px;
+  padding: 10px 14px; margin-bottom: 6px;
+}
+.cut-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--accent); width: 36px; flex-shrink: 0; line-height: 1; }
+.cut-info { flex: 1; }
+.cut-desc { font-size: 13px; color: var(--text); }
+.cut-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.cut-badge {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  padding: 3px 8px; border-radius: 20px;
+  background: var(--accent-dim); color: var(--accent);
+  flex-shrink: 0;
+}
+.cut-badge.green { background: var(--green-dim); color: var(--green); }
+
+/* VISUAL STOCK BAR */
+.stock-visual { margin: 10px 0; }
+.stock-bar-wrap { display: flex; border-radius: 6px; overflow: hidden; height: 32px; }
+.stock-seg { display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 500; }
+.seg-cut { background: var(--accent); color: #000; }
+.seg-offcut { background: var(--surface3); color: var(--text3); border: 1px solid var(--border); }
+.stock-legend { display: flex; gap: 14px; margin-top: 6px; font-size: 11px; color: var(--text2); }
+.stock-legend span { display: flex; align-items: center; gap: 5px; }
+.dot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* FOOTER */
+footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(--text3); }
+
+/* PRINT */
+@media print {
+  body { background: #fff; color: #000; }
+  header { background: #fff; border-bottom: 3px solid #f5820a; position: static; }
+  .nav, .go-btn, .action-row, footer, .formula-box, .chip, .preset-row { display: none !important; }
+  .section { display: block !important; }
+  .results { display: block !important; }
+  .result-hero { border: 2px solid #ccc; }
+  .rh-value { color: #f5820a !important; }
+}
+
+@media (max-width: 380px) {
+  .rh-value { font-size: 56px; }
+  .stat-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
+      <rect x="2" y="8" width="3" height="8" rx="1"/>
+      <rect x="7" y="8" width="3" height="8" rx="1"/>
+      <rect x="12" y="8" width="3" height="8" rx="1"/>
+      <rect x="17" y="8" width="3" height="8" rx="1"/>
+    </svg>
+  </div>
+  <div>
+    <div class="logo-title">GapCalc</div>
+    <div class="logo-tagline">Workshop Spacing & Cut List Calculator</div>
+  </div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="switchTab('gaps')">📐 GAP CALCULATOR</button>
+  <button class="nav-btn" onclick="switchTab('cutlist')">✂ CUT LIST</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 1 — GAP CALCULATOR
+     ═══════════════════════════════════════ -->
+<div class="section active" id="tab-gaps">
+
+  <div style="height:8px"></div>
+
+  <div class="formula-box">
+    <div class="formula-title">How the maths works</div>
+    <div class="formula-text">
+      n = floor( (L + g) / (w + g) )<br>
+      g_actual = (L − n×w) / (n − 1)
+    </div>
+    <div class="formula-note">Bars run edge-to-edge. Gaps exist only between bars — not at the ends.</div>
+  </div>
+
+  <!-- Frame length L -->
+  <div class="card">
+    <div class="card-label">Frame Dimension (spacing direction)</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Frame length — the side your bars span across</span>
+        <span class="input-meta-var">L</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="g-L" inputmode="decimal" placeholder="e.g. 901">
+        <span class="input-unit">mm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bar width w -->
+  <div class="card">
+    <div class="card-label">Bar / Slat Width</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Width of each flat bar or slat</span>
+        <span class="input-meta-var">w</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="g-w" inputmode="decimal" placeholder="e.g. 40">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row" id="g-w-presets"></div>
+    </div>
+  </div>
+
+  <!-- Desired gap g -->
+  <div class="card">
+    <div class="card-label">Target Gap</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Gap you're aiming for between bars</span>
+        <span class="input-meta-var">g</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="g-gap" inputmode="decimal" placeholder="e.g. 13">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row" id="g-gap-presets"></div>
+    </div>
+  </div>
+
+  <!-- Bar cut length (other dimension) -->
+  <div class="card">
+    <div class="card-label">Bar Cut Length (optional — for materials list)</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Length to cut each bar — usually the other frame dimension</span>
+        <span class="input-meta-var">b</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="g-barlen" inputmode="decimal" placeholder="e.g. 752">
+        <span class="input-unit">mm</span>
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Stock length you buy from (usually 6m)</span>
+        <span class="input-meta-var">S</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="g-stock" inputmode="decimal" placeholder="6000">
+        <span class="input-unit">mm</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcGaps()">⚡ CALCULATE</button>
+
+  <div class="results" id="g-results"></div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 2 — CUT LIST
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-cutlist">
+
+  <div style="height:8px"></div>
+
+  <div class="note">
+    <strong>Measure twice, cut once.</strong> Enter your raw stock length, how long you want each piece, and how many you need. GapCalc tells you cuts per length, lengths to buy, offcut lengths — before you touch the grinder.
+  </div>
+
+  <!-- Stock length -->
+  <div class="card">
+    <div class="card-label">Raw Stock</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Length of each piece you buy</span>
+        <span class="input-meta-var">S</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="c-stock" inputmode="decimal" placeholder="e.g. 6000">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('c-stock',6000)">6m length</button>
+        <button class="chip" onclick="setVal('c-stock',3000)">3m length</button>
+        <button class="chip" onclick="setVal('c-stock',2000)">2m length</button>
+        <button class="chip" onclick="setVal('c-stock',1200)">1.2m length</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desired piece length -->
+  <div class="card">
+    <div class="card-label">Desired Piece Length</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Length of each piece you want to cut</span>
+        <span class="input-meta-var">p</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="c-piece" inputmode="decimal" placeholder="e.g. 752">
+        <span class="input-unit">mm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quantity needed -->
+  <div class="card">
+    <div class="card-label">Quantity Needed</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Total number of pieces required</span>
+        <span class="input-meta-var">Q</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="c-qty" inputmode="numeric" placeholder="e.g. 17">
+        <span class="input-unit">pcs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blade kerf -->
+  <div class="card">
+    <div class="card-label">Blade Kerf (optional)</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Material lost per cut (angle grinder disc ≈ 1–2mm)</span>
+        <span class="input-meta-var">k</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="c-kerf" inputmode="decimal" placeholder="1.5" value="1.5">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('c-kerf',1)">Thin disc 1mm</button>
+        <button class="chip" onclick="setVal('c-kerf',1.5)">Grinder 1.5mm</button>
+        <button class="chip" onclick="setVal('c-kerf',2)">Standard 2mm</button>
+        <button class="chip" onclick="setVal('c-kerf',3)">Hacksaw 3mm</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcCutList()">✂ GENERATE CUT LIST</button>
+
+  <div class="results" id="c-results"></div>
+
+</div>
+
+<footer>
+  <p>GapCalc — free forever. No login. No data stored.</p>
+  <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v1.0.0 &nbsp;·&nbsp; Updated 19 March 2026</p>
+</footer>
+
+<script>
+// ════════════════════════════════════════
+// PRESETS
+// ════════════════════════════════════════
+const BAR_PRESETS = [20,25,30,38,40,50,65,75,100];
+const GAP_PRESETS = [8,10,13,15,20,25,30];
+
+function renderChips(containerId, values, inputId, unit='mm') {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  values.forEach(v => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.textContent = v + unit;
+    b.onclick = () => { setVal(inputId, v); highlightChip(containerId, b); };
+    c.appendChild(b);
+  });
+}
+
+function highlightChip(containerId, btn) {
+  document.querySelectorAll('#'+containerId+' .chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function setVal(id, val) {
+  document.getElementById(id).value = val;
+}
+
+// ════════════════════════════════════════
+// TAB SWITCHER
+// ════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.nav-btn').forEach((b,i)=> b.classList.toggle('active', (i===0)===(tab==='gaps')));
+  document.getElementById('tab-gaps').classList.toggle('active', tab==='gaps');
+  document.getElementById('tab-cutlist').classList.toggle('active', tab==='cutlist');
+}
+
+// ════════════════════════════════════════
+// DIAGRAM
+// ════════════════════════════════════════
+function buildDiagram(n, w, g, L) {
+  const W = 500, H = 80;
+  const scale = (W) / L;
+  const bW = w * scale;
+  const gW = g * scale;
+
+  let rects = '';
+  for (let i = 0; i < n; i++) {
+    const x = i * (bW + gW);
+    rects += `<rect x="${x.toFixed(2)}" y="10" width="${bW.toFixed(2)}" height="40" rx="2" fill="#f5820a"/>`;
+  }
+
+  // Gap annotation on first gap (if visible)
+  let anno = '';
+  if (n > 1 && gW > 6) {
+    const gx1 = bW;
+    const gx2 = bW + gW;
+    const ay = 70;
+    anno = `
+      <line x1="${gx1.toFixed(1)}" y1="${ay}" x2="${gx2.toFixed(1)}" y2="${ay}" stroke="#52c47a" stroke-width="1.5"/>
+      <polygon points="${(gx1+4).toFixed(1)},${ay-3} ${gx1.toFixed(1)},${ay} ${(gx1+4).toFixed(1)},${ay+3}" fill="#52c47a"/>
+      <polygon points="${(gx2-4).toFixed(1)},${ay-3} ${gx2.toFixed(1)},${ay} ${(gx2-4).toFixed(1)},${ay+3}" fill="#52c47a"/>
+      <text x="${((gx1+gx2)/2).toFixed(1)}" y="${ay-4}" text-anchor="middle" fill="#52c47a" font-size="9" font-family="DM Mono,monospace">${g.toFixed(1)}mm</text>
+    `;
+  }
+
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="${W}" height="${H}" fill="#252525" rx="6"/>
+    ${rects}${anno}
+  </svg>`;
+}
+
+// ════════════════════════════════════════
+// GAP CALCULATOR
+// ════════════════════════════════════════
+function calcGaps() {
+  const L = parseFloat(document.getElementById('g-L').value);
+  const w = parseFloat(document.getElementById('g-w').value);
+  const gTarget = parseFloat(document.getElementById('g-gap').value);
+  const barLen = parseFloat(document.getElementById('g-barlen').value) || null;
+  const stock = parseFloat(document.getElementById('g-stock').value) || 6000;
+  const box = document.getElementById('g-results');
+  box.className = 'results show';
+
+  // Validate
+  if (!L || !w || !gTarget || L <= 0 || w <= 0 || gTarget <= 0) {
+    box.innerHTML = errorBox('Fill in Frame Length (L), Bar Width (w), and Target Gap (g) to continue.');
+    return;
+  }
+  if (w >= L) {
+    box.innerHTML = errorBox('Bar width is wider than the frame. Check your values.');
+    return;
+  }
+
+  // FORMULA — edge to edge, n-1 gaps
+  const n = Math.floor((L + gTarget) / (w + gTarget));
+
+  if (n < 2) {
+    box.innerHTML = errorBox(`Only ${n} bar fits — you need at least 2 bars to have any gaps. Try a larger frame or smaller bars.`);
+    return;
+  }
+
+  const gActual = (L - n * w) / (n - 1);
+  const diff = gActual - gTarget;
+  const totalBarMm = n * w;
+  const totalGapMm = gActual * (n - 1);
+  const fillPct = ((totalBarMm / L) * 100).toFixed(1);
+
+  // Materials section
+  let materialsHtml = '';
+  if (barLen) {
+    const cutsPerLength = Math.floor(stock / barLen);
+    const lengthsNeeded = Math.ceil(n / cutsPerLength);
+    const offcutMm = stock - cutsPerLength * barLen;
+    const totalMetreMm = n * barLen;
+    const totalM = (totalMetreMm / 1000).toFixed(2);
+
+    materialsHtml = `
+      <hr class="section-divider">
+      <div class="card-label" style="color:var(--blue);margin-bottom:10px;">📦 MATERIALS LIST</div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Bar cut length</div>
+          <div class="stat-val">${barLen} <span class="u">mm each</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Total flat bar</div>
+          <div class="stat-val">${totalM} <span class="u">m</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Cuts per ${(stock/1000).toFixed(1)}m length</div>
+          <div class="stat-val">${cutsPerLength} <span class="u">cuts</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Lengths to buy</div>
+          <div class="stat-val">${lengthsNeeded} <span class="u">× ${(stock/1000).toFixed(1)}m</span></div>
+        </div>
+        <div class="stat" style="grid-column:1/-1">
+          <div class="stat-label">Offcut per length</div>
+          <div class="stat-val">${offcutMm} <span class="u">mm (${(offcutMm/1000).toFixed(3)}m left over)</span></div>
+        </div>
+      </div>
+    `;
+  }
+
+  const gColor = Math.abs(diff) < 0.5 ? 'green' : (Math.abs(diff) < 2 ? '' : 'warn');
+  const gValueClass = gColor === 'warn' ? 'warn' : '';
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">BARS THAT FIT</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <div class="rh-value">${n}</div>
+        <div class="rh-unit">bars</div>
+      </div>
+      <div class="rh-sub">Edge to edge across ${L}mm, with ${n-1} gaps between them</div>
+    </div>
+
+    <div class="result-hero ${gValueClass}" style="${gValueClass?'':'border-color:var(--green)'}">
+      <div class="rh-label">ACTUAL GAP YOU'LL GET</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <div class="rh-value ${gValueClass}">${gActual.toFixed(2)}</div>
+        <div class="rh-unit">mm</div>
+      </div>
+      <div class="rh-sub">You asked for ${gTarget}mm — difference: ${diff >= 0 ? '+' : ''}${diff.toFixed(2)}mm ${Math.abs(diff) < 1 ? '✓ close enough' : '— acceptable for steel'}</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">Number of gaps</div>
+        <div class="stat-val">${n - 1} <span class="u">gaps</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total bar width</div>
+        <div class="stat-val">${totalBarMm} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total gap space</div>
+        <div class="stat-val">${totalGapMm.toFixed(1)} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Frame fill</div>
+        <div class="stat-val">${fillPct} <span class="u">%</span></div>
+      </div>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-label">Layout preview — top view (not to scale)</div>
+      ${buildDiagram(n, w, gActual, L)}
+    </div>
+
+    ${materialsHtml}
+
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">🖨 Print</button>
+      <button class="act-btn" onclick="copyGapResult(${n},${gActual.toFixed(2)},${L},${w})">📋 Copy result</button>
+    </div>
+  `;
+
+  window._lastGap = { n, gActual: gActual.toFixed(2), L, w };
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ════════════════════════════════════════
+// CUT LIST CALCULATOR
+// ════════════════════════════════════════
+function calcCutList() {
+  const S = parseFloat(document.getElementById('c-stock').value);
+  const p = parseFloat(document.getElementById('c-piece').value);
+  const Q = parseInt(document.getElementById('c-qty').value);
+  const k = parseFloat(document.getElementById('c-kerf').value) || 0;
+  const box = document.getElementById('c-results');
+  box.className = 'results show';
+
+  if (!S || !p || !Q || S <= 0 || p <= 0 || Q <= 0) {
+    box.innerHTML = errorBox('Fill in stock length, piece length, and quantity to continue.');
+    return;
+  }
+  if (p > S) {
+    box.innerHTML = errorBox(`Piece (${p}mm) is longer than your stock (${S}mm). Check your values.`);
+    return;
+  }
+
+  // Effective piece length including kerf (each cut eats kerf except possibly last)
+  const effectivePiece = p + k;
+  // How many pieces fit in one length?
+  // First piece: p mm, each additional: p + k (kerf between)
+  // n pieces = p + (n-1)*(p+k) = n*p + (n-1)*k ≤ S
+  // n*(p+k) - k ≤ S → n ≤ (S + k) / (p + k)
+  const cutsPerLength = Math.floor((S + k) / (p + k));
+
+  if (cutsPerLength === 0) {
+    box.innerHTML = errorBox(`Can't get even one piece from a ${(S/1000).toFixed(1)}m length. Your piece (${p}mm) is too long.`);
+    return;
+  }
+
+  const lengthsNeeded = Math.ceil(Q / cutsPerLength);
+  const totalStockUsed = lengthsNeeded * S;
+  const totalPieceMm = Q * p;
+  const totalKerfMm = (Q - lengthsNeeded) * k; // n-1 cuts per length total
+  const lastLengthPieces = Q % cutsPerLength || cutsPerLength;
+  const lastLengthUsed = lastLengthPieces * p + (lastLengthPieces - 1) * k;
+  const offcutLast = S - lastLengthUsed;
+  const fullLengthOffcut = S - cutsPerLength * p - (cutsPerLength - 1) * k;
+  const totalOffcut = (lengthsNeeded - 1) * fullLengthOffcut + offcutLast;
+  const wastePercent = ((totalOffcut / totalStockUsed) * 100).toFixed(1);
+
+  // Build per-length rows
+  let lengthRows = '';
+  for (let i = 1; i <= lengthsNeeded; i++) {
+    const isLast = i === lengthsNeeded;
+    const pieces = isLast ? lastLengthPieces : cutsPerLength;
+    const offcut = isLast ? offcutLast : fullLengthOffcut;
+    lengthRows += `
+      <div class="cut-row">
+        <div class="cut-num">${i}</div>
+        <div class="cut-info">
+          <div class="cut-desc">Cut ${pieces} × ${p}mm pieces</div>
+          <div class="cut-sub">${pieces * p}mm used${k > 0 ? ` + ${(pieces-1)*k}mm kerf` : ''} — offcut: ${offcut.toFixed(0)}mm</div>
+        </div>
+        <div class="cut-badge ${offcut > p ? 'green' : ''}">${offcut > p ? '♻ reuse' : offcut > 0 ? 'scrap' : 'no waste'}</div>
+      </div>
+    `;
+  }
+
+  // Visual stock bar for length 1
+  const barTotal = cutsPerLength * p + (cutsPerLength - 1) * k;
+  const offcutW = ((fullLengthOffcut / S) * 100).toFixed(1);
+  const usedW = (100 - parseFloat(offcutW)).toFixed(1);
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">LENGTHS TO BUY</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <div class="rh-value">${lengthsNeeded}</div>
+        <div class="rh-unit">× ${(S/1000).toFixed(S%1000===0?0:2)}m</div>
+      </div>
+      <div class="rh-sub">${cutsPerLength} piece${cutsPerLength>1?'s':''} per length — ${Q} pieces total</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">Cuts per length</div>
+        <div class="stat-val">${cutsPerLength} <span class="u">pcs</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Offcut per full length</div>
+        <div class="stat-val">${fullLengthOffcut.toFixed(0)} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total stock bought</div>
+        <div class="stat-val">${(totalStockUsed/1000).toFixed(2)} <span class="u">m</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Waste</div>
+        <div class="stat-val" style="color:${parseFloat(wastePercent)<10?'var(--green)':'var(--accent)'}">${wastePercent} <span class="u">%</span></div>
+      </div>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-label">One full length — visual breakdown</div>
+      <div class="stock-bar-wrap">
+        <div class="stock-seg seg-cut" style="width:${usedW}%">${usedW}%</div>
+        ${offcutW > 0 ? `<div class="stock-seg seg-offcut" style="width:${offcutW}%;flex:0 0 ${offcutW}%">${offcutW}%</div>` : ''}
+      </div>
+      <div class="stock-legend">
+        <span><div class="dot" style="background:var(--accent)"></div>Pieces (${barTotal.toFixed(0)}mm)</span>
+        ${fullLengthOffcut > 0 ? `<span><div class="dot" style="background:var(--surface3);border:1px solid var(--border)"></div>Offcut (${fullLengthOffcut.toFixed(0)}mm)</span>` : ''}
+      </div>
+    </div>
+
+    <div class="card-label" style="color:var(--blue);margin:4px 0 10px">✂ PER-LENGTH CUT PLAN</div>
+    ${lengthRows}
+
+    <div class="action-row" style="margin-top:10px">
+      <button class="act-btn" onclick="window.print()">🖨 Print cut list</button>
+      <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut.toFixed(0)})">📋 Copy</button>
+    </div>
+  `;
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════
+function errorBox(msg) {
+  return `<div class="result-hero error"><div class="rh-label">⚠ Can't calculate</div><div class="rh-value error-val">${msg}</div></div>`;
+}
+
+function copyGapResult(n, g, L, w) {
+  const txt = `GapCalc — Gap Calculator\n---\nFrame: ${L}mm | Bar width: ${w}mm\nBars that fit: ${n}\nActual gap: ${g}mm\nNumber of gaps: ${n-1}\n\ngapcalc.app`;
+  copy(txt, event.target);
+}
+
+function copyCutList(lengths, cps, p, S, Q, offcut) {
+  const txt = `GapCalc — Cut List\n---\nStock: ${(S/1000).toFixed(S%1000===0?0:2)}m | Piece: ${p}mm | Qty: ${Q}\nLengths to buy: ${lengths}\nCuts per length: ${cps}\nOffcut per length: ${offcut}mm\n\ngapcalc.app`;
+  copy(txt, event.target);
+}
+
+function copy(txt, btn) {
+  if (!navigator.clipboard) return;
+  navigator.clipboard.writeText(txt).then(() => {
+    const o = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = o, 1800);
+  });
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+renderChips('g-w-presets', BAR_PRESETS, 'g-w');
+renderChips('g-gap-presets', GAP_PRESETS, 'g-gap');
+
+// Enter key triggers calculate
+document.getElementById('tab-gaps').addEventListener('keydown', e => { if (e.key==='Enter') calcGaps(); });
+document.getElementById('tab-cutlist').addEventListener('keydown', e => { if (e.key==='Enter') calcCutList(); });
+</script>
+</body>
+</html>
