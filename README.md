@@ -1,2 +1,2 @@
 # gapcalc
-Free workshop calculator for spacing bars and planning cut lists. No login, no ads, no fluff.
+Free workshop calculator for welders and makers. Gap spacing, cut lists, and material weights. No login, no fluff.
