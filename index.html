@@ -274,6 +274,61 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   .rh-value { font-size: 56px; }
   .stat-grid { grid-template-columns: 1fr; }
 }
+
+
+/* RESET BUTTON */
+.reset-btn {
+  width: 100%; padding: 12px;
+  border: 2px solid var(--border); background: transparent;
+  color: var(--text3); border-radius: 8px;
+  font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; transition: all 0.2s;
+  text-transform: uppercase; margin-top: 8px;
+}
+.reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ANGLE CUTS CALCULATOR */
+.cut-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
+.cut-type-btn {
+  padding: 14px 8px; border: 2px solid var(--border);
+  background: var(--surface2); color: var(--text2);
+  border-radius: 8px; font-size: 12px; font-weight: 700;
+  cursor: pointer; text-align: center; transition: all 0.2s;
+  line-height: 1.4;
+}
+.cut-type-btn .cicon { font-size: 22px; display: block; margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+.cut-type-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+.cut-type-btn:not(.active):hover { border-color: #555; color: var(--text); }
+
+.angle-presets { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+.end-type-wrap { display: none; margin-top: 12px; }
+.end-type-wrap.show { display: block; }
+.end-type-label { font-size: 11px; color: var(--text2); margin-bottom: 8px; }
+.end-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.end-type-btn {
+  padding: 10px 6px; border: 2px solid var(--border);
+  background: var(--surface2); color: var(--text2);
+  border-radius: 8px; font-size: 11px; font-weight: 700;
+  cursor: pointer; text-align: center; transition: all 0.2s; line-height: 1.4;
+}
+.end-type-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+
+.angle-diagram-card {
+  background: var(--surface2); border-radius: 8px;
+  padding: 14px; margin-bottom: 10px;
+}
+.angle-diagram-label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+.angle-diagram-card svg { width: 100%; height: auto; display: block; }
+
+.marking-tip {
+  background: rgba(245,130,10,0.08);
+  border: 1px solid rgba(245,130,10,0.3);
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 12px; color: #ffb066; line-height: 1.5; margin-bottom: 10px;
+}
+.marking-tip strong { color: var(--accent); }
+
 /* WEIGHT CALCULATOR */
 .profile-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
@@ -370,6 +425,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   <button class="nav-btn active" onclick="switchTab('gaps')">GAP CALCULATOR</button>
   <button class="nav-btn" onclick="switchTab('cutlist')">✂ CUT LIST</button>
   <button class="nav-btn" onclick="switchTab('weight')">⚖ WEIGHT</button>
+  <button class="nav-btn" onclick="switchTab('angle')">∠ ANGLE CUTS</button>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -460,7 +516,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     </div>
   </div>
 
-  <button class="go-btn" onclick="calcGaps()">⚡ CALCULATE</button>
+  <button class="go-btn" onclick="calcGaps()">CALCULATE</button>
 
   <div class="results" id="g-results"></div>
 
@@ -659,10 +715,112 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
 </div>
 
+<!-- ═══════════════════════════════════════
+     TAB 4 — ANGLE CUTS CALCULATOR
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-angle">
+
+  <div style="height:8px"></div>
+
+  <div class="formula-box">
+    <div class="formula-title">The formula</div>
+    <div class="formula-text">
+      cut face = width / sin(θ)<br>
+      long point = short point + (width / tan(θ))
+    </div>
+    <div class="formula-note">Bars run edge-to-edge. Mark from short point and long point — draw a line between them.</div>
+  </div>
+
+  <!-- Material width -->
+  <div class="card">
+    <div class="card-label">Material Width</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Width of the face being cut across</span>
+        <span class="input-meta-var">w</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="a-width" inputmode="decimal" placeholder="e.g. 40">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row" id="a-width-presets"></div>
+    </div>
+  </div>
+
+  <!-- Piece length -->
+  <div class="card">
+    <div class="card-label">Piece Length (short point to short point)</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">The dimension you're cutting to — measured on the short side</span>
+        <span class="input-meta-var">L</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="a-length" inputmode="decimal" placeholder="e.g. 500">
+        <span class="input-unit">mm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cut angle -->
+  <div class="card">
+    <div class="card-label">Cut Angle</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Angle of the cut measured from square (90° = straight cut)</span>
+        <span class="input-meta-var">θ</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="a-angle" inputmode="decimal" placeholder="e.g. 45" min="1" max="89">
+        <span class="input-unit">deg</span>
+      </div>
+      <div class="angle-presets">
+        <button class="chip" onclick="setAnglePreset(22.5)">22.5°</button>
+        <button class="chip" onclick="setAnglePreset(30)">30°</button>
+        <button class="chip" onclick="setAnglePreset(45)">45°</button>
+        <button class="chip" onclick="setAnglePreset(60)">60°</button>
+        <button class="chip" onclick="setAnglePreset(67.5)">67.5°</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cut type -->
+  <div class="card">
+    <div class="card-label">Cut Type</div>
+    <div class="cut-type-grid">
+      <button class="cut-type-btn active" id="ct-single" onclick="setCutType('single')">
+        <span class="cicon">◺▬</span>
+        Single end cut<br><span style="font-weight:400;font-size:10px;color:var(--text3)">One angled end, one square</span>
+      </button>
+      <button class="cut-type-btn" id="ct-double" onclick="setCutType('double')">
+        <span class="cicon">◹▬◸</span>
+        Both ends cut<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Mitre or parallel angles</span>
+      </button>
+    </div>
+    <!-- Double end sub-options -->
+    <div class="end-type-wrap" id="end-type-wrap">
+      <div class="end-type-label">How are the two cuts oriented?</div>
+      <div class="end-type-grid">
+        <button class="end-type-btn active" id="et-mitre" onclick="setEndType('mitre')">
+          ◹▬◸ Mirrored (mitre)<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Corner joints, frames</span>
+        </button>
+        <button class="end-type-btn" id="et-parallel" onclick="setEndType('parallel')">
+          ◺▬◺ Parallel (same lean)<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Diagonal bracing, parallelogram</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcAngle()">∠ CALCULATE CUT</button>
+
+  <div class="results" id="a-results"></div>
+
+</div>
+
 <footer>
   <p>GapCalc — free forever. No login. No data stored.</p>
   <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v1.1.3 &nbsp;·&nbsp; Updated 19 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v1.2.2 &nbsp;·&nbsp; Updated 20 March 2026</p>
 </footer>
 
 <script>
@@ -697,7 +855,7 @@ function setVal(id, val) {
 // TAB SWITCHER — 3 tabs
 // ════════════════════════════════════════
 function switchTab(tab) {
-  const tabs = ['gaps','cutlist','weight'];
+  const tabs = ['gaps','cutlist','weight','angle'];
   document.querySelectorAll('.nav-btn').forEach((b,i) => b.classList.toggle('active', tabs[i] === tab));
   tabs.forEach(t => { const el = document.getElementById('tab-'+t); if (el) el.classList.toggle('active', t === tab); });
 }
@@ -862,6 +1020,7 @@ function calcGaps() {
       <button class="act-btn" onclick="window.print()">🖨 Print</button>
       <button class="act-btn" onclick="copyGapResult(${n},${gActual.toFixed(2)},${L},${w})">📋 Copy result</button>
     </div>
+    <button class="reset-btn" onclick="resetTab('tab-gaps')">↺ Start over</button>
   `;
 
   window._lastGap = { n, gActual: gActual.toFixed(2), L, w };
@@ -983,6 +1142,7 @@ function calcCutList() {
       <button class="act-btn" onclick="window.print()">🖨 Print cut list</button>
       <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut.toFixed(0)})">📋 Copy</button>
     </div>
+    <button class="reset-btn" onclick="resetTab('tab-cutlist')">↺ Start over</button>
   `;
 
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1174,7 +1334,8 @@ function calcWeight() {
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">🖨 Print</button>
       <button class="act-btn" onclick="copyWeightResult(${totalWeight.toFixed(2)},${weightPerPiece.toFixed(2)},${weightPerMetre.toFixed(3)},${Q})">📋 Copy</button>
-    </div>`;
+    </div>
+    <button class="reset-btn" onclick="resetTab('tab-weight')">↺ Start over</button>`;
   box.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
@@ -1184,10 +1345,421 @@ function copyWeightResult(total,perPiece,perM,qty) {
   copy(txt, event.target);
 }
 
+
+// ════════════════════════════════════════
+// ANGLE CUTS CALCULATOR
+// ════════════════════════════════════════
+let aCutType = 'single';
+let aEndType = 'mitre';
+
+const ANGLE_WIDTH_PRESETS = [20,25,30,38,40,50,65,75,100];
+
+function setAnglePreset(val) {
+  document.getElementById('a-angle').value = val;
+  document.querySelectorAll('.angle-presets .chip').forEach(c => {
+    c.classList.toggle('on', parseFloat(c.textContent) === val);
+  });
+}
+
+function setCutType(type) {
+  aCutType = type;
+  document.getElementById('ct-single').classList.toggle('active', type === 'single');
+  document.getElementById('ct-double').classList.toggle('active', type === 'double');
+  const wrap = document.getElementById('end-type-wrap');
+  wrap.classList.toggle('show', type === 'double');
+  document.getElementById('a-results').className = 'results';
+}
+
+function setEndType(type) {
+  aEndType = type;
+  document.getElementById('et-mitre').classList.toggle('active', type === 'mitre');
+  document.getElementById('et-parallel').classList.toggle('active', type === 'parallel');
+  document.getElementById('a-results').className = 'results';
+}
+
+function calcAngle() {
+  const box = document.getElementById('a-results');
+  box.className = 'results show';
+
+  const w = parseFloat(document.getElementById('a-width').value);
+  const L = parseFloat(document.getElementById('a-length').value);
+  const deg = parseFloat(document.getElementById('a-angle').value);
+
+  // Clear highlights
+  document.querySelectorAll('#tab-angle input').forEach(el => el.style.borderColor = '');
+
+  if (!w || !L || !deg) {
+    const missing = [];
+    if (!w) missing.push('a-width');
+    if (!L) missing.push('a-length');
+    if (!deg) missing.push('a-angle');
+    missing.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.style.borderColor = 'var(--red)'; el.addEventListener('input', () => el.style.borderColor = '', {once:true}); }
+    });
+    box.innerHTML = errorBox('Fill in all fields — empty fields are highlighted in red.');
+    return;
+  }
+  if (deg <= 0 || deg >= 90) {
+    box.innerHTML = errorBox('Angle must be between 1° and 89°. Use 45° for a standard mitre.');
+    return;
+  }
+  if (w >= L) {
+    box.innerHTML = errorBox('Material width cannot be larger than the piece length.');
+    return;
+  }
+
+  const rad = deg * Math.PI / 180;
+  const cutFace = w / Math.sin(rad);
+  const offset = w / Math.tan(rad); // how much longer the long point is vs short point
+
+  let shortPt, longPt, longPtLong, overallSP, overallLP, diagramHtml;
+
+  if (aCutType === 'single') {
+    shortPt = L;
+    longPt = L + offset;
+    diagramHtml = buildAngleDiagram('single', null, w, L, deg, offset);
+  } else if (aEndType === 'mitre') {
+    // Both ends mirrored — standard mitre joint
+    // Short point to short point = L (user input)
+    // Long point to long point = L + 2*offset
+    shortPt = L;
+    longPt = L + offset; // each end adds one offset
+    overallLP = L + 2 * offset;
+    diagramHtml = buildAngleDiagram('double-mitre', null, w, L, deg, offset);
+  } else {
+    // Parallel — both ends lean same direction (parallelogram)
+    // Overall piece: short point = L, long point = L + offset (same as single, just both ends cut)
+    shortPt = L;
+    longPt = L + offset;
+    overallLP = L + offset; // long-to-long same as long point (parallel shift)
+    diagramHtml = buildAngleDiagram('double-parallel', null, w, L, deg, offset);
+  }
+
+  const tipMap = {
+    22.5: 'Mark both points, then use a sliding bevel set to 22.5° to verify the cut line.',
+    30:   'A 30° cut removes less material than 45°. Good for shallow angle joins.',
+    45:   'Classic mitre. Mark short and long points, ruler between them — draw a line between the two marks.',
+    60:   'A steep cut — the long point extends significantly. Double-check your long point mark.',
+    67.5: 'Use a sliding bevel or digital angle finder to verify this less common angle.'
+  };
+  const tip = tipMap[deg] || 'Mark the short point and long point on opposite edges, then connect them with a straight line.';
+
+  const is45 = Math.abs(deg - 45) < 0.1;
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">CUT FACE LENGTH</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <div class="rh-value">${cutFace.toFixed(1)}</div>
+        <div class="rh-unit">mm</div>
+      </div>
+      <div class="rh-sub">The diagonal cut line across your ${w}mm material at ${deg}°</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">Short point</div>
+        <div class="stat-val">${shortPt.toFixed(1)} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Long point</div>
+        <div class="stat-val">${longPt.toFixed(1)} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Offset (SP→LP)</div>
+        <div class="stat-val">${offset.toFixed(1)} <span class="u">mm</span></div>
+      </div>
+      ${aCutType === 'double' && aEndType === 'mitre' ? `
+      <div class="stat">
+        <div class="stat-label">Long pt to long pt</div>
+        <div class="stat-val">${overallLP.toFixed(1)} <span class="u">mm</span></div>
+      </div>` : `
+      <div class="stat">
+        <div class="stat-label">Cut angle</div>
+        <div class="stat-val">${deg}° <span class="u">from square</span></div>
+      </div>`}
+    </div>
+
+    ${diagramHtml}
+
+    <div class="marking-tip">
+      <strong>Workshop tip:</strong> ${tip}
+    </div>
+
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">🖨 Print</button>
+      <button class="act-btn" onclick="copyAngleResult(${cutFace.toFixed(1)},${shortPt.toFixed(1)},${longPt.toFixed(1)},${offset.toFixed(1)},${deg})">📋 Copy</button>
+    </div>
+    <button class="reset-btn" onclick="resetTab('tab-angle')">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── SVG DIAGRAM GENERATOR ──
+function buildAngleDiagram(type, _, matW, L, deg, offset) {
+  const svgW = 500;
+  const DIM_TOP = 28;    // space above piece for top dimension line
+  const DIM_BOT = 28;    // space below for bottom dimension line
+  const DIM_LEFT = 10;   // left margin
+  const DIM_RIGHT = 10;  // right margin
+  const PIECE_H = 70;    // visual height of the piece (represents material width)
+  const LABEL_H = 20;    // space for bottom labels
+
+  const totalH = DIM_TOP + PIECE_H + DIM_BOT + LABEL_H;
+
+  // Scale: fit the longest dimension (longPt or longPt+offset for mitre) into drawing area
+  const drawW = svgW - DIM_LEFT - DIM_RIGHT - 60; // leave room for side labels
+  const xOff = DIM_LEFT + 30;
+
+  let maxLen;
+  if (type === 'double-mitre') maxLen = L + 2 * offset;
+  else maxLen = L + offset;
+
+  const scale = drawW / maxLen;
+  const lScaled = L * scale;
+  const offScaled = offset * scale;
+
+  const pieceTop = DIM_TOP;
+  const pieceBot = DIM_TOP + PIECE_H;
+
+  // Piece polygon points depend on cut type
+  let points = '';
+  let shortLeft, shortRight, longLeft, longRight;
+
+  if (type === 'single') {
+    // Left end: square. Right end: angled (long top, short bottom)
+    // TL, TR-long, BR-short, BL
+    const x0 = xOff;
+    const xShort = xOff + lScaled;
+    const xLong = xOff + lScaled + offScaled;
+    points = `${x0},${pieceTop} ${xLong},${pieceTop} ${xShort},${pieceBot} ${x0},${pieceBot}`;
+    shortLeft = x0; shortRight = xShort; longLeft = x0; longRight = xLong;
+
+  } else if (type === 'double-mitre') {
+    // Left end: long top-left, short bottom-left
+    // Right end: short top-right, long bottom-right  (mirror)
+    // Actually: left cut — long point at top, right cut — long point at bottom
+    const x0Short = xOff;                         // bottom-left short
+    const x0Long = xOff + offScaled;              // top-left long
+    const xRShort = xOff + lScaled + offScaled;   // top-right short (mirror)  
+    const xRLong = xOff + lScaled + 2*offScaled;  // bottom-right long
+    points = `${x0Long},${pieceTop} ${xRShort},${pieceTop} ${xRLong},${pieceBot} ${x0Short},${pieceBot}`;
+    shortLeft = x0Short; shortRight = xRShort;
+    longLeft = x0Long; longRight = xRLong;
+
+  } else {
+    // double-parallel: both ends lean same direction
+    // Left: long top, short bottom. Right: long top, short bottom (same lean)
+    const x0Long = xOff;
+    const x0Short = xOff + offScaled;  // no — for parallel, left short is at bottom-left with offset
+    // Actually parallel: TL=offset, TR=L+offset, BR=L+offset+offset... no
+    // Parallel: left end same as single left. Right end same lean direction.
+    // Left end: square left side
+    // Wait — let me re-think parallel.
+    // Parallel means: piece is a parallelogram. Both cuts lean same way.
+    // Points: TL(offset,0), TR(offset+L,0), BR(offset+L+offset, H)... no
+    // Simplest: TL(0+offScaled, top), TR(offScaled+lScaled, top), BR(lScaled, bot), BL(0, bot)
+    // This creates a parallelogram leaning right
+    const tlx = xOff + offScaled;
+    const trx = xOff + offScaled + lScaled;
+    const brx = xOff + lScaled;
+    const blx = xOff;
+    points = `${tlx},${pieceTop} ${trx},${pieceTop} ${brx},${pieceBot} ${blx},${pieceBot}`;
+    shortLeft = blx; shortRight = brx;
+    longLeft = tlx; longRight = trx;
+  }
+
+  // ── Dimension lines ──
+  const arrowSize = 4;
+
+  function hArrow(x1, x2, y, color, label, labelBelow) {
+    const dir = x2 > x1 ? 1 : -1;
+    const mid = (x1 + x2) / 2;
+    const labelY = labelBelow ? y + 14 : y - 6;
+    return `
+      <line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${color}" stroke-width="1.5" marker-start="url(#arr-${color.replace('#','').replace('var(--','').replace(')','').replace('-','_')})" marker-end="url(#arr-${color.replace('#','').replace('var(--','').replace(')','').replace('-','_')})"/>
+      <text x="${mid}" y="${labelY}" text-anchor="middle" fill="${color}" font-size="11" font-family="DM Mono,monospace" font-weight="500">${label}</text>`;
+  }
+
+  function tickLine(x, y1, y2, color) {
+    return `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${color}" stroke-width="1" stroke-dasharray="2,2"/>`;
+  }
+
+  // Arrowhead markers
+  const defs = `<defs>
+    <marker id="arr-green" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#52c47a"/>
+    </marker>
+    <marker id="arr-green-rev" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#52c47a"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#f5820a"/>
+    </marker>
+    <marker id="arr-blue" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#5aabf5"/>
+    </marker>
+    <marker id="a-start" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#52c47a"/>
+    </marker>
+    <marker id="a-start-o" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#f5820a"/>
+    </marker>
+  </defs>`;
+
+  // ── Build SVG pieces ──
+  let svg = '';
+
+  // Background
+  svg += `<rect width="${svgW}" height="${totalH}" fill="#1a1a1a" rx="6"/>`;
+
+  // Piece fill
+  svg += `<polygon points="${points}" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>`;
+
+  // Cut line(s) — orange
+  if (type === 'single') {
+    const xLong = xOff + lScaled + offScaled;
+    const xShort = xOff + lScaled;
+    svg += `<line x1="${xLong}" y1="${pieceTop}" x2="${xShort}" y2="${pieceBot}" stroke="#f5820a" stroke-width="2.5" stroke-linecap="round"/>`;
+  } else if (type === 'double-mitre') {
+    const x0Short = xOff;
+    const x0Long = xOff + offScaled;
+    const xRShort = xOff + lScaled + offScaled;
+    const xRLong = xOff + lScaled + 2*offScaled;
+    svg += `<line x1="${x0Long}" y1="${pieceTop}" x2="${x0Short}" y2="${pieceBot}" stroke="#f5820a" stroke-width="2.5" stroke-linecap="round"/>`;
+    svg += `<line x1="${xRShort}" y1="${pieceTop}" x2="${xRLong}" y2="${pieceBot}" stroke="#f5820a" stroke-width="2.5" stroke-linecap="round"/>`;
+  } else {
+    const tlx = xOff + offScaled;
+    const brx = xOff + lScaled;
+    const blx = xOff;
+    const trx = xOff + offScaled + lScaled;
+    svg += `<line x1="${tlx}" y1="${pieceTop}" x2="${blx}" y2="${pieceBot}" stroke="#f5820a" stroke-width="2.5" stroke-linecap="round"/>`;
+    svg += `<line x1="${trx}" y1="${pieceTop}" x2="${brx}" y2="${pieceBot}" stroke="#f5820a" stroke-width="2.5" stroke-linecap="round"/>`;
+  }
+
+  // ── Dimension annotations ──
+  const dimY_top = pieceTop - 14;
+  const dimY_bot = pieceBot + 16;
+
+  if (type === 'single') {
+    const xLong = xOff + lScaled + offScaled;
+    const xShort = xOff + lScaled;
+    // Short point (bottom) — green
+    svg += tickLine(xOff, pieceBot, dimY_bot+4, '#52c47a');
+    svg += tickLine(xShort, pieceBot, dimY_bot+4, '#52c47a');
+    svg += `<line x1="${xOff}" y1="${dimY_bot}" x2="${xShort}" y2="${dimY_bot}" stroke="#52c47a" stroke-width="1.5" marker-end="url(#arr-green)" marker-start="url(#a-start)"/>`;
+    svg += `<text x="${(xOff+xShort)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">SP ${L.toFixed(0)}mm</text>`;
+    // Long point (top) — blue
+    svg += tickLine(xOff, pieceTop, dimY_top-4, '#5aabf5');
+    svg += tickLine(xLong, pieceTop, dimY_top-4, '#5aabf5');
+    svg += `<line x1="${xOff}" y1="${dimY_top}" x2="${xLong}" y2="${dimY_top}" stroke="#5aabf5" stroke-width="1.5" marker-end="url(#arr-blue)" marker-start="url(#a-start)"/>`;
+    svg += `<text x="${(xOff+xLong)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">LP ${(L+offset).toFixed(1)}mm</text>`;
+    // Width label on left side
+    svg += `<line x1="${xOff-8}" y1="${pieceTop}" x2="${xOff-8}" y2="${pieceBot}" stroke="#888" stroke-width="1"/>`;
+    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${matW}mm</text>`;
+
+  } else if (type === 'double-mitre') {
+    const x0Short = xOff;
+    const x0Long = xOff + offScaled;
+    const xRShort = xOff + lScaled + offScaled;
+    const xRLong = xOff + lScaled + 2*offScaled;
+    // SP to SP (bottom — green)
+    svg += tickLine(x0Short, pieceBot, dimY_bot+4, '#52c47a');
+    svg += tickLine(xRLong, pieceBot, dimY_bot+4, '#52c47a');
+    svg += `<line x1="${x0Short}" y1="${dimY_bot}" x2="${xRLong}" y2="${dimY_bot}" stroke="#52c47a" stroke-width="1.5" marker-end="url(#arr-green)" marker-start="url(#a-start)"/>`;
+    svg += `<text x="${(x0Short+xRLong)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">LP→LP ${(L+2*offset).toFixed(1)}mm</text>`;
+    // SP to SP top — blue
+    svg += tickLine(x0Long, pieceTop, dimY_top-4, '#5aabf5');
+    svg += tickLine(xRShort, pieceTop, dimY_top-4, '#5aabf5');
+    svg += `<line x1="${x0Long}" y1="${dimY_top}" x2="${xRShort}" y2="${dimY_top}" stroke="#5aabf5" stroke-width="1.5" marker-end="url(#arr-blue)" marker-start="url(#a-start)"/>`;
+    svg += `<text x="${(x0Long+xRShort)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">SP→SP ${L.toFixed(0)}mm</text>`;
+    // Width label
+    svg += `<line x1="${xOff-8}" y1="${pieceTop}" x2="${xOff-8}" y2="${pieceBot}" stroke="#888" stroke-width="1"/>`;
+    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${matW}mm</text>`;
+
+  } else {
+    // double-parallel
+    const tlx = xOff + offScaled;
+    const trx = xOff + offScaled + lScaled;
+    const brx = xOff + lScaled;
+    const blx = xOff;
+    // SP to SP bottom — green
+    svg += tickLine(blx, pieceBot, dimY_bot+4, '#52c47a');
+    svg += tickLine(brx, pieceBot, dimY_bot+4, '#52c47a');
+    svg += `<line x1="${blx}" y1="${dimY_bot}" x2="${brx}" y2="${dimY_bot}" stroke="#52c47a" stroke-width="1.5" marker-end="url(#arr-green)" marker-start="url(#a-start)"/>`;
+    svg += `<text x="${(blx+brx)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">SP ${L.toFixed(0)}mm</text>`;
+    // LP to LP top — blue
+    svg += tickLine(tlx, pieceTop, dimY_top-4, '#5aabf5');
+    svg += tickLine(trx, pieceTop, dimY_top-4, '#5aabf5');
+    svg += `<line x1="${tlx}" y1="${dimY_top}" x2="${trx}" y2="${dimY_top}" stroke="#5aabf5" stroke-width="1.5" marker-end="url(#arr-blue)" marker-start="url(#a-start)"/>`;
+    svg += `<text x="${(tlx+trx)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">LP ${(L+offset).toFixed(1)}mm</text>`;
+    // Width label
+    svg += `<line x1="${xOff-8}" y1="${pieceTop}" x2="${xOff-8}" y2="${pieceBot}" stroke="#888" stroke-width="1"/>`;
+    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${matW}mm</text>`;
+  }
+
+  // Legend
+  const legY = totalH - 6;
+  svg += `<circle cx="10" cy="${legY-3}" r="4" fill="#f5820a"/>`;
+  svg += `<text x="18" y="${legY}" fill="#888" font-size="9" font-family="DM Mono,monospace">Cut line</text>`;
+  svg += `<circle cx="70" cy="${legY-3}" r="4" fill="#52c47a"/>`;
+  svg += `<text x="78" y="${legY}" fill="#888" font-size="9" font-family="DM Mono,monospace">Short pt (SP)</text>`;
+  svg += `<circle cx="160" cy="${legY-3}" r="4" fill="#5aabf5"/>`;
+  svg += `<text x="168" y="${legY}" fill="#888" font-size="9" font-family="DM Mono,monospace">Long pt (LP)</text>`;
+
+  return `<div class="angle-diagram-card">
+    <div class="angle-diagram-label">Cut diagram — mark these points on your material</div>
+    <svg viewBox="0 0 ${svgW} ${totalH}" xmlns="http://www.w3.org/2000/svg">
+      ${defs}${svg}
+    </svg>
+  </div>`;
+}
+
+function copyAngleResult(face, sp, lp, offset, deg) {
+  const txt = `GapCalc — Angle Cuts\n---\nCut angle: ${deg}°\nCut face length: ${face}mm\nShort point: ${sp}mm\nLong point: ${lp}mm\nOffset (SP to LP): ${offset}mm\n\ngapcalc-za.netlify.app`;
+  copy(txt, event.target);
+}
+
+
+// ════════════════════════════════════════
+// RESET FUNCTIONS
+// ════════════════════════════════════════
+function resetTab(tabId) {
+  const tab = document.getElementById(tabId);
+  // Clear all inputs
+  tab.querySelectorAll('input').forEach(el => {
+    el.value = '';
+    el.style.borderColor = '';
+  });
+  // Clear all chip highlights
+  tab.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  // Reset profile buttons to first active
+  tab.querySelectorAll('.profile-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  tab.querySelectorAll('.cut-type-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  tab.querySelectorAll('.end-type-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  // Hide end-type-wrap
+  const etw = tab.querySelector('#end-type-wrap');
+  if (etw) etw.classList.remove('show');
+  // Hide results
+  const results = tab.querySelector('.results');
+  if (results) { results.className = 'results'; results.innerHTML = ''; }
+  // Reset weight profile to flatbar
+  if (tabId === 'tab-weight') { wProfile = 'flatbar'; renderDimFields('flatbar'); }
+  if (tabId === 'tab-angle') aCutType = 'single';
+  // Scroll to top of tab
+  tab.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // Enter key triggers calculate
 document.getElementById('tab-gaps').addEventListener('keydown', e => { if (e.key==='Enter') calcGaps(); });
 document.getElementById('tab-cutlist').addEventListener('keydown', e => { if (e.key==='Enter') calcCutList(); });
 document.getElementById('tab-weight').addEventListener('keydown', e => { if (e.key==='Enter') calcWeight(); });
+document.getElementById('tab-angle').addEventListener('keydown', e => { if (e.key==='Enter') calcAngle(); });
+
+// Init angle width presets
+renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');
 
 // Init weight calculator dimensions
 renderDimFields('flatbar');
