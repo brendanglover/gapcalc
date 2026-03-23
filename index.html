@@ -402,11 +402,163 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 .dim-row { display: flex; gap: 8px; margin-bottom: 10px; }
 .dim-row:last-child { margin-bottom: 0; }
 .dim-row .input-group { flex: 1; margin-bottom: 0; }
+
+/* ═══════════════════════════════
+   HOMEPAGE
+   ═══════════════════════════════ */
+.home-hero {
+  padding: 28px 18px 20px;
+  max-width: 640px; margin: 0 auto;
+  text-align: center;
+}
+.home-hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px; letter-spacing: 3px;
+  color: var(--text); line-height: 1.1;
+  margin-bottom: 10px;
+}
+.home-hero-title span { color: var(--accent); }
+.home-hero-sub {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.6; max-width: 420px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; padding: 0 18px 24px;
+  max-width: 640px; margin: 0 auto;
+}
+.feature-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 14px;
+  cursor: pointer; transition: all 0.2s;
+  text-align: left;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.feature-card:hover {
+  border-color: var(--accent);
+  background: rgba(245,130,10,0.05);
+  transform: translateY(-2px);
+}
+.feature-card-icon {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; color: var(--accent);
+  letter-spacing: 1px;
+}
+.feature-card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px; letter-spacing: 1.5px;
+  color: var(--text); line-height: 1.1;
+}
+.feature-card-desc {
+  font-size: 11px; color: var(--text2);
+  line-height: 1.5;
+}
+.feature-card-arrow {
+  font-size: 12px; color: var(--text3);
+  margin-top: auto; padding-top: 6px;
+  letter-spacing: 1px;
+}
+.feature-card:hover .feature-card-arrow { color: var(--accent); }
+
+/* ═══════════════════════════════
+   BACK BUTTON
+   ═══════════════════════════════ */
+.back-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 18px;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text2); cursor: pointer;
+  background: none; border: none;
+  transition: color 0.2s;
+  max-width: 640px; margin: 0 auto;
+  width: 100%;
+}
+.back-btn:hover { color: var(--accent); }
+.back-btn-wrap {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══════════════════════════════
+   ROD ESTIMATOR
+   ═══════════════════════════════ */
+.skill-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+}
+.skill-btn {
+  padding: 12px 8px; border: 2px solid var(--border);
+  background: var(--surface2); color: var(--text2);
+  border-radius: 8px; font-size: 11px; font-weight: 700;
+  cursor: pointer; text-align: center;
+  transition: all 0.2s; line-height: 1.4;
+}
+.skill-btn .skill-level { font-family: 'Bebas Neue',sans-serif; font-size: 16px; display: block; margin-bottom: 4px; letter-spacing: 1px; }
+.skill-btn .skill-desc { font-size: 10px; font-weight: 400; color: var(--text3); line-height: 1.4; display: block; margin-top: 3px; }
+.skill-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+.skill-btn.active .skill-desc { color: var(--accent); opacity: 0.7; }
+.skill-btn:not(.active):hover { border-color: #555; color: var(--text); }
+
+.rod-option-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.rod-opt-btn {
+  padding: 11px 8px; border: 2px solid var(--border);
+  background: var(--surface2); color: var(--text2);
+  border-radius: 8px; font-size: 11px; font-weight: 700;
+  cursor: pointer; text-align: left; transition: all 0.2s;
+  line-height: 1.4;
+}
+.rod-opt-btn .rod-opt-code { font-family: 'DM Mono',monospace; font-size: 14px; display: block; margin-bottom: 2px; }
+.rod-opt-btn .rod-opt-hint { font-size: 10px; font-weight: 400; color: var(--text3); }
+.rod-opt-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+.rod-opt-btn.active .rod-opt-hint { color: var(--accent); opacity: 0.7; }
+
+.position-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.pos-btn {
+  padding: 11px 8px; border: 2px solid var(--border);
+  background: var(--surface2); color: var(--text2);
+  border-radius: 8px; font-size: 11px; font-weight: 700;
+  cursor: pointer; text-align: left; transition: all 0.2s; line-height: 1.5;
+}
+.pos-btn .pos-name { font-family: 'Bebas Neue',sans-serif; font-size: 14px; display: block; letter-spacing: 1px; }
+.pos-btn .pos-code { font-family: 'DM Mono',monospace; font-size: 11px; color: var(--text3); }
+.pos-btn .pos-hint { font-size: 10px; font-weight: 400; color: var(--text3); display: block; margin-top: 2px; }
+.pos-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+.pos-btn.active .pos-code, .pos-btn.active .pos-hint { color: var(--accent); opacity: 0.7; }
+
+.rod-recommendation {
+  background: var(--surface2); border-radius: 8px;
+  padding: 16px; margin-bottom: 10px;
+  border-left: 3px solid var(--accent);
+}
+.rod-rec-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); margin-bottom: 8px; }
+.rod-rec-name { font-family: 'Bebas Neue',sans-serif; font-size: 28px; color: var(--accent); letter-spacing: 2px; line-height: 1; margin-bottom: 4px; }
+.rod-rec-why { font-size: 12px; color: var(--text2); line-height: 1.6; margin-top: 6px; }
+.rod-rec-tip { font-size: 11px; color: #8ac8ff; background: var(--blue-dim); border-radius: 6px; padding: 8px 10px; margin-top: 8px; line-height: 1.5; }
+
+.pack-result {
+  background: var(--surface2); border-radius: 8px;
+  padding: 14px; margin-bottom: 8px;
+}
+.pack-label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.pack-val { font-family: 'Bebas Neue',sans-serif; font-size: 42px; line-height: 1; color: var(--green); }
+.pack-unit { font-family: 'DM Mono',monospace; font-size: 16px; color: var(--text2); }
+.pack-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
 </style>
 </head>
 <body>
 
-<header onclick="switchTab('gaps')" style="cursor:pointer;" title="Back to start">
+<header onclick="goHome()" style="cursor:pointer;" title="Back to home">
   <div class="logo-mark">
     <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
       <rect x="2" y="8" width="3" height="8" rx="1"/>
@@ -421,17 +573,70 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   </div>
 </header>
 
-<div class="nav">
-  <button class="nav-btn active" onclick="switchTab('gaps')">GAP CALCULATOR</button>
-  <button class="nav-btn" onclick="switchTab('cutlist')">✂ CUT LIST</button>
-  <button class="nav-btn" onclick="switchTab('weight')">⚖ WEIGHT</button>
-  <button class="nav-btn" onclick="switchTab('angle')">∠ ANGLE CUTS</button>
+<!-- Back button bar — hidden on homepage -->
+<div class="back-btn-wrap" id="back-bar" style="display:none">
+  <div style="display:flex;align-items:center;padding:0 8px;max-width:640px;margin:0 auto;width:100%;">
+    <button class="back-btn" onclick="goHome()" style="flex:1;text-align:left;width:auto;">&#8592; ALL TOOLS</button>
+    <span id="current-tool-name" style="flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent);"></span>
+    <div style="flex:1;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     HOMEPAGE
+     ═══════════════════════════════════════ -->
+<div id="tab-home" class="section active" style="padding-bottom:40px;padding-left:0;padding-right:0;max-width:100%">
+
+  <div class="home-hero">
+    <div class="home-hero-title">YOUR WORKSHOP,<br><span>CALCULATED.</span></div>
+    <p class="home-hero-sub">Free calculators built for welders, fabricators, and makers. Plan your gaps, cuts, material weight, and angles before you touch the grinder — then get back to building.</p>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="feature-card" onclick="openTool('gaps')">
+      <div class="feature-card-icon">⊞</div>
+      <div class="feature-card-title">GAP CALCULATOR</div>
+      <div class="feature-card-desc">Space bars or slats evenly across any frame. Enter your frame size and bar width — get exact gap measurements.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+    <div class="feature-card" onclick="openTool('cutlist')">
+      <div class="feature-card-icon">✂</div>
+      <div class="feature-card-title">CUT LIST</div>
+      <div class="feature-card-desc">Plan your cuts before ordering. Know how many lengths to buy, cuts per length, offcut sizes, and waste percentage.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+    <div class="feature-card" onclick="openTool('weight')">
+      <div class="feature-card-icon">⚖</div>
+      <div class="feature-card-title">WEIGHT CALCULATOR</div>
+      <div class="feature-card-desc">Calculate your total order weight before heading to the supplier. Includes a bakkie load indicator so you know what you can carry.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+    <div class="feature-card" onclick="openTool('angle')">
+      <div class="feature-card-icon">∠</div>
+      <div class="feature-card-title">ANGLE CUTS</div>
+      <div class="feature-card-desc">Get short point, long point, and a cut diagram for any angle. Mark directly from the diagram — no guesswork at the grinder.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+    <div class="feature-card" onclick="openTool('rods')">
+      <div class="feature-card-icon">▬</div>
+      <div class="feature-card-title">ROD ESTIMATOR</div>
+      <div class="feature-card-desc">Not sure which rod to use or how many to buy? Get a rod recommendation for your job and an accurate quantity estimate.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+  </div>
+
 </div>
 
 <!-- ═══════════════════════════════════════
      TAB 1 — GAP CALCULATOR
      ═══════════════════════════════════════ -->
-<div class="section active" id="tab-gaps">
+<div class="section" id="tab-gaps">
 
   <div style="height:8px"></div>
 
@@ -731,6 +936,33 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <div class="formula-note">Bars run edge-to-edge. Mark from short point and long point — draw a line between them.</div>
   </div>
 
+  <!-- Cut type -->
+  <div class="card">
+    <div class="card-label">Cut Type</div>
+    <div class="cut-type-grid">
+      <button class="cut-type-btn active" id="ct-single" onclick="setCutType('single')">
+        <span class="cicon">◺▬</span>
+        Single end cut<br><span style="font-weight:400;font-size:10px;color:var(--text3)">One angled end, one square</span>
+      </button>
+      <button class="cut-type-btn" id="ct-double" onclick="setCutType('double')">
+        <span class="cicon">◹▬◸</span>
+        Both ends cut<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Mitre or parallel angles</span>
+      </button>
+    </div>
+    <!-- Double end sub-options -->
+    <div class="end-type-wrap" id="end-type-wrap">
+      <div class="end-type-label">How are the two cuts oriented?</div>
+      <div class="end-type-grid">
+        <button class="end-type-btn active" id="et-mitre" onclick="setEndType('mitre')">
+          ◹▬◸ Mirrored (mitre)<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Corner joints, frames</span>
+        </button>
+        <button class="end-type-btn" id="et-parallel" onclick="setEndType('parallel')">
+          ◺▬◺ Parallel (same lean)<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Diagonal bracing, parallelogram</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Material width -->
   <div class="card">
     <div class="card-label">Material Width</div>
@@ -784,36 +1016,263 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     </div>
   </div>
 
-  <!-- Cut type -->
+  <button class="go-btn" onclick="calcAngle()">∠ CALCULATE CUT</button>
+
+  <div class="results" id="a-results"></div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 5 — ROD ESTIMATOR
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-rods">
+
+  <div style="height:8px"></div>
+
+  <!-- SKILL LEVEL FIRST -->
   <div class="card">
-    <div class="card-label">Cut Type</div>
-    <div class="cut-type-grid">
-      <button class="cut-type-btn active" id="ct-single" onclick="setCutType('single')">
-        <span class="cicon">◺▬</span>
-        Single end cut<br><span style="font-weight:400;font-size:10px;color:var(--text3)">One angled end, one square</span>
+    <div class="card-label">Your Skill Level</div>
+    <div class="input-meta-label" style="margin-bottom:10px;font-size:12px;color:var(--text2);">Be honest — this helps the tool give you the right guidance and a realistic quantity estimate.</div>
+    <div class="skill-grid">
+      <button class="skill-btn active" id="skill-beginner" onclick="setSkill('beginner')">
+        <span class="skill-level">BEGINNER</span>
+        New to welding, still learning to strike an arc and run a consistent bead.
+        <span class="skill-desc">Extra rod allowance added for learning waste.</span>
       </button>
-      <button class="cut-type-btn" id="ct-double" onclick="setCutType('double')">
-        <span class="cicon">◹▬◸</span>
-        Both ends cut<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Mitre or parallel angles</span>
+      <button class="skill-btn" id="skill-intermediate" onclick="setSkill('intermediate')">
+        <span class="skill-level">INTERMEDIATE</span>
+        Comfortable with basic joints, working on consistency and technique.
+        <span class="skill-desc">Moderate allowance for restarts and imperfect runs.</span>
+      </button>
+      <button class="skill-btn" id="skill-experienced" onclick="setSkill('experienced')">
+        <span class="skill-level">EXPERIENCED</span>
+        Confident across multiple positions and joint types, understand settings well.
+        <span class="skill-desc">Tight allowance — minimal wastage expected.</span>
       </button>
     </div>
-    <!-- Double end sub-options -->
-    <div class="end-type-wrap" id="end-type-wrap">
-      <div class="end-type-label">How are the two cuts oriented?</div>
-      <div class="end-type-grid">
-        <button class="end-type-btn active" id="et-mitre" onclick="setEndType('mitre')">
-          ◹▬◸ Mirrored (mitre)<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Corner joints, frames</span>
-        </button>
-        <button class="end-type-btn" id="et-parallel" onclick="setEndType('parallel')">
-          ◺▬◺ Parallel (same lean)<br><span style="font-weight:400;font-size:10px;color:var(--text3)">Diagonal bracing, parallelogram</span>
-        </button>
+  </div>
+
+  <!-- DIVIDER -->
+  <div style="padding:4px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text3);text-align:center;">PART 1 — ROD SELECTOR</div>
+
+  <!-- MATERIAL -->
+  <div class="card">
+    <div class="card-label">Base Material</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px;" id="material-hint">What metal are you welding?</div>
+    <div class="rod-option-grid">
+      <button class="rod-opt-btn active" id="rmat-mild" onclick="setRodMaterial('mild')">
+        <span class="rod-opt-code">Mild Steel</span>
+        <span class="rod-opt-hint">Most common — gates, frames, furniture, trailers</span>
+      </button>
+      <button class="rod-opt-btn" id="rmat-galv" onclick="setRodMaterial('galv')">
+        <span class="rod-opt-code">Galvanised Steel</span>
+        <span class="rod-opt-hint">Zinc-coated — outdoor structures, gutters</span>
+      </button>
+      <button class="rod-opt-btn" id="rmat-cast" onclick="setRodMaterial('cast')">
+        <span class="rod-opt-code">Cast Iron</span>
+        <span class="rod-opt-hint">Engine blocks, brackets, old machinery</span>
+      </button>
+      <button class="rod-opt-btn" id="rmat-ss" onclick="setRodMaterial('ss')">
+        <span class="rod-opt-code">Stainless Steel</span>
+        <span class="rod-opt-hint">Braais, food equipment, handrails</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- JOINT TYPE -->
+  <div class="card">
+    <div class="card-label">Joint Type</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px;" id="joint-hint">How are the two pieces of metal meeting?</div>
+    <div class="rod-option-grid" id="joint-options">
+      <button class="rod-opt-btn active" id="joint-butt" onclick="setJoint('butt')">
+        <span class="rod-opt-code">Butt Joint</span>
+        <span class="rod-opt-hint">Two flat pieces meeting end to end — like joining two plates flat</span>
+      </button>
+      <button class="rod-opt-btn" id="joint-fillet" onclick="setJoint('fillet')">
+        <span class="rod-opt-code">Fillet / T-Joint</span>
+        <span class="rod-opt-hint">One piece meets another at 90° — like a shelf bracket or table leg</span>
+      </button>
+      <button class="rod-opt-btn" id="joint-lap" onclick="setJoint('lap')">
+        <span class="rod-opt-code">Lap Joint</span>
+        <span class="rod-opt-hint">Two pieces overlapping — common in sheet metal and thin plate</span>
+      </button>
+      <button class="rod-opt-btn" id="joint-corner" onclick="setJoint('corner')">
+        <span class="rod-opt-code">Corner Joint</span>
+        <span class="rod-opt-hint">Two pieces meeting at a corner — like a box or frame corner</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- WELD POSITION -->
+  <div class="card">
+    <div class="card-label">Weld Position</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px;">The position you will be welding in. Shown with industry code for reference.</div>
+    <div class="position-grid">
+      <button class="pos-btn active" id="pos-1g" onclick="setPosition('1g')">
+        <span class="pos-name">FLAT</span>
+        <span class="pos-code">1G / 1F</span>
+        <span class="pos-hint">Welding on top of a horizontal surface — the easiest position</span>
+      </button>
+      <button class="pos-btn" id="pos-2g" onclick="setPosition('2g')">
+        <span class="pos-name">HORIZONTAL</span>
+        <span class="pos-code">2G / 2F</span>
+        <span class="pos-hint">Welding on the side of a vertical surface — pool wants to sag</span>
+      </button>
+      <button class="pos-btn" id="pos-3g" onclick="setPosition('3g')">
+        <span class="pos-name">VERTICAL UP</span>
+        <span class="pos-code">3G / 3F</span>
+        <span class="pos-hint">Welding upward on a vertical surface — requires good technique</span>
+      </button>
+      <button class="pos-btn" id="pos-3gd" onclick="setPosition('3gd')">
+        <span class="pos-name">VERTICAL DOWN</span>
+        <span class="pos-code">3G Down</span>
+        <span class="pos-hint">Welding downward — faster but less penetration</span>
+      </button>
+      <button class="pos-btn" id="pos-4g" onclick="setPosition('4g')">
+        <span class="pos-name">OVERHEAD</span>
+        <span class="pos-code">4G / 4F</span>
+        <span class="pos-hint">Welding underneath — most difficult, weld pool fights gravity</span>
+      </button>
+      <button class="pos-btn" id="pos-5g" onclick="setPosition('5g')">
+        <span class="pos-name">PIPE — FIXED</span>
+        <span class="pos-code">5G</span>
+        <span class="pos-hint">Pipe welded horizontally, you move around it — all positions combined</span>
+      </button>
+      <button class="pos-btn" id="pos-6g" onclick="setPosition('6g')">
+        <span class="pos-name">PIPE — INCLINED</span>
+        <span class="pos-code">6G</span>
+        <span class="pos-hint">Pipe at 45° — the most challenging, tests all skills at once</span>
+      </button>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcRodSelector()">▬ GET ROD RECOMMENDATION</button>
+  <div class="results" id="rod-selector-results"></div>
+
+  <!-- DIVIDER TO ESTIMATOR -->
+  <div style="padding:20px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text3);text-align:center;">PART 2 — ROD QUANTITY ESTIMATOR</div>
+
+  <!-- ROD DIAMETER -->
+  <div class="card">
+    <div class="card-label">Rod Diameter</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px;" id="rod-diam-hint">Select the rod size you are using. If unsure, 2.5mm is a good starting point for most hobby welders.</div>
+    <div class="rod-option-grid">
+      <button class="rod-opt-btn active" id="rd-25" onclick="setRodDiam(2.5)">
+        <span class="rod-opt-code">2.5mm</span>
+        <span class="rod-opt-hint">Thin material up to 4mm — good for beginners, easier to control</span>
+      </button>
+      <button class="rod-opt-btn" id="rd-315" onclick="setRodDiam(3.15)">
+        <span class="rod-opt-code">3.15mm</span>
+        <span class="rod-opt-hint">General purpose — most common size, suits 4–8mm material</span>
+      </button>
+      <button class="rod-opt-btn" id="rd-40" onclick="setRodDiam(4.0)">
+        <span class="rod-opt-code">4.0mm</span>
+        <span class="rod-opt-hint">Heavier plate 8mm+ — higher deposition, faster welding</span>
+      </button>
+      <button class="rod-opt-btn" id="rd-50" onclick="setRodDiam(5.0)">
+        <span class="rod-opt-code">5.0mm</span>
+        <span class="rod-opt-hint">Structural and heavy fabrication — industrial use</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MATERIAL THICKNESS -->
+  <div class="card">
+    <div class="card-label">Material Thickness</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Thickness of the thinner piece being welded</span>
+        <span class="input-meta-var">t</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="rod-thick" inputmode="decimal" placeholder="e.g. 3">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('rod-thick',1.5)">1.5mm</button>
+        <button class="chip" onclick="setVal('rod-thick',2)">2mm</button>
+        <button class="chip" onclick="setVal('rod-thick',3)">3mm</button>
+        <button class="chip" onclick="setVal('rod-thick',4)">4mm</button>
+        <button class="chip" onclick="setVal('rod-thick',5)">5mm</button>
+        <button class="chip" onclick="setVal('rod-thick',6)">6mm</button>
+        <button class="chip" onclick="setVal('rod-thick',8)">8mm</button>
+        <button class="chip" onclick="setVal('rod-thick',10)">10mm</button>
       </div>
     </div>
   </div>
 
-  <button class="go-btn" onclick="calcAngle()">∠ CALCULATE CUT</button>
+  <!-- TOTAL WELD LENGTH — Simple / Advanced -->
+  <div class="card">
+    <div class="card-label">Total Weld Length</div>
+    <!-- Mode toggle -->
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="rod-opt-btn active" id="weld-simple-btn" onclick="setWeldMode('simple')" style="flex:1;text-align:center">
+        <span class="rod-opt-code" style="text-align:center;display:block">SIMPLE</span>
+        <span class="rod-opt-hint" style="display:block;text-align:center">Count your joints</span>
+      </button>
+      <button class="rod-opt-btn" id="weld-advanced-btn" onclick="setWeldMode('advanced')" style="flex:1;text-align:center">
+        <span class="rod-opt-code" style="text-align:center;display:block">ADVANCED</span>
+        <span class="rod-opt-hint" style="display:block;text-align:center">Enter total mm</span>
+      </button>
+    </div>
 
-  <div class="results" id="a-results"></div>
+    <!-- SIMPLE MODE -->
+    <div id="weld-simple-mode">
+      <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:12px">How many individual welds (joints) does this job have? Then pick the approximate size of each weld.</div>
+      <div class="dim-row">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Number of joints</span></div>
+          <div class="input-wrap">
+            <input type="number" id="rod-joints" inputmode="numeric" placeholder="e.g. 18">
+            <span class="input-unit">pcs</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-meta-label" style="font-size:11px;color:var(--text2);margin-bottom:8px;margin-top:4px">Approximate weld size per joint:</div>
+      <div class="rod-option-grid">
+        <button class="rod-opt-btn active" id="wsize-small" onclick="setWeldSize('small')">
+          <span class="rod-opt-code">Small</span>
+          <span class="rod-opt-hint">~25mm — tack welds, thin tube, small brackets</span>
+        </button>
+        <button class="rod-opt-btn" id="wsize-medium" onclick="setWeldSize('medium')">
+          <span class="rod-opt-code">Medium</span>
+          <span class="rod-opt-hint">~50mm — general fabrication, most hobby projects</span>
+        </button>
+        <button class="rod-opt-btn" id="wsize-large" onclick="setWeldSize('large')">
+          <span class="rod-opt-code">Large</span>
+          <span class="rod-opt-hint">~100mm — heavier plate, full joint runs</span>
+        </button>
+        <button class="rod-opt-btn" id="wsize-full" onclick="setWeldSize('full')">
+          <span class="rod-opt-code">Full Run</span>
+          <span class="rod-opt-hint">~150mm+ — long continuous welds, structural</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ADVANCED MODE -->
+    <div id="weld-advanced-mode" style="display:none">
+      <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Add up the total length of all your welds combined and enter it here.</div>
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Total weld length</span>
+          <span class="input-meta-var">W</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="rod-weldlen" inputmode="decimal" placeholder="e.g. 2400">
+          <span class="input-unit">mm</span>
+        </div>
+        <div class="preset-row">
+          <button class="chip" onclick="setVal('rod-weldlen',500)">500mm</button>
+          <button class="chip" onclick="setVal('rod-weldlen',1000)">1m</button>
+          <button class="chip" onclick="setVal('rod-weldlen',2000)">2m</button>
+          <button class="chip" onclick="setVal('rod-weldlen',5000)">5m</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcRodEstimator()">▬ ESTIMATE RODS</button>
+  <div class="results" id="rod-estimator-results"></div>
 
 </div>
 
@@ -821,7 +1280,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   <p>GapCalc — free forever. No login. No data stored.</p>
   <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v1.2.4 &nbsp;·&nbsp; Updated 22 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.0.1 &nbsp;·&nbsp; Updated 23 March 2026</p>
 </footer>
 
 <script>
@@ -856,7 +1315,7 @@ function setVal(id, val) {
 // TAB SWITCHER — 3 tabs
 // ════════════════════════════════════════
 function switchTab(tab) {
-  const tabs = ['gaps','cutlist','weight','angle'];
+  const tabs = ['gaps','cutlist','weight','angle','rods'];
   document.querySelectorAll('.nav-btn').forEach((b,i) => b.classList.toggle('active', tabs[i] === tab));
   tabs.forEach(t => { const el = document.getElementById('tab-'+t); if (el) el.classList.toggle('active', t === tab); });
 }
@@ -1744,13 +2203,370 @@ function resetTab(tabId) {
   const etw = tab.querySelector('#end-type-wrap');
   if (etw) etw.classList.remove('show');
   // Hide results
-  const results = tab.querySelector('.results');
-  if (results) { results.className = 'results'; results.innerHTML = ''; }
+  const results = tab.querySelectorAll('.results');
+  results.forEach(r => { r.className = 'results'; r.innerHTML = ''; });
   // Reset weight profile to flatbar
   if (tabId === 'tab-weight') { wProfile = 'flatbar'; renderDimFields('flatbar'); }
   if (tabId === 'tab-angle') aCutType = 'single';
-  // Scroll to top of tab
-  tab.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Scroll to top of page reliably
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+
+// ════════════════════════════════════════
+// HOMEPAGE NAVIGATION
+// ════════════════════════════════════════
+const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods'];
+
+function goHome() {
+  ALL_TABS.forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if (el) el.classList.toggle('active', t === 'home');
+  });
+  document.getElementById('back-bar').style.display = 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
+  gtag('event','navigate_home');
+}
+
+const TOOL_NAMES = {
+  gaps: 'GAP CALCULATOR',
+  cutlist: 'CUT LIST',
+  weight: 'WEIGHT CALCULATOR',
+  angle: 'ANGLE CUTS',
+  rods: 'ROD ESTIMATOR'
+};
+
+function openTool(tool) {
+  ALL_TABS.forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if (el) el.classList.toggle('active', t === tool);
+  });
+  document.getElementById('back-bar').style.display = 'block';
+  const nameEl = document.getElementById('current-tool-name');
+  if (nameEl) nameEl.textContent = TOOL_NAMES[tool] || '';
+  window.scrollTo({top:0, behavior:'smooth'});
+  gtag('event','open_tool', {tool_name: tool});
+}
+
+// ════════════════════════════════════════
+// ROD ESTIMATOR STATE
+// ════════════════════════════════════════
+let rodSkill = 'beginner';
+let rodMaterial = 'mild';
+let rodJoint = 'butt';
+let rodPosition = '1g';
+let rodDiam = 2.5;
+
+// Wastage factors per skill level
+const WASTAGE = { beginner: 1.35, intermediate: 1.20, experienced: 1.10 };
+
+// Rod length in mm (standard SA stock)
+const ROD_LENGTH_MM = { 2.5: 350, 3.15: 350, 4.0: 450, 5.0: 450 };
+
+// Approximate deposition rate: mm of weld per mm of rod consumed
+// Based on typical 6013 mild steel electrode efficiency ~65%
+const DEPO_RATE = { 2.5: 0.18, 3.15: 0.28, 4.0: 0.42, 5.0: 0.60 };
+
+// Passes needed based on material thickness and joint
+function getPassCount(thicknessMm, joint) {
+  if (joint === 'lap') {
+    if (thicknessMm <= 3) return 1;
+    if (thicknessMm <= 6) return 2;
+    return 3;
+  }
+  if (joint === 'butt' || joint === 'corner') {
+    if (thicknessMm <= 3) return 1;
+    if (thicknessMm <= 6) return 2;
+    if (thicknessMm <= 10) return 3;
+    return Math.ceil(thicknessMm / 3.5);
+  }
+  // fillet
+  if (thicknessMm <= 4) return 1;
+  if (thicknessMm <= 8) return 2;
+  if (thicknessMm <= 12) return 3;
+  return Math.ceil(thicknessMm / 4);
+}
+
+// Rod recommendation database
+const ROD_DB = {
+  mild: {
+    rec: '6013',
+    full: 'E6013 — General Purpose Mild Steel',
+    why: 'The 6013 is the go-to rod for mild steel. It produces a smooth, easy-to-control arc with moderate penetration and a self-cleaning slag. Works well in all basic positions and is forgiving for beginners. Available at virtually every hardware store in SA.',
+    tip: 'Run at 70–90A for 2.5mm, 90–120A for 3.15mm. Keep a short arc length — roughly equal to the rod diameter.',
+    alt: '7018 for structural work requiring higher strength'
+  },
+  galv: {
+    rec: '6013',
+    full: 'E6013 — with surface prep required',
+    why: 'For galvanised steel, the 6013 still works but you MUST grind off the zinc coating in the weld area first. Welding through zinc produces toxic fumes and causes porosity in the weld. Always work in a well-ventilated area or outdoors.',
+    tip: 'Grind back at least 25mm either side of the weld line. Wear a proper respirator — zinc fumes cause metal fume fever.',
+    alt: 'Dedicated galvanised electrodes if available'
+  },
+  cast: {
+    rec: 'ENi-CI',
+    full: 'ENi-CI — Nickel Cast Iron Electrode',
+    why: 'Cast iron requires a specialist nickel electrode. It has low thermal shock resistance — preheat the casting to around 300°C before welding and cool slowly by burying in dry sand or covering with insulating blanket. Never quench with water.',
+    tip: 'Use short weld runs (25–30mm max), peen immediately after each run to relieve stress, and allow to cool slowly. This is an advanced technique — beginners should practice on scrap first.',
+    alt: 'Braze welding with bronze rod for non-structural repairs'
+  },
+  ss: {
+    rec: 'E308L-16',
+    full: 'E308L-16 — Stainless Steel Electrode',
+    why: 'Stainless steel requires a dedicated stainless electrode. The 308L is suitable for 304 grade stainless which covers most braai, handrail, and food-grade applications. Keep heat input low to avoid warping and sensitisation.',
+    tip: 'Use the lowest amperage that maintains a stable arc. Stainless conducts heat poorly — it warps easily. Clamp, tack frequently, and weld in short runs with cooling time between passes.',
+    alt: 'E316L for marine or chemical environments'
+  }
+};
+
+// Position difficulty notes
+const POSITION_NOTES = {
+  '1g':  null,
+  '2g':  'Horizontal welding — use a slightly lower amperage than flat. The weld pool wants to sag downward. Keep a tight arc and move steadily.',
+  '3g':  'Vertical up — use a weaving technique and reduce amperage by 10-15% vs flat. Pause briefly at the edges of each weave to allow fusion.',
+  '3gd': 'Vertical down — faster travel speed, less penetration. Not recommended for structural welds. Use 6013 or 6011 only.',
+  '4g':  'Overhead — the most difficult position. Reduce amperage significantly, use a very short arc, and wear full protective gear. Molten slag will fall.',
+  '5g':  'Fixed pipe — you will weld through all positions as you travel around. Adjust technique continuously. Requires significant practice.',
+  '6g':  'Inclined pipe — the certification standard for good reason. All positions combined on an angle. Not recommended without substantial experience.'
+};
+
+function setSkill(skill) {
+  rodSkill = skill;
+  ['beginner','intermediate','experienced'].forEach(s => {
+    document.getElementById('skill-'+s).classList.toggle('active', s === skill);
+  });
+}
+
+function setRodMaterial(mat) {
+  rodMaterial = mat;
+  ['mild','galv','cast','ss'].forEach(m => {
+    document.getElementById('rmat-'+m).classList.toggle('active', m === mat);
+  });
+}
+
+function setJoint(joint) {
+  rodJoint = joint;
+  ['butt','fillet','lap','corner'].forEach(j => {
+    document.getElementById('joint-'+j).classList.toggle('active', j === joint);
+  });
+}
+
+function setPosition(pos) {
+  rodPosition = pos;
+  ['1g','2g','3g','3gd','4g','5g','6g'].forEach(p => {
+    document.getElementById('pos-'+p).classList.toggle('active', p === pos);
+  });
+}
+
+function setRodDiam(d) {
+  rodDiam = d;
+  ['25','315','40','50'].forEach(id => {
+    const val = id === '25' ? 2.5 : id === '315' ? 3.15 : id === '40' ? 4.0 : 5.0;
+    document.getElementById('rd-'+id).classList.toggle('active', val === d);
+  });
+}
+
+// ════════════════════════════════════════
+// ROD SELECTOR CALCULATOR
+// ════════════════════════════════════════
+function calcRodSelector() {
+  const box = document.getElementById('rod-selector-results');
+  box.className = 'results show';
+
+  const rec = ROD_DB[rodMaterial];
+  const posNote = POSITION_NOTES[rodPosition];
+
+  const isAdvancedPos = ['4g','5g','6g'].includes(rodPosition);
+  const isBeginner = rodSkill === 'beginner';
+  const warningHtml = (isAdvancedPos && isBeginner) ?
+    `<div class="bakkie-note warn" style="margin-top:8px">⚠ This weld position is advanced. As a beginner, practise in the flat (1G/1F) position first until your technique is consistent before attempting ${rodPosition.toUpperCase()}.</div>` : '';
+
+  box.innerHTML = `
+    <div class="rod-recommendation">
+      <div class="rod-rec-label">RECOMMENDED ROD</div>
+      <div class="rod-rec-name">${rec.rec}</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:6px">${rec.full}</div>
+      <div class="rod-rec-why">${rec.why}</div>
+      ${rec.alt ? `<div style="font-size:11px;color:var(--text3);margin-top:6px">Alternative: ${rec.alt}</div>` : ''}
+      ${posNote ? `<div class="rod-rec-tip"><strong>Position note (${rodPosition.toUpperCase()}):</strong> ${posNote}</div>` : ''}
+      <div class="rod-rec-tip"><strong>Workshop tip:</strong> ${rec.tip}</div>
+      ${warningHtml}
+    </div>
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyRodRec()">Copy</button>
+    </div>
+    <button class="reset-btn" onclick="resetRodSelector()">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+  gtag('event','rod_selector_used', {material: rodMaterial, position: rodPosition});
+}
+
+function copyRodRec() {
+  const rec = ROD_DB[rodMaterial];
+  const txt = `GapCalc — Rod Selector\n---\nRecommended rod: ${rec.rec}\n${rec.full}\n\nTip: ${rec.tip}\n\ngapcalc-za.netlify.app`;
+  copy(txt, event.target);
+}
+
+function resetRodSelector() {
+  document.getElementById('rod-selector-results').className = 'results';
+  document.getElementById('rod-selector-results').innerHTML = '';
+}
+
+// ════════════════════════════════════════
+// ROD QUANTITY ESTIMATOR
+// ════════════════════════════════════════
+function calcRodEstimator() {
+  const box = document.getElementById('rod-estimator-results');
+  box.className = 'results show';
+
+  const thickness = parseFloat(document.getElementById('rod-thick').value);
+  const weldLen = getWeldLengthMm();
+
+  document.querySelectorAll('#tab-rods input').forEach(el => el.style.borderColor = '');
+
+  if (!thickness || !weldLen) {
+    if (!thickness) { const el=document.getElementById('rod-thick'); el.style.borderColor='var(--red)'; el.addEventListener('input',()=>el.style.borderColor='',{once:true}); }
+    if (!weldLen && weldMode === 'advanced') { const el=document.getElementById('rod-weldlen'); el.style.borderColor='var(--red)'; el.addEventListener('input',()=>el.style.borderColor='',{once:true}); }
+    if (!weldLen && weldMode === 'simple') { const el=document.getElementById('rod-joints'); if(el){el.style.borderColor='var(--red)'; el.addEventListener('input',()=>el.style.borderColor='',{once:true});} }
+    box.innerHTML = errorBox('Fill in material thickness and weld length — empty fields highlighted in red.');
+    return;
+  }
+
+  const passes = getPassCount(thickness, rodJoint);
+  const depoRate = DEPO_RATE[rodDiam];
+  const rodLenMm = ROD_LENGTH_MM[rodDiam];
+  const wastage = WASTAGE[rodSkill];
+
+  // Usable rod length (stub = ~40mm discarded)
+  const usableRodMm = rodLenMm - 40;
+
+  // Weld metal deposited per rod (mm of weld bead per rod)
+  const weldPerRod = usableRodMm * depoRate;
+
+  // Total weld passes length
+  const totalWeldMm = weldLen * passes;
+
+  // Raw rods needed before wastage
+  const rawRods = totalWeldMm / weldPerRod;
+
+  // Apply wastage factor
+  const rodsNeeded = Math.ceil(rawRods * wastage);
+
+  // Pack sizes — typical SA supplier packs
+  const pack500gRods = Math.round(500 / (rodDiam * rodDiam * 0.8 * rodLenMm * 0.00785));
+  const pack5kgRods = pack500gRods * 10;
+  const packs5kg = Math.ceil(rodsNeeded / pack5kgRods);
+  const packs500g = Math.ceil(rodsNeeded / pack500gRods);
+
+  const skillLabels = { beginner:'Beginner (35% wastage added)', intermediate:'Intermediate (20% wastage added)', experienced:'Experienced (10% wastage added)' };
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">RODS NEEDED</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <div class="rh-value">${rodsNeeded}</div>
+        <div class="rh-unit">rods</div>
+      </div>
+      <div class="rh-sub">${rodDiam}mm rods — ${passes} pass${passes>1?'es':''} — ${skillLabels[rodSkill]}</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">Passes required</div>
+        <div class="stat-val">${passes} <span class="u">pass${passes>1?'es':''}</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total weld length</div>
+        <div class="stat-val">${(totalWeldMm/1000).toFixed(2)} <span class="u">m</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Rod length</div>
+        <div class="stat-val">${rodLenMm} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Usable per rod</div>
+        <div class="stat-val">${usableRodMm} <span class="u">mm</span></div>
+      </div>
+    </div>
+
+    <div class="pack-result">
+      <div class="pack-label">How many packs to buy</div>
+      <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap">
+        <div>
+          <div class="pack-val">${packs5kg}</div>
+          <div class="pack-unit">× 5kg pack</div>
+          <div class="pack-sub">~${pack5kgRods} rods per pack</div>
+        </div>
+        <div style="color:var(--text3);padding-bottom:8px">or</div>
+        <div>
+          <div class="pack-val" style="font-size:28px">${packs500g}</div>
+          <div class="pack-unit">× 500g pack</div>
+          <div class="pack-sub">~${pack500gRods} rods per pack</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-bottom:10px">
+      <strong>Buy one extra pack</strong> as a buffer — especially for your first attempt at a joint or position. Unused rods store well in a dry place.
+    </div>
+
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyRodEst(${rodsNeeded},${packs5kg},${packs500g},${rodDiam})">Copy</button>
+    </div>
+    <button class="reset-btn" onclick="resetRodEst()">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  gtag('event','rod_estimator_used', {rod_diam: rodDiam, skill: rodSkill});
+}
+
+function copyRodEst(rods, p5, p500, diam) {
+  const txt = `GapCalc — Rod Estimator\n---\nRods needed: ${rods} × ${diam}mm\n5kg packs: ${p5}\n500g packs: ${p500}\n\ngapcalc-za.netlify.app`;
+  copy(txt, event.target);
+}
+
+function resetRodEst() {
+  document.getElementById('rod-estimator-results').className = 'results';
+  document.getElementById('rod-estimator-results').innerHTML = '';
+  document.querySelectorAll('#tab-rods input').forEach(el => { el.value=''; el.style.borderColor=''; });
+  setWeldMode('simple');
+  setWeldSize('small');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+
+// ════════════════════════════════════════
+// WELD LENGTH MODE
+// ════════════════════════════════════════
+let weldMode = 'simple';
+let weldSize = 'small';
+const WELD_SIZE_MM = { small: 25, medium: 50, large: 100, full: 150 };
+
+function setWeldMode(mode) {
+  weldMode = mode;
+  document.getElementById('weld-simple-btn').classList.toggle('active', mode === 'simple');
+  document.getElementById('weld-advanced-btn').classList.toggle('active', mode === 'advanced');
+  document.getElementById('weld-simple-mode').style.display = mode === 'simple' ? '' : 'none';
+  document.getElementById('weld-advanced-mode').style.display = mode === 'advanced' ? '' : 'none';
+}
+
+function setWeldSize(size) {
+  weldSize = size;
+  ['small','medium','large','full'].forEach(s => {
+    document.getElementById('wsize-'+s).classList.toggle('active', s === size);
+  });
+}
+
+function getWeldLengthMm() {
+  if (weldMode === 'advanced') {
+    return parseFloat(document.getElementById('rod-weldlen').value) || null;
+  }
+  const joints = parseInt(document.getElementById('rod-joints').value);
+  if (!joints) return null;
+  return joints * WELD_SIZE_MM[weldSize];
 }
 
 // Enter key triggers calculate
@@ -1758,6 +2574,7 @@ document.getElementById('tab-gaps').addEventListener('keydown', e => { if (e.key
 document.getElementById('tab-cutlist').addEventListener('keydown', e => { if (e.key==='Enter') calcCutList(); });
 document.getElementById('tab-weight').addEventListener('keydown', e => { if (e.key==='Enter') calcWeight(); });
 document.getElementById('tab-angle').addEventListener('keydown', e => { if (e.key==='Enter') calcAngle(); });
+document.getElementById('tab-rods').addEventListener('keydown', e => { if (e.key==='Enter') calcRodEstimator(); });
 
 // Init angle width presets
 renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');
