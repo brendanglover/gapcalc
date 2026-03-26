@@ -3,7 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>GapCalc — Workshop Calculator for Welders & Makers</title>
+<title>GapCalc — Free Workshop Calculator for Welders & Makers</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" href="/favicon.ico">
+<meta name="theme-color" content="#f5820a">
+
+<!-- SEO Meta -->
+<meta name="description" content="Free workshop calculators for welders, fabricators, and makers. Gap spacing, cut lists, material weight, angle cuts, rod estimator, and job costing — all in one tool. Built for SA workshops.">
+<meta name="keywords" content="gap calculator, welding calculator, cut list calculator, steel weight calculator, angle cuts, rod estimator, job costing, workshop calculator, south africa, welder, fabricator, maker">
+<meta name="author" content="Brendan Glover">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gapcalc.com/">
+
+<!-- Open Graph — Facebook, WhatsApp, LinkedIn -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://gapcalc.com/">
+<meta property="og:title" content="GapCalc — Free Workshop Calculator for Welders & Makers">
+<meta property="og:description" content="Free workshop calculators for welders, fabricators, and makers. Gap spacing, cut lists, material weight, angle cuts, rod estimator, and job costing — all in one tool.">
+<meta property="og:image" content="https://gapcalc.com/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="GapCalc">
+<meta property="og:locale" content="en_ZA">
+
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@brendanglover_x">
+<meta name="twitter:creator" content="@brendanglover_x">
+<meta name="twitter:title" content="GapCalc — Free Workshop Calculator for Welders & Makers">
+<meta name="twitter:description" content="Free workshop calculators for welders, fabricators, and makers. Gap spacing, cut lists, material weight, angle cuts, rod estimator, and job costing.">
+<meta name="twitter:image" content="https://gapcalc.com/og-image.svg">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "GapCalc",
+  "url": "https://gapcalc.com",
+  "description": "Free workshop calculators for welders, fabricators, and makers. Gap spacing, cut lists, material weight, angle cuts, rod estimator, and job costing.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "ZAR"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Brendan Glover",
+    "sameAs": "https://x.com/brendanglover_x"
+  },
+  "featureList": [
+    "Gap Calculator",
+    "Cut List Calculator",
+    "Weight Calculator",
+    "Angle Cuts Calculator",
+    "Welding Rod Estimator",
+    "Job Costing Calculator"
+  ]
+}
+</script>
+
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KEMY3NEYCQ"></script>
 <script>
@@ -554,17 +617,234 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 .pack-unit { font-family: 'DM Mono',monospace; font-size: 16px; color: var(--text2); }
 .pack-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
 
+
+/* ═══════════════════════════════
+   JOB COSTING CALCULATOR
+   ═══════════════════════════════ */
+.coming-soon-card {
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  border-radius: var(--r);
+  padding: 18px 14px;
+  text-align: left;
+  display: flex; flex-direction: column; gap: 8px;
+  opacity: 0.6;
+  cursor: default;
+}
+.coming-soon-badge {
+  display: inline-block;
+  background: var(--surface3);
+  color: var(--text3);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px; letter-spacing: 1.5px;
+  padding: 3px 8px; border-radius: 20px;
+  margin-bottom: 2px;
+}
+.coming-soon-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px; letter-spacing: 1.5px;
+  color: var(--text2); line-height: 1.1;
+}
+.coming-soon-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
+
+/* Line items */
+.line-items-wrap { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.line-item-row {
+  display: grid;
+  grid-template-columns: 1fr 70px 90px 32px;
+  gap: 6px; align-items: center;
+}
+.line-item-row input {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  padding: 10px 10px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  -webkit-appearance: none;
+}
+.line-item-row input:focus { border-color: var(--accent); }
+.line-item-row input::placeholder { color: var(--text3); font-size: 12px; }
+.line-item-header {
+  display: grid;
+  grid-template-columns: 1fr 70px 90px 32px;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.line-item-header span {
+  font-size: 10px; color: var(--text3);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.remove-btn {
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--border);
+  background: var(--surface2);
+  color: var(--text3); border-radius: 6px;
+  cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.remove-btn:hover { border-color: var(--red); color: var(--red); }
+.add-line-btn {
+  width: 100%; padding: 10px;
+  border: 1.5px dashed var(--border);
+  background: transparent; color: var(--text3);
+  border-radius: 8px; font-size: 12px; font-weight: 700;
+  letter-spacing: 1px; cursor: pointer;
+  transition: all 0.2s; text-transform: uppercase;
+}
+.add-line-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Toggle switch */
+.toggle-wrap {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.toggle-label { font-size: 12px; color: var(--text2); flex: 1; }
+.toggle-switch {
+  position: relative; width: 44px; height: 24px; flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--surface3); border-radius: 24px;
+  transition: 0.3s; border: 1.5px solid var(--border);
+}
+.toggle-slider:before {
+  position: absolute; content: '';
+  height: 16px; width: 16px;
+  left: 3px; bottom: 3px;
+  background: var(--text3); border-radius: 50%;
+  transition: 0.3s;
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--accent-dim); border-color: var(--accent); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); background: var(--accent); }
+
+/* Labour mode toggle */
+.labour-mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.labour-mode-btn {
+  padding: 11px 8px; border: 2px solid var(--border);
+  background: var(--surface2); color: var(--text2);
+  border-radius: 8px; font-size: 12px; font-weight: 700;
+  cursor: pointer; text-align: center; transition: all 0.2s;
+}
+.labour-mode-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+
+/* Markup vs Margin explainer */
+.margin-explainer {
+  background: var(--surface2); border-radius: 8px;
+  padding: 14px; margin-top: 12px;
+}
+.margin-explainer-title {
+  font-size: 10px; color: var(--text3);
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;
+}
+.margin-row {
+  display: flex; gap: 0; border-radius: 6px; overflow: hidden;
+  height: 36px; margin-bottom: 8px;
+}
+.margin-seg {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 500;
+  transition: width 0.4s ease;
+}
+.margin-seg-cost { background: var(--surface3); color: var(--text2); }
+.margin-seg-profit { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+.margin-legend { display: flex; gap: 14px; font-size: 10px; color: var(--text2); flex-wrap: wrap; }
+.margin-legend span { display: flex; align-items: center; gap: 4px; }
+
+/* Quote view toggle */
+.view-toggle {
+  display: flex; gap: 8px; margin-bottom: 14px;
+}
+.view-btn {
+  flex: 1; padding: 12px 8px;
+  border: 2px solid var(--border); background: var(--surface2);
+  color: var(--text2); border-radius: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px; letter-spacing: 1.5px;
+  cursor: pointer; text-align: center; transition: all 0.2s;
+}
+.view-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+
+/* Quote document */
+.quote-doc {
+  background: #fff; color: #111;
+  border-radius: var(--r); padding: 24px;
+  margin-bottom: 10px;
+}
+.quote-doc-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 20px;
+  padding-bottom: 14px; border-bottom: 2px solid #f5820a;
+}
+.quote-biz-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px; color: #111;
+}
+.quote-biz-vat { font-size: 11px; color: #666; margin-top: 2px; }
+.quote-meta { text-align: right; font-size: 12px; color: #444; }
+.quote-meta strong { display: block; font-size: 14px; color: #111; margin-bottom: 2px; }
+.quote-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+.quote-table th {
+  font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+  color: #888; text-align: left; padding: 6px 0;
+  border-bottom: 1px solid #ddd;
+}
+.quote-table td {
+  font-size: 13px; color: #222; padding: 8px 0;
+  border-bottom: 1px solid #eee; vertical-align: top;
+}
+.quote-table td:last-child { text-align: right; font-family: 'DM Mono', monospace; }
+.quote-table th:last-child { text-align: right; }
+.quote-section-head {
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #f5820a; font-weight: 700; padding: 12px 0 4px;
+}
+.quote-total-row td {
+  font-weight: 700; font-size: 15px;
+  border-top: 2px solid #111; border-bottom: none;
+  padding-top: 10px;
+}
+.quote-footer {
+  font-size: 11px; color: #888; margin-top: 16px;
+  padding-top: 12px; border-top: 1px solid #eee;
+  text-align: center;
+}
+
+/* Internal costing summary */
+.cost-summary-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;
+}
+.cost-summary-card {
+  background: var(--surface2); border-radius: 8px; padding: 12px;
+}
+.cost-summary-label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.cost-summary-val { font-family: 'DM Mono', monospace; font-size: 17px; color: var(--text); }
+.cost-summary-val .u { font-size: 12px; color: var(--text2); }
+.cost-summary-card.highlight { border: 1px solid var(--green); }
+.cost-summary-card.highlight .cost-summary-val { color: var(--green); }
+.cost-summary-card.warn { border: 1px solid var(--accent); }
+.cost-summary-card.warn .cost-summary-val { color: var(--accent); }
+
+@media print {
+  .quote-doc { box-shadow: none; }
+  .view-toggle, .go-btn, .reset-btn, .action-row, .back-btn-wrap { display: none !important; }
+}
+
 </style>
 </head>
 <body>
 
 <header onclick="goHome()" style="cursor:pointer;" title="Back to home">
   <div class="logo-mark">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
-      <rect x="2" y="8" width="3" height="8" rx="1"/>
-      <rect x="7" y="8" width="3" height="8" rx="1"/>
-      <rect x="12" y="8" width="3" height="8" rx="1"/>
-      <rect x="17" y="8" width="3" height="8" rx="1"/>
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <text x="18" y="27" font-family="'Bebas Neue', sans-serif" font-size="22" fill="#111" text-anchor="middle" letter-spacing="1">GC</text>
     </svg>
   </div>
   <div>
@@ -627,6 +907,19 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
       <div class="feature-card-title">ROD ESTIMATOR</div>
       <div class="feature-card-desc">Not sure which rod to use or how many to buy? Get a rod recommendation for your job and an accurate quantity estimate.</div>
       <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+    <div class="feature-card" onclick="openTool('costing')">
+      <div class="feature-card-icon">R</div>
+      <div class="feature-card-title">JOB COSTING</div>
+      <div class="feature-card-desc">Price your work properly. Calculate material, labour, and consumable costs — then generate a clean client quote in Rands.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+    <div class="coming-soon-card">
+      <span class="coming-soon-badge">COMING SOON</span>
+      <div class="coming-soon-title">BOLT SPACING</div>
+      <div class="coming-soon-desc">Evenly space bolts or holes along any length. Same precision as the Gap Calculator — built for drilling and fixing.</div>
     </div>
 
   </div>
@@ -1276,11 +1569,209 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
 </div>
 
+<!-- ═══════════════════════════════════════
+     TAB 6 — JOB COSTING CALCULATOR
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-costing">
+
+  <div style="height:8px"></div>
+
+  <div class="note">
+    <strong>Price your work properly.</strong> Enter your materials, labour, and consumables. GapCalc calculates your cost, suggests a sell price, and generates a clean quote for your client — keeping your margins private.
+  </div>
+
+  <!-- QUOTE DETAILS -->
+  <div class="card">
+    <div class="card-label">Quote Details</div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Your business name</span></div>
+      <div class="input-wrap">
+        <input type="text" id="q-bizname" placeholder="e.g. Brendan Fabrication" style="font-size:16px">
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Client name</span></div>
+      <div class="input-wrap">
+        <input type="text" id="q-client" placeholder="e.g. John Smith" style="font-size:16px">
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Quote date</span></div>
+      <div class="input-wrap">
+        <input type="date" id="q-date" style="font-size:16px;color-scheme:dark">
+      </div>
+    </div>
+    <!-- VAT toggle -->
+    <div class="toggle-wrap" style="margin-top:4px">
+      <span class="toggle-label">VAT registered — include VAT number on quote</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="vat-toggle" onchange="toggleVAT()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div id="vat-field" style="display:none">
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">VAT registration number</span></div>
+        <div class="input-wrap">
+          <input type="text" id="q-vat" placeholder="e.g. 4123456789" style="font-size:16px">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATERIALS -->
+  <div class="card">
+    <div class="card-label">Materials</div>
+    <div class="line-item-header">
+      <span>Description</span><span>Qty</span><span>Unit Price</span><span></span>
+    </div>
+    <div class="line-items-wrap" id="materials-wrap"></div>
+    <button class="add-line-btn" onclick="addLineItem('materials')">+ ADD MATERIAL LINE</button>
+  </div>
+
+  <!-- CONSUMABLES -->
+  <div class="card">
+    <div class="card-label">Consumables</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Rods, grinding discs, wire, gas, primer, paint — every small cost adds up. Don't leave money on the table.</div>
+    <div class="line-item-header">
+      <span>Description</span><span>Qty</span><span>Unit Price</span><span></span>
+    </div>
+    <div class="line-items-wrap" id="consumables-wrap"></div>
+    <button class="add-line-btn" onclick="addLineItem('consumables')">+ ADD CONSUMABLE LINE</button>
+  </div>
+
+  <!-- LABOUR -->
+  <div class="card">
+    <div class="card-label">Labour</div>
+    <div class="labour-mode-grid">
+      <button class="labour-mode-btn active" id="labour-hourly-btn" onclick="setLabourMode('hourly')">HOURLY RATE</button>
+      <button class="labour-mode-btn" id="labour-flat-btn" onclick="setLabourMode('flat')">DAY RATE / FLAT FEE</button>
+    </div>
+    <!-- Hourly mode -->
+    <div id="labour-hourly-mode">
+      <div class="dim-row">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Your hourly rate</span></div>
+          <div class="input-wrap">
+            <input type="number" id="labour-rate" inputmode="decimal" placeholder="e.g. 350">
+            <span class="input-unit">R/hr</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Hours on this job</span></div>
+          <div class="input-wrap">
+            <input type="number" id="labour-hours" inputmode="decimal" placeholder="e.g. 8">
+            <span class="input-unit">hrs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Flat fee mode -->
+    <div id="labour-flat-mode" style="display:none">
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Flat labour fee for this job</span></div>
+        <div class="input-wrap">
+          <input type="number" id="labour-flat" inputmode="decimal" placeholder="e.g. 2500">
+          <span class="input-unit">R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELIVERY -->
+  <div class="card">
+    <div class="card-label">Delivery</div>
+    <div class="toggle-wrap">
+      <span class="toggle-label">You will deliver the finished product to the client</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="delivery-toggle" onchange="toggleDelivery()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div id="delivery-fields" style="display:none">
+      <div class="dim-row">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Distance to client</span></div>
+          <div class="input-wrap">
+            <input type="number" id="del-km" inputmode="decimal" placeholder="e.g. 25">
+            <span class="input-unit">km</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Fuel price</span></div>
+          <div class="input-wrap">
+            <input type="number" id="del-fuel" inputmode="decimal" placeholder="e.g. 22.50">
+            <span class="input-unit">R/L</span>
+          </div>
+        </div>
+      </div>
+      <div class="dim-row">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Fuel consumption</span></div>
+          <div class="input-wrap">
+            <input type="number" id="del-consump" inputmode="decimal" placeholder="e.g. 10">
+            <span class="input-unit">L/100km</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Your time cost (hourly)</span></div>
+          <div class="input-wrap">
+            <input type="number" id="del-timerate" inputmode="decimal" placeholder="e.g. 350">
+            <span class="input-unit">R/hr</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Estimated delivery time (one way)</span></div>
+        <div class="input-wrap">
+          <input type="number" id="del-time" inputmode="decimal" placeholder="e.g. 0.5">
+          <span class="input-unit">hrs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARGIN -->
+  <div class="card">
+    <div class="card-label">Margin & Pricing</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Your target gross margin</span>
+        <span class="input-meta-var">%</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="q-margin" inputmode="decimal" placeholder="e.g. 30" min="1" max="90">
+        <span class="input-unit">%</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('q-margin',20)">20%</button>
+        <button class="chip" onclick="setVal('q-margin',25)">25%</button>
+        <button class="chip" onclick="setVal('q-margin',30)">30%</button>
+        <button class="chip" onclick="setVal('q-margin',40)">40%</button>
+        <button class="chip" onclick="setVal('q-margin',50)">50%</button>
+      </div>
+    </div>
+    <div class="margin-explainer">
+      <div class="margin-explainer-title">Markup vs Margin — know the difference</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px">
+        <strong style="color:var(--text)">Markup</strong> is added on top of your cost. A 30% markup on R1000 = R1300 sell price.<br>
+        <strong style="color:var(--text)">Margin</strong> is your profit as a percentage of your <em>sell price</em>. A 30% margin on R1000 cost = R1428 sell price.<br>
+        <span style="color:var(--accent)">Same profit goal — different numbers. This tool uses margin.</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcCosting()">R CALCULATE JOB COST</button>
+
+  <div class="results" id="costing-results"></div>
+
+</div>
+
 <footer>
   <p>GapCalc — free forever. No login. No data stored.</p>
   <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.0.1 &nbsp;·&nbsp; Updated 23 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.1.0 &nbsp;·&nbsp; Updated 26 March 2026</p>
 </footer>
 
 <script>
@@ -1315,7 +1806,7 @@ function setVal(id, val) {
 // TAB SWITCHER — 3 tabs
 // ════════════════════════════════════════
 function switchTab(tab) {
-  const tabs = ['gaps','cutlist','weight','angle','rods'];
+  const tabs = ['gaps','cutlist','weight','angle','rods','costing'];
   document.querySelectorAll('.nav-btn').forEach((b,i) => b.classList.toggle('active', tabs[i] === tab));
   tabs.forEach(t => { const el = document.getElementById('tab-'+t); if (el) el.classList.toggle('active', t === tab); });
 }
@@ -1402,7 +1893,7 @@ function calcGaps() {
 
     materialsHtml = `
       <hr class="section-divider">
-      <div class="card-label" style="color:var(--blue);margin-bottom:10px;">📦 MATERIALS LIST</div>
+      <div class="card-label" style="color:var(--blue);margin-bottom:10px;">MATERIALS LIST</div>
       <div class="stat-grid">
         <div class="stat">
           <div class="stat-label">Bar cut length</div>
@@ -1477,8 +1968,8 @@ function calcGaps() {
     ${materialsHtml}
 
     <div class="action-row">
-      <button class="act-btn" onclick="window.print()">🖨 Print</button>
-      <button class="act-btn" onclick="copyGapResult(${n},${gActual.toFixed(2)},${L},${w})">📋 Copy result</button>
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyGapResult(${n},${gActual.toFixed(2)},${L},${w})">Copy result</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-gaps')">↺ Start over</button>
   `;
@@ -1544,7 +2035,7 @@ function calcCutList() {
           <div class="cut-desc">Cut ${pieces} × ${p}mm pieces</div>
           <div class="cut-sub">${pieces * p}mm used${k > 0 ? ` + ${(pieces-1)*k}mm kerf` : ''} — offcut: ${offcut.toFixed(0)}mm</div>
         </div>
-        <div class="cut-badge ${offcut > p ? 'green' : ''}">${offcut > p ? '♻ reuse' : offcut > 0 ? 'scrap' : 'no waste'}</div>
+        <div class="cut-badge ${offcut > p ? 'green' : ''}">${offcut > p ? 'REUSE' : offcut > 0 ? 'scrap' : 'no waste'}</div>
       </div>
     `;
   }
@@ -1595,12 +2086,12 @@ function calcCutList() {
       </div>
     </div>
 
-    <div class="card-label" style="color:var(--blue);margin:4px 0 10px">✂ PER-LENGTH CUT PLAN</div>
+    <div class="card-label" style="color:var(--blue);margin:4px 0 10px">PER-LENGTH CUT PLAN</div>
     ${lengthRows}
 
     <div class="action-row" style="margin-top:10px">
-      <button class="act-btn" onclick="window.print()">🖨 Print cut list</button>
-      <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut.toFixed(0)})">📋 Copy</button>
+      <button class="act-btn" onclick="window.print()">Print cut list</button>
+      <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut.toFixed(0)})">Copy</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-cutlist')">↺ Start over</button>
   `;
@@ -1786,14 +2277,14 @@ function calcWeight() {
       <div class="stat"><div class="stat-label">Piece length</div><div class="stat-val">${L} <span class="u">mm</span></div></div>
     </div>
     <div class="bakkie-wrap">
-      <div class="bakkie-label-row"><span class="bakkie-title">🚗 Bakkie load indicator</span><span class="bakkie-kg">${totalWeight.toFixed(1)}kg / ${BAKKIE_LIMIT}kg</span></div>
+      <div class="bakkie-label-row"><span class="bakkie-title">Bakkie load indicator</span><span class="bakkie-kg">${totalWeight.toFixed(1)}kg / ${BAKKIE_LIMIT}kg</span></div>
       <div class="bakkie-track"><div class="bakkie-fill" style="width:${fillPct.toFixed(1)}%;background:${fillColor}"></div></div>
       <div class="bakkie-markers"><span>0</span><span>250kg</span><span>500kg</span><span>750kg</span></div>
       <div class="bakkie-note ${bakkieClass}">${bakkieMsg}</div>
     </div>
     <div class="action-row">
-      <button class="act-btn" onclick="window.print()">🖨 Print</button>
-      <button class="act-btn" onclick="copyWeightResult(${totalWeight.toFixed(2)},${weightPerPiece.toFixed(2)},${weightPerMetre.toFixed(3)},${Q})">📋 Copy</button>
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyWeightResult(${totalWeight.toFixed(2)},${weightPerPiece.toFixed(2)},${weightPerMetre.toFixed(3)},${Q})">Copy</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-weight')">↺ Start over</button>`;
   box.scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -1801,7 +2292,7 @@ function calcWeight() {
 
 function copyWeightResult(total,perPiece,perM,qty) {
   const isSteel = wMaterial==='steel';
-  const txt = `GapCalc — Weight Calculator\n---\nTotal order weight: ${total}kg\n${isSteel?'Weight per length':'Weight per piece'}: ${perPiece}kg\nWeight per metre: ${perM}kg/m\nQuantity: ${qty}\n\ngapcalc-za.netlify.app`;
+  const txt = `GapCalc — Weight Calculator\n---\nTotal order weight: ${total}kg\n${isSteel?'Weight per length':'Weight per piece'}: ${perPiece}kg\nWeight per metre: ${perM}kg/m\nQuantity: ${qty}\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -1948,8 +2439,8 @@ function calcAngle() {
     </div>
 
     <div class="action-row">
-      <button class="act-btn" onclick="window.print()">🖨 Print</button>
-      <button class="act-btn" onclick="copyAngleResult(${cutFace.toFixed(1)},${shortPt.toFixed(1)},${longPt.toFixed(1)},${offset.toFixed(1)},${deg})">📋 Copy</button>
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyAngleResult(${cutFace.toFixed(1)},${shortPt.toFixed(1)},${longPt.toFixed(1)},${offset.toFixed(1)},${deg})">Copy</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-angle')">↺ Start over</button>
   `;
@@ -2178,7 +2669,7 @@ function buildAngleDiagram(type, _, matW, L, deg, offset) {
 }
 
 function copyAngleResult(face, sp, lp, offset, deg) {
-  const txt = `GapCalc — Angle Cuts\n---\nCut angle: ${deg}°\nCut face length: ${face}mm\nShort point: ${sp}mm\nLong point: ${lp}mm\nOffset (SP to LP): ${offset}mm\n\ngapcalc-za.netlify.app`;
+  const txt = `GapCalc — Angle Cuts\n---\nCut angle: ${deg}°\nCut face length: ${face}mm\nShort point: ${sp}mm\nLong point: ${lp}mm\nOffset (SP to LP): ${offset}mm\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -2216,7 +2707,7 @@ function resetTab(tabId) {
 // ════════════════════════════════════════
 // HOMEPAGE NAVIGATION
 // ════════════════════════════════════════
-const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods'];
+const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing'];
 
 function goHome() {
   ALL_TABS.forEach(t => {
@@ -2233,7 +2724,8 @@ const TOOL_NAMES = {
   cutlist: 'CUT LIST',
   weight: 'WEIGHT CALCULATOR',
   angle: 'ANGLE CUTS',
-  rods: 'ROD ESTIMATOR'
+  rods: 'ROD ESTIMATOR',
+  costing: 'JOB COSTING'
 };
 
 function openTool(tool) {
@@ -2405,7 +2897,7 @@ function calcRodSelector() {
 
 function copyRodRec() {
   const rec = ROD_DB[rodMaterial];
-  const txt = `GapCalc — Rod Selector\n---\nRecommended rod: ${rec.rec}\n${rec.full}\n\nTip: ${rec.tip}\n\ngapcalc-za.netlify.app`;
+  const txt = `GapCalc — Rod Selector\n---\nRecommended rod: ${rec.rec}\n${rec.full}\n\nTip: ${rec.tip}\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -2524,7 +3016,7 @@ function calcRodEstimator() {
 }
 
 function copyRodEst(rods, p5, p500, diam) {
-  const txt = `GapCalc — Rod Estimator\n---\nRods needed: ${rods} × ${diam}mm\n5kg packs: ${p5}\n500g packs: ${p500}\n\ngapcalc-za.netlify.app`;
+  const txt = `GapCalc — Rod Estimator\n---\nRods needed: ${rods} × ${diam}mm\n5kg packs: ${p5}\n500g packs: ${p500}\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -2569,18 +3061,338 @@ function getWeldLengthMm() {
   return joints * WELD_SIZE_MM[weldSize];
 }
 
+
+// ════════════════════════════════════════
+// JOB COSTING CALCULATOR
+// ════════════════════════════════════════
+let labourMode = 'hourly';
+let deliveryEnabled = false;
+let vatEnabled = false;
+let costingView = 'internal';
+
+// Line item counters
+let matCount = 0;
+let consCount = 0;
+
+function toggleVAT() {
+  vatEnabled = document.getElementById('vat-toggle').checked;
+  document.getElementById('vat-field').style.display = vatEnabled ? '' : 'none';
+}
+
+function toggleDelivery() {
+  deliveryEnabled = document.getElementById('delivery-toggle').checked;
+  document.getElementById('delivery-fields').style.display = deliveryEnabled ? '' : 'none';
+}
+
+function setLabourMode(mode) {
+  labourMode = mode;
+  document.getElementById('labour-hourly-btn').classList.toggle('active', mode === 'hourly');
+  document.getElementById('labour-flat-btn').classList.toggle('active', mode === 'flat');
+  document.getElementById('labour-hourly-mode').style.display = mode === 'hourly' ? '' : 'none';
+  document.getElementById('labour-flat-mode').style.display = mode === 'flat' ? '' : 'none';
+}
+
+function addLineItem(type) {
+  const wrap = document.getElementById(type + '-wrap');
+  const id = type === 'materials' ? ++matCount : ++consCount;
+  const row = document.createElement('div');
+  row.className = 'line-item-row';
+  row.id = type + '-row-' + id;
+  row.innerHTML = `
+    <input type="text" placeholder="${type === 'materials' ? 'e.g. 40x4.5 flat bar' : 'e.g. 6013 rods 2.5mm'}" id="${type}-desc-${id}">
+    <input type="number" placeholder="1" inputmode="decimal" id="${type}-qty-${id}" style="text-align:center">
+    <input type="number" placeholder="0.00" inputmode="decimal" id="${type}-price-${id}">
+    <button class="remove-btn" onclick="removeLineItem('${type}','${id}')">×</button>
+  `;
+  wrap.appendChild(row);
+}
+
+function removeLineItem(type, id) {
+  const row = document.getElementById(type + '-row-' + id);
+  if (row) row.remove();
+}
+
+function getLineItems(type) {
+  const wrap = document.getElementById(type + '-wrap');
+  const rows = wrap.querySelectorAll('.line-item-row');
+  const items = [];
+  rows.forEach(row => {
+    const id = row.id.replace(type + '-row-', '');
+    const desc = document.getElementById(type + '-desc-' + id)?.value || '';
+    const qty = parseFloat(document.getElementById(type + '-qty-' + id)?.value) || 0;
+    const price = parseFloat(document.getElementById(type + '-price-' + id)?.value) || 0;
+    if (desc || price > 0) {
+      items.push({ desc, qty: qty || 1, price, total: (qty || 1) * price });
+    }
+  });
+  return items;
+}
+
+function formatR(val) {
+  return 'R ' + val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function setCostingView(view) {
+  costingView = view;
+  document.getElementById('view-btn-internal').classList.toggle('active', view === 'internal');
+  document.getElementById('view-btn-quote').classList.toggle('active', view === 'quote');
+  document.getElementById('costing-internal-view').style.display = view === 'internal' ? '' : 'none';
+  document.getElementById('costing-quote-view').style.display = view === 'quote' ? '' : 'none';
+}
+
+function calcCosting() {
+  const box = document.getElementById('costing-results');
+  box.className = 'results show';
+
+  // Gather data
+  const bizName = document.getElementById('q-bizname').value || 'Your Business';
+  const client = document.getElementById('q-client').value || 'Client';
+  const date = document.getElementById('q-date').value || new Date().toISOString().split('T')[0];
+  const vatNum = vatEnabled ? (document.getElementById('q-vat').value || '') : '';
+  const marginPct = parseFloat(document.getElementById('q-margin').value) || 30;
+
+  const materials = getLineItems('materials');
+  const consumables = getLineItems('consumables');
+
+  // Labour cost
+  let labourCost = 0;
+  let labourDesc = '';
+  if (labourMode === 'hourly') {
+    const rate = parseFloat(document.getElementById('labour-rate').value) || 0;
+    const hours = parseFloat(document.getElementById('labour-hours').value) || 0;
+    labourCost = rate * hours;
+    labourDesc = `${hours}hrs @ ${formatR(rate)}/hr`;
+  } else {
+    labourCost = parseFloat(document.getElementById('labour-flat').value) || 0;
+    labourDesc = 'Flat fee';
+  }
+
+  // Delivery cost
+  let deliveryCost = 0;
+  let deliveryDesc = '';
+  if (deliveryEnabled) {
+    const km = parseFloat(document.getElementById('del-km').value) || 0;
+    const fuel = parseFloat(document.getElementById('del-fuel').value) || 0;
+    const consump = parseFloat(document.getElementById('del-consump').value) || 0;
+    const timeRate = parseFloat(document.getElementById('del-timerate').value) || 0;
+    const delTime = parseFloat(document.getElementById('del-time').value) || 0;
+    const fuelCost = (km / 100) * consump * fuel * 2; // return trip
+    const timeCost = delTime * 2 * timeRate;
+    deliveryCost = fuelCost + timeCost;
+    deliveryDesc = `${km}km (return trip) — fuel + time`;
+  }
+
+  // Totals
+  const matTotal = materials.reduce((s, i) => s + i.total, 0);
+  const consTotal = consumables.reduce((s, i) => s + i.total, 0);
+  const totalCost = matTotal + consTotal + labourCost + deliveryCost;
+
+  if (totalCost <= 0) {
+    box.innerHTML = errorBox('Add at least one line item, labour cost, or delivery cost to calculate.');
+    return;
+  }
+
+  if (marginPct <= 0 || marginPct >= 100) {
+    box.innerHTML = errorBox('Margin must be between 1% and 99%.');
+    return;
+  }
+
+  // Margin calculation: sellPrice = cost / (1 - margin/100)
+  const sellPrice = totalCost / (1 - marginPct / 100);
+  const profit = sellPrice - totalCost;
+  const markup = ((sellPrice - totalCost) / totalCost * 100);
+
+  // Format date
+  const dateFormatted = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-ZA', {day:'numeric',month:'long',year:'numeric'}) : '';
+
+  // Build material rows for quote
+  const matRows = materials.map(i =>
+    `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${i.qty} × ${formatR(i.price)}</td><td>${formatR(i.total)}</td></tr>`
+  ).join('');
+
+  const consRows = consumables.map(i =>
+    `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${i.qty} × ${formatR(i.price)}</td><td>${formatR(i.total)}</td></tr>`
+  ).join('');
+
+  // Visual margin bar
+  const costPct = (totalCost / sellPrice * 100).toFixed(1);
+  const profitPct = (profit / sellPrice * 100).toFixed(1);
+
+  box.innerHTML = `
+    <div class="view-toggle">
+      <button class="view-btn active" id="view-btn-internal" onclick="setCostingView('internal')">MY NUMBERS</button>
+      <button class="view-btn" id="view-btn-quote" onclick="setCostingView('quote')">CLIENT QUOTE</button>
+    </div>
+
+    <!-- INTERNAL VIEW -->
+    <div id="costing-internal-view">
+      <div class="result-hero">
+        <div class="rh-label">SELL PRICE (INCL. ${marginPct}% MARGIN)</div>
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <div class="rh-value" style="font-size:52px">${formatR(sellPrice)}</div>
+        </div>
+        <div class="rh-sub">Total cost: ${formatR(totalCost)} — Profit: ${formatR(profit)}</div>
+      </div>
+
+      <div class="cost-summary-grid">
+        <div class="cost-summary-card">
+          <div class="cost-summary-label">Materials</div>
+          <div class="cost-summary-val">${formatR(matTotal)}</div>
+        </div>
+        <div class="cost-summary-card">
+          <div class="cost-summary-label">Consumables</div>
+          <div class="cost-summary-val">${formatR(consTotal)}</div>
+        </div>
+        <div class="cost-summary-card">
+          <div class="cost-summary-label">Labour</div>
+          <div class="cost-summary-val">${formatR(labourCost)}</div>
+        </div>
+        ${deliveryEnabled ? `<div class="cost-summary-card"><div class="cost-summary-label">Delivery</div><div class="cost-summary-val">${formatR(deliveryCost)}</div></div>` : ''}
+        <div class="cost-summary-card">
+          <div class="cost-summary-label">Total cost</div>
+          <div class="cost-summary-val">${formatR(totalCost)}</div>
+        </div>
+        <div class="cost-summary-card highlight">
+          <div class="cost-summary-label">Your profit</div>
+          <div class="cost-summary-val">${formatR(profit)}</div>
+        </div>
+        <div class="cost-summary-card">
+          <div class="cost-summary-label">Markup applied</div>
+          <div class="cost-summary-val">${markup.toFixed(1)}<span class="u">%</span></div>
+        </div>
+        <div class="cost-summary-card highlight">
+          <div class="cost-summary-label">Actual margin</div>
+          <div class="cost-summary-val">${marginPct}<span class="u">%</span></div>
+        </div>
+      </div>
+
+      <div class="margin-explainer">
+        <div class="margin-explainer-title">Your price breakdown</div>
+        <div class="margin-row">
+          <div class="margin-seg margin-seg-cost" style="width:${costPct}%">${costPct}% cost</div>
+          <div class="margin-seg margin-seg-profit" style="width:${profitPct}%">${profitPct}% profit</div>
+        </div>
+        <div class="margin-legend">
+          <span><div class="dot" style="background:var(--surface3);border:1px solid var(--border)"></div>Cost ${formatR(totalCost)}</span>
+          <span><div class="dot" style="background:var(--green-dim);border:1px solid var(--green)"></div>Profit ${formatR(profit)}</span>
+          <span style="color:var(--text2)">Sell price: ${formatR(sellPrice)}</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:8px">You added a ${markup.toFixed(1)}% markup on your cost to achieve a ${marginPct}% gross margin.</div>
+      </div>
+
+      <div class="action-row" style="margin-top:12px">
+        <button class="act-btn" onclick="setCostingView('quote');window.print()">Print Quote</button>
+        <button class="act-btn" onclick="copyCostingSummary(${sellPrice.toFixed(2)},${totalCost.toFixed(2)},${profit.toFixed(2)},${marginPct})">Copy Summary</button>
+      </div>
+      <button class="reset-btn" onclick="resetCosting()">↺ Start over</button>
+    </div>
+
+    <!-- CLIENT QUOTE VIEW -->
+    <div id="costing-quote-view" style="display:none">
+      <div class="quote-doc">
+        <div class="quote-doc-header">
+          <div>
+            <div class="quote-biz-name">${bizName}</div>
+            ${vatNum ? `<div class="quote-biz-vat">VAT Reg: ${vatNum}</div>` : ''}
+          </div>
+          <div class="quote-meta">
+            <strong>QUOTATION</strong>
+            <span>For: ${client}</span><br>
+            <span>${dateFormatted}</span>
+          </div>
+        </div>
+
+        <table class="quote-table">
+          ${materials.length > 0 ? `
+          <tr><td colspan="3" class="quote-section-head">MATERIALS</td></tr>
+          <tr><th>Description</th><th style="text-align:right">Qty</th><th>Amount</th></tr>
+          ${matRows}` : ''}
+
+          ${consumables.length > 0 ? `
+          <tr><td colspan="3" class="quote-section-head">CONSUMABLES</td></tr>
+          <tr><th>Description</th><th style="text-align:right">Qty</th><th>Amount</th></tr>
+          ${consRows}` : ''}
+
+          ${labourCost > 0 ? `
+          <tr><td colspan="3" class="quote-section-head">LABOUR</td></tr>
+          <tr><th>Description</th><th></th><th>Amount</th></tr>
+          <tr><td>Labour — ${labourDesc}</td><td></td><td>${formatR(labourCost)}</td></tr>` : ''}
+
+          ${deliveryEnabled && deliveryCost > 0 ? `
+          <tr><td colspan="3" class="quote-section-head">DELIVERY</td></tr>
+          <tr><td>Delivery — ${deliveryDesc}</td><td></td><td>${formatR(deliveryCost)}</td></tr>` : ''}
+
+          <tr class="quote-total-row">
+            <td colspan="2">TOTAL</td>
+            <td>${formatR(sellPrice)}</td>
+          </tr>
+        </table>
+
+        <div class="quote-footer">
+          This quotation is valid for 30 days from the date of issue.<br>
+          Generated by GapCalc — gapcalc.com
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="act-btn" onclick="window.print()">Print / Save PDF</button>
+        <button class="act-btn" onclick="setCostingView('internal')">← My Numbers</button>
+      </div>
+    </div>
+  `;
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  gtag('event', 'job_costing_used', { margin: marginPct });
+}
+
+function copyCostingSummary(sell, cost, profit, margin) {
+  const txt = `GapCalc — Job Costing\n---\nSell price: R ${parseFloat(sell).toFixed(2)}\nTotal cost: R ${parseFloat(cost).toFixed(2)}\nProfit: R ${parseFloat(profit).toFixed(2)}\nMargin: ${margin}%\n\ngapcalc.com`;
+  copy(txt, event.target);
+}
+
+function resetCosting() {
+  document.getElementById('costing-results').className = 'results';
+  document.getElementById('costing-results').innerHTML = '';
+  document.querySelectorAll('#tab-costing input').forEach(el => { el.value = ''; el.style.borderColor = ''; });
+  document.getElementById('materials-wrap').innerHTML = '';
+  document.getElementById('consumables-wrap').innerHTML = '';
+  matCount = 0; consCount = 0;
+  labourMode = 'hourly';
+  setLabourMode('hourly');
+  deliveryEnabled = false;
+  document.getElementById('delivery-toggle').checked = false;
+  document.getElementById('delivery-fields').style.display = 'none';
+  vatEnabled = false;
+  document.getElementById('vat-toggle').checked = false;
+  document.getElementById('vat-field').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init — add one row to each section on load
+function initCosting() {
+  addLineItem('materials');
+  addLineItem('consumables');
+  // Set today as default date
+  const today = new Date().toISOString().split('T')[0];
+  const dateEl = document.getElementById('q-date');
+  if (dateEl) dateEl.value = today;
+}
+
 // Enter key triggers calculate
 document.getElementById('tab-gaps').addEventListener('keydown', e => { if (e.key==='Enter') calcGaps(); });
 document.getElementById('tab-cutlist').addEventListener('keydown', e => { if (e.key==='Enter') calcCutList(); });
 document.getElementById('tab-weight').addEventListener('keydown', e => { if (e.key==='Enter') calcWeight(); });
 document.getElementById('tab-angle').addEventListener('keydown', e => { if (e.key==='Enter') calcAngle(); });
 document.getElementById('tab-rods').addEventListener('keydown', e => { if (e.key==='Enter') calcRodEstimator(); });
+document.getElementById('tab-costing').addEventListener('keydown', e => { if (e.key==='Enter') calcCosting(); });
 
 // Init angle width presets
 renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');
 
 // Init weight calculator dimensions
 renderDimFields('flatbar');
+// Init costing
+initCosting();
 </script>
 </body>
 </html>

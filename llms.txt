@@ -1,0 +1,22 @@
+# GapCalc
+> Free workshop calculators for welders, fabricators, and makers.
+
+GapCalc is a free, no-login web application built for welders, metal fabricators, woodworkers, and DIY makers. It provides practical calculators to help plan and execute workshop projects accurately.
+
+## Tools available
+
+- **Gap Calculator**: Calculates equal bar or slat spacing across a frame. Uses edge-to-edge formula with n-1 gaps.
+- **Cut List Calculator**: Plans steel or timber cuts from standard stock lengths. Shows cuts per length, offcut sizes, and waste percentage including blade kerf.
+- **Weight Calculator**: Calculates total order weight for steel profiles (flat bar, square tube, round bar, round tube, angle iron) and timber sections. Includes bakkie (pickup truck) load indicator.
+- **Angle Cuts Calculator**: Calculates short point, long point, cut face length, and offset for any cut angle. Generates SVG cut diagrams for single end, mitre, and parallel cuts.
+- **Rod Estimator**: Recommends welding rod type based on material, joint type, and weld position. Estimates rod quantity and packs to buy with skill-level wastage adjustment.
+- **Job Costing Calculator**: Calculates material, consumable, labour, and delivery costs. Applies margin pricing and generates a clean client quote output.
+
+## Target audience
+South African welders, fabricators, makers, and small workshop businesses.
+
+## URL
+https://gapcalc.com
+
+## Creator
+Brendan Glover — https://x.com/brendanglover_x
