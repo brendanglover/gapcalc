@@ -1771,7 +1771,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <a href="https://github.com/brendanglover" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">GitHub</a>
   </p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.1.0 &nbsp;·&nbsp; Updated 26 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.1.3 &nbsp;·&nbsp; Updated 27 March 2026</p>
 </footer>
 
 <script>
@@ -2045,6 +2045,7 @@ function calcCutList() {
   const offcutW = ((fullLengthOffcut / S) * 100).toFixed(1);
   const usedW = (100 - parseFloat(offcutW)).toFixed(1);
 
+  pendingSend = { section: 'materials', desc: `${(S/1000).toFixed(S%1000===0?0:2)}m stock — ${Q} × ${p}mm pieces`, qty: lengthsNeeded };
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">LENGTHS TO BUY</div>
@@ -2092,6 +2093,7 @@ function calcCutList() {
     <div class="action-row" style="margin-top:10px">
       <button class="act-btn" onclick="window.print()">Print cut list</button>
       <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut.toFixed(0)})">Copy</button>
+      <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-cutlist')">↺ Start over</button>
   `;
@@ -2264,6 +2266,7 @@ function calcWeight() {
   const fillColor = fillPct<60?'var(--green)':fillPct<85?'var(--accent)':'var(--red)';
   const bakkieClass = fillPct<60?'ok':fillPct<85?'warn':'over';
   const bakkieMsg = totalWeight>BAKKIE_LIMIT ? '✗ Exceeds a standard bakkie payload (~750kg). Consider two trips or delivery.' : fillPct>=85 ? '⚠ Close to the limit — check your bakkie rated payload before loading.' : fillPct>=60 ? '⚠ Getting heavy — double-check your bakkie rated payload.' : '✓ Well within a standard bakkie payload (~750kg). Easy trip.';
+  pendingSend = { section: 'materials', desc: buildWeightDesc(L), qty: Q };
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">TOTAL ORDER WEIGHT</div>
@@ -2285,6 +2288,7 @@ function calcWeight() {
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
       <button class="act-btn" onclick="copyWeightResult(${totalWeight.toFixed(2)},${weightPerPiece.toFixed(2)},${weightPerMetre.toFixed(3)},${Q})">Copy</button>
+      <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-weight')">↺ Start over</button>`;
   box.scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -2954,6 +2958,7 @@ function calcRodEstimator() {
 
   const skillLabels = { beginner:'Beginner (35% wastage added)', intermediate:'Intermediate (20% wastage added)', experienced:'Experienced (10% wastage added)' };
 
+  pendingSend = { section: 'consumables', desc: `${rodDiam}mm ${ROD_DB[rodMaterial].rec} rods`, qty: packs5kg };
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">RODS NEEDED</div>
@@ -3007,6 +3012,7 @@ function calcRodEstimator() {
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
       <button class="act-btn" onclick="copyRodEst(${rodsNeeded},${packs5kg},${packs500g},${rodDiam})">Copy</button>
+      <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
     <button class="reset-btn" onclick="resetRodEst()">↺ Start over</button>
   `;
@@ -3069,6 +3075,7 @@ let labourMode = 'hourly';
 let deliveryEnabled = false;
 let vatEnabled = false;
 let costingView = 'internal';
+let pendingSend = null;
 
 // Line item counters
 let matCount = 0;
@@ -3138,6 +3145,43 @@ function setCostingView(view) {
   document.getElementById('view-btn-quote').classList.toggle('active', view === 'quote');
   document.getElementById('costing-internal-view').style.display = view === 'internal' ? '' : 'none';
   document.getElementById('costing-quote-view').style.display = view === 'quote' ? '' : 'none';
+}
+
+function sendToJobCosting() {
+  if (!pendingSend) return;
+  const { section, desc, qty } = pendingSend;
+  switchTab('costing');
+  addLineItem(section);
+  const id = section === 'materials' ? matCount : consCount;
+  const descEl = document.getElementById(section + '-desc-' + id);
+  const qtyEl = document.getElementById(section + '-qty-' + id);
+  const priceEl = document.getElementById(section + '-price-' + id);
+  if (descEl) descEl.value = desc;
+  if (qtyEl) qtyEl.value = qty;
+  if (priceEl) {
+    priceEl.style.borderColor = 'var(--accent)';
+    priceEl.focus();
+    priceEl.addEventListener('input', () => { priceEl.style.borderColor = ''; }, { once: true });
+  }
+  const row = document.getElementById(section + '-row-' + id);
+  if (row) setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+function buildWeightDesc(L) {
+  const Lm = (L / 1000).toFixed(L % 1000 === 0 ? 0 : 2);
+  if (wMaterial === 'wood') {
+    const w = document.getElementById('w-tw')?.value || '';
+    const t = document.getElementById('w-tt')?.value || '';
+    return `${w}×${t} timber — ${Lm}m`;
+  }
+  switch (wProfile) {
+    case 'flatbar': { const w=document.getElementById('w-width')?.value||'',t=document.getElementById('w-thick')?.value||''; return `${w}×${t} flat bar — ${Lm}m`; }
+    case 'sqtube':  { const o=document.getElementById('w-outer')?.value||'',wt=document.getElementById('w-wall')?.value||''; return `${o}×${o}×${wt} sq tube — ${Lm}m`; }
+    case 'roundbar':{ const d=document.getElementById('w-diam')?.value||''; return `${d}mm round bar — ${Lm}m`; }
+    case 'roundtube':{ const od=document.getElementById('w-od')?.value||'',wt=document.getElementById('w-wall2')?.value||''; return `${od}×${wt} round tube — ${Lm}m`; }
+    case 'angle':   { const l1=document.getElementById('w-leg1')?.value||'',l2=document.getElementById('w-leg2')?.value||'',t=document.getElementById('w-athick')?.value||''; return `${l1}×${l2}×${t} angle — ${Lm}m`; }
+  }
+  return `Steel — ${Lm}m`;
 }
 
 function calcCosting() {
