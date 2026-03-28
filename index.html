@@ -886,7 +886,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <div class="feature-card" onclick="openTool('weight')">
       <div class="feature-card-icon">⚖</div>
       <div class="feature-card-title">WEIGHT CALCULATOR</div>
-      <div class="feature-card-desc">Calculate your total order weight before heading to the supplier. Includes a bakkie load indicator so you know what you can carry.</div>
+      <div class="feature-card-desc">Calculate your total order weight before heading to the supplier. Includes a vehicle load indicator so you know what you can carry.</div>
       <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
@@ -1112,7 +1112,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   <div style="height:8px"></div>
 
   <div class="note">
-    <strong>Know before you go.</strong> Calculate the total weight of your steel or timber order before heading to the supplier — so you know if your bakkie can handle it.
+    <strong>Know before you go.</strong> Calculate the total weight of your steel or timber order before heading to the supplier — so you know if your vehicle can handle it.
   </div>
 
   <!-- Material toggle -->
@@ -1130,6 +1130,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <div class="profile-grid">
       <button class="profile-btn active" onclick="setProfile('flatbar')"><span class="picon">▬</span>Flat Bar</button>
       <button class="profile-btn" onclick="setProfile('sqtube')"><span class="picon">□</span>Square Tube</button>
+      <button class="profile-btn" onclick="setProfile('recttube')"><span class="picon">▭</span>Rect Tube</button>
       <button class="profile-btn" onclick="setProfile('roundbar')"><span class="picon">●</span>Round Bar</button>
       <button class="profile-btn" onclick="setProfile('roundtube')"><span class="picon">◯</span>Round Tube</button>
       <button class="profile-btn" onclick="setProfile('angle')"><span class="picon">∟</span>Angle Iron</button>
@@ -1575,6 +1576,21 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <strong>Price your work properly.</strong> Enter your materials, labour, and consumables. GapCalc calculates your cost, suggests a sell price, and generates a clean quote for your client — keeping your margins private.
   </div>
 
+  <!-- CURRENCY -->
+  <div class="card">
+    <div class="card-label">Currency</div>
+    <select class="w-select" id="currency-select" onchange="updateCurrencyLabels()">
+      <option value="ZAR" selected>ZAR — R (South African Rand)</option>
+      <option value="USD">USD — $ (US Dollar)</option>
+      <option value="GBP">GBP — £ (British Pound)</option>
+      <option value="EUR">EUR — € (Euro)</option>
+      <option value="AUD">AUD — A$ (Australian Dollar)</option>
+      <option value="CAD">CAD — C$ (Canadian Dollar)</option>
+      <option value="NZD">NZD — NZ$ (New Zealand Dollar)</option>
+    </select>
+    <p style="font-size:12px;color:var(--text2);margin-top:8px">All amounts will display in your selected currency. Enter your local prices.</p>
+  </div>
+
   <!-- QUOTE DETAILS -->
   <div class="card">
     <div class="card-label">Quote Details</div>
@@ -1649,7 +1665,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
           <div class="input-meta"><span class="input-meta-label">Your hourly rate</span></div>
           <div class="input-wrap">
             <input type="number" id="labour-rate" inputmode="decimal" placeholder="e.g. 350">
-            <span class="input-unit">R/hr</span>
+            <span class="input-unit" id="labour-rate-unit">R/hr</span>
           </div>
         </div>
         <div class="input-group">
@@ -1667,7 +1683,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
         <div class="input-meta"><span class="input-meta-label">Flat labour fee for this job</span></div>
         <div class="input-wrap">
           <input type="number" id="labour-flat" inputmode="decimal" placeholder="e.g. 2500">
-          <span class="input-unit">R</span>
+          <span class="input-unit" id="labour-flat-unit">R</span>
         </div>
       </div>
     </div>
@@ -1696,7 +1712,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
           <div class="input-meta"><span class="input-meta-label">Fuel price</span></div>
           <div class="input-wrap">
             <input type="number" id="del-fuel" inputmode="decimal" placeholder="e.g. 22.50">
-            <span class="input-unit">R/L</span>
+            <span class="input-unit" id="del-fuel-unit">R/L</span>
           </div>
         </div>
       </div>
@@ -1712,7 +1728,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
           <div class="input-meta"><span class="input-meta-label">Your time cost (hourly)</span></div>
           <div class="input-wrap">
             <input type="number" id="del-timerate" inputmode="decimal" placeholder="e.g. 350">
-            <span class="input-unit">R/hr</span>
+            <span class="input-unit" id="del-timerate-unit">R/hr</span>
           </div>
         </div>
       </div>
@@ -1756,7 +1772,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     </div>
   </div>
 
-  <button class="go-btn" onclick="calcCosting()">R CALCULATE JOB COST</button>
+  <button class="go-btn" id="costing-calc-btn" onclick="calcCosting()">R CALCULATE JOB COST</button>
 
   <div class="results" id="costing-results"></div>
 
@@ -1771,7 +1787,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <a href="https://github.com/brendanglover" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">GitHub</a>
   </p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.1.3 &nbsp;·&nbsp; Updated 27 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.2.0 &nbsp;·&nbsp; Updated 28 March 2026</p>
 </footer>
 
 <script>
@@ -2144,6 +2160,7 @@ const STEEL_DENSITY = 7.85;
 const PROFILE_FIELDS = {
   flatbar: [{id:'w-width',label:'Width',placeholder:'e.g. 40',unit:'mm'},{id:'w-thick',label:'Thickness',placeholder:'e.g. 4.5',unit:'mm'}],
   sqtube:  [{id:'w-outer',label:'Outer size',placeholder:'e.g. 25',unit:'mm'},{id:'w-wall',label:'Wall thickness',placeholder:'e.g. 1.6',unit:'mm'}],
+  recttube:[{id:'w-rw',label:'Width (outer)',placeholder:'e.g. 50',unit:'mm'},{id:'w-rh',label:'Height (outer)',placeholder:'e.g. 25',unit:'mm'},{id:'w-rwall',label:'Wall thickness',placeholder:'e.g. 1.6',unit:'mm'}],
   roundbar:[{id:'w-diam',label:'Diameter',placeholder:'e.g. 20',unit:'mm'}],
   roundtube:[{id:'w-od',label:'Outer diameter',placeholder:'e.g. 33.7',unit:'mm'},{id:'w-wall2',label:'Wall thickness',placeholder:'e.g. 2',unit:'mm'}],
   angle:   [{id:'w-leg1',label:'Leg 1',placeholder:'e.g. 50',unit:'mm'},{id:'w-leg2',label:'Leg 2',placeholder:'e.g. 50',unit:'mm'},{id:'w-athick',label:'Thickness',placeholder:'e.g. 5',unit:'mm'}],
@@ -2176,7 +2193,7 @@ function renderDimFields(profile) {
   const fields = PROFILE_FIELDS[profile] || [];
   const container = document.getElementById('w-dims-fields');
   const label = document.getElementById('w-dims-label');
-  const names = {flatbar:'Flat Bar Dimensions',sqtube:'Square Tube Dimensions',roundbar:'Round Bar Dimensions',roundtube:'Round Tube Dimensions',angle:'Angle Iron Dimensions',timber:'Timber Section Dimensions'};
+  const names = {flatbar:'Flat Bar Dimensions',sqtube:'Square Tube Dimensions',recttube:'Rectangular Tube Dimensions',roundbar:'Round Bar Dimensions',roundtube:'Round Tube Dimensions',angle:'Angle Iron Dimensions',timber:'Timber Section Dimensions'};
   label.textContent = names[profile] || 'Dimensions';
   const field = f => `<div class="input-group"><div class="input-meta"><span class="input-meta-label">${f.label}</span></div><div class="input-wrap"><input type="number" id="${f.id}" inputmode="decimal" placeholder="${f.placeholder}"><span class="input-unit">${f.unit}</span></div></div>`;
   let html = '';
@@ -2210,6 +2227,7 @@ function getCrossSectionCm2() {
   switch(wProfile) {
     case 'flatbar': { const w=c(parseFloat(document.getElementById('w-width')?.value)),t=c(parseFloat(document.getElementById('w-thick')?.value)); return (w&&t)?w*t:null; }
     case 'sqtube': { const o=c(parseFloat(document.getElementById('w-outer')?.value)),wt=c(parseFloat(document.getElementById('w-wall')?.value)); if(!o||!wt)return null; const i=o-2*wt; return i>0?o*o-i*i:null; }
+    case 'recttube': { const rw=c(parseFloat(document.getElementById('w-rw')?.value)),rh=c(parseFloat(document.getElementById('w-rh')?.value)),wt=c(parseFloat(document.getElementById('w-rwall')?.value)); if(!rw||!rh||!wt)return null; const iw=rw-2*wt,ih=rh-2*wt; return (iw>0&&ih>0)?rw*rh-iw*ih:null; }
     case 'roundbar': { const d=c(parseFloat(document.getElementById('w-diam')?.value)); return d?Math.PI*(d/2)*(d/2):null; }
     case 'roundtube': { const od=c(parseFloat(document.getElementById('w-od')?.value)),wt=c(parseFloat(document.getElementById('w-wall2')?.value)); if(!od||!wt)return null; const id=od-2*wt; return id>0?Math.PI*((od/2)*(od/2)-(id/2)*(id/2)):null; }
     case 'angle': { const l1=c(parseFloat(document.getElementById('w-leg1')?.value)),l2=c(parseFloat(document.getElementById('w-leg2')?.value)),t=c(parseFloat(document.getElementById('w-athick')?.value)); return (l1&&l2&&t)?(l1+l2-t)*t:null; }
@@ -2236,7 +2254,7 @@ function highlightEmpty(ids) {
 
 function getDimFieldIds() {
   if (wMaterial === 'wood') return ['w-tw','w-tt'];
-  const map = { flatbar:['w-width','w-thick'], sqtube:['w-outer','w-wall'], roundbar:['w-diam'], roundtube:['w-od','w-wall2'], angle:['w-leg1','w-leg2','w-athick'] };
+  const map = { flatbar:['w-width','w-thick'], sqtube:['w-outer','w-wall'], recttube:['w-rw','w-rh','w-rwall'], roundbar:['w-diam'], roundtube:['w-od','w-wall2'], angle:['w-leg1','w-leg2','w-athick'] };
   return map[wProfile] || [];
 }
 
@@ -2265,7 +2283,7 @@ function calcWeight() {
   const fillPct = Math.min((totalWeight/BAKKIE_LIMIT)*100,100);
   const fillColor = fillPct<60?'var(--green)':fillPct<85?'var(--accent)':'var(--red)';
   const bakkieClass = fillPct<60?'ok':fillPct<85?'warn':'over';
-  const bakkieMsg = totalWeight>BAKKIE_LIMIT ? '✗ Exceeds a standard bakkie payload (~750kg). Consider two trips or delivery.' : fillPct>=85 ? '⚠ Close to the limit — check your bakkie rated payload before loading.' : fillPct>=60 ? '⚠ Getting heavy — double-check your bakkie rated payload.' : '✓ Well within a standard bakkie payload (~750kg). Easy trip.';
+  const bakkieMsg = totalWeight>BAKKIE_LIMIT ? '✗ Exceeds a standard vehicle payload (~750kg). Consider two trips or arrange delivery.' : fillPct>=85 ? '⚠ Close to the limit — check your vehicle\'s rated payload before loading.' : fillPct>=60 ? '⚠ Getting heavy — double-check your vehicle\'s rated payload.' : '✓ Well within your vehicle\'s payload (~750kg). Easy trip.';
   pendingSend = { section: 'materials', desc: buildWeightDesc(L), qty: Q };
   box.innerHTML = `
     <div class="result-hero">
@@ -2280,7 +2298,7 @@ function calcWeight() {
       <div class="stat"><div class="stat-label">Piece length</div><div class="stat-val">${L} <span class="u">mm</span></div></div>
     </div>
     <div class="bakkie-wrap">
-      <div class="bakkie-label-row"><span class="bakkie-title">Bakkie load indicator</span><span class="bakkie-kg">${totalWeight.toFixed(1)}kg / ${BAKKIE_LIMIT}kg</span></div>
+      <div class="bakkie-label-row"><span class="bakkie-title">Vehicle load indicator</span><span class="bakkie-kg">${totalWeight.toFixed(1)}kg / ${BAKKIE_LIMIT}kg</span></div>
       <div class="bakkie-track"><div class="bakkie-fill" style="width:${fillPct.toFixed(1)}%;background:${fillColor}"></div></div>
       <div class="bakkie-markers"><span>0</span><span>250kg</span><span>500kg</span><span>750kg</span></div>
       <div class="bakkie-note ${bakkieClass}">${bakkieMsg}</div>
@@ -3135,8 +3153,28 @@ function getLineItems(type) {
   return items;
 }
 
-function formatR(val) {
-  return 'R ' + val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const CURRENCIES = {
+  ZAR: 'R', USD: '$', GBP: '£',
+  EUR: '€', AUD: 'A$', CAD: 'C$', NZD: 'NZ$'
+};
+
+function getCurrencySymbol() {
+  const sel = document.getElementById('currency-select');
+  return sel ? CURRENCIES[sel.value] || 'R' : 'R';
+}
+
+function formatCurrency(val) {
+  return getCurrencySymbol() + ' ' + val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function updateCurrencyLabels() {
+  const sym = getCurrencySymbol();
+  const el = (id) => document.getElementById(id);
+  if (el('labour-rate-unit')) el('labour-rate-unit').textContent = sym + '/hr';
+  if (el('labour-flat-unit')) el('labour-flat-unit').textContent = sym;
+  if (el('del-fuel-unit')) el('del-fuel-unit').textContent = sym + '/L';
+  if (el('del-timerate-unit')) el('del-timerate-unit').textContent = sym + '/hr';
+  if (el('costing-calc-btn')) el('costing-calc-btn').textContent = sym + ' CALCULATE JOB COST';
 }
 
 function setCostingView(view) {
@@ -3177,6 +3215,7 @@ function buildWeightDesc(L) {
   switch (wProfile) {
     case 'flatbar': { const w=document.getElementById('w-width')?.value||'',t=document.getElementById('w-thick')?.value||''; return `${w}×${t} flat bar — ${Lm}m`; }
     case 'sqtube':  { const o=document.getElementById('w-outer')?.value||'',wt=document.getElementById('w-wall')?.value||''; return `${o}×${o}×${wt} sq tube — ${Lm}m`; }
+    case 'recttube':{ const rw=document.getElementById('w-rw')?.value||'',rh=document.getElementById('w-rh')?.value||'',wt=document.getElementById('w-rwall')?.value||''; return `${rw}×${rh}×${wt} rect tube — ${Lm}m`; }
     case 'roundbar':{ const d=document.getElementById('w-diam')?.value||''; return `${d}mm round bar — ${Lm}m`; }
     case 'roundtube':{ const od=document.getElementById('w-od')?.value||'',wt=document.getElementById('w-wall2')?.value||''; return `${od}×${wt} round tube — ${Lm}m`; }
     case 'angle':   { const l1=document.getElementById('w-leg1')?.value||'',l2=document.getElementById('w-leg2')?.value||'',t=document.getElementById('w-athick')?.value||''; return `${l1}×${l2}×${t} angle — ${Lm}m`; }
@@ -3205,7 +3244,7 @@ function calcCosting() {
     const rate = parseFloat(document.getElementById('labour-rate').value) || 0;
     const hours = parseFloat(document.getElementById('labour-hours').value) || 0;
     labourCost = rate * hours;
-    labourDesc = `${hours}hrs @ ${formatR(rate)}/hr`;
+    labourDesc = `${hours}hrs @ ${formatCurrency(rate)}/hr`;
   } else {
     labourCost = parseFloat(document.getElementById('labour-flat').value) || 0;
     labourDesc = 'Flat fee';
@@ -3251,11 +3290,11 @@ function calcCosting() {
 
   // Build material rows for quote
   const matRows = materials.map(i =>
-    `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${i.qty} × ${formatR(i.price)}</td><td>${formatR(i.total)}</td></tr>`
+    `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${i.qty} × ${formatCurrency(i.price)}</td><td>${formatCurrency(i.total)}</td></tr>`
   ).join('');
 
   const consRows = consumables.map(i =>
-    `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${i.qty} × ${formatR(i.price)}</td><td>${formatR(i.total)}</td></tr>`
+    `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${i.qty} × ${formatCurrency(i.price)}</td><td>${formatCurrency(i.total)}</td></tr>`
   ).join('');
 
   // Visual margin bar
@@ -3273,32 +3312,32 @@ function calcCosting() {
       <div class="result-hero">
         <div class="rh-label">SELL PRICE (INCL. ${marginPct}% MARGIN)</div>
         <div style="display:flex;align-items:baseline;gap:8px">
-          <div class="rh-value" style="font-size:52px">${formatR(sellPrice)}</div>
+          <div class="rh-value" style="font-size:52px">${formatCurrency(sellPrice)}</div>
         </div>
-        <div class="rh-sub">Total cost: ${formatR(totalCost)} — Profit: ${formatR(profit)}</div>
+        <div class="rh-sub">Total cost: ${formatCurrency(totalCost)} — Profit: ${formatCurrency(profit)}</div>
       </div>
 
       <div class="cost-summary-grid">
         <div class="cost-summary-card">
           <div class="cost-summary-label">Materials</div>
-          <div class="cost-summary-val">${formatR(matTotal)}</div>
+          <div class="cost-summary-val">${formatCurrency(matTotal)}</div>
         </div>
         <div class="cost-summary-card">
           <div class="cost-summary-label">Consumables</div>
-          <div class="cost-summary-val">${formatR(consTotal)}</div>
+          <div class="cost-summary-val">${formatCurrency(consTotal)}</div>
         </div>
         <div class="cost-summary-card">
           <div class="cost-summary-label">Labour</div>
-          <div class="cost-summary-val">${formatR(labourCost)}</div>
+          <div class="cost-summary-val">${formatCurrency(labourCost)}</div>
         </div>
-        ${deliveryEnabled ? `<div class="cost-summary-card"><div class="cost-summary-label">Delivery</div><div class="cost-summary-val">${formatR(deliveryCost)}</div></div>` : ''}
+        ${deliveryEnabled ? `<div class="cost-summary-card"><div class="cost-summary-label">Delivery</div><div class="cost-summary-val">${formatCurrency(deliveryCost)}</div></div>` : ''}
         <div class="cost-summary-card">
           <div class="cost-summary-label">Total cost</div>
-          <div class="cost-summary-val">${formatR(totalCost)}</div>
+          <div class="cost-summary-val">${formatCurrency(totalCost)}</div>
         </div>
         <div class="cost-summary-card highlight">
           <div class="cost-summary-label">Your profit</div>
-          <div class="cost-summary-val">${formatR(profit)}</div>
+          <div class="cost-summary-val">${formatCurrency(profit)}</div>
         </div>
         <div class="cost-summary-card">
           <div class="cost-summary-label">Markup applied</div>
@@ -3317,9 +3356,9 @@ function calcCosting() {
           <div class="margin-seg margin-seg-profit" style="width:${profitPct}%">${profitPct}% profit</div>
         </div>
         <div class="margin-legend">
-          <span><div class="dot" style="background:var(--surface3);border:1px solid var(--border)"></div>Cost ${formatR(totalCost)}</span>
-          <span><div class="dot" style="background:var(--green-dim);border:1px solid var(--green)"></div>Profit ${formatR(profit)}</span>
-          <span style="color:var(--text2)">Sell price: ${formatR(sellPrice)}</span>
+          <span><div class="dot" style="background:var(--surface3);border:1px solid var(--border)"></div>Cost ${formatCurrency(totalCost)}</span>
+          <span><div class="dot" style="background:var(--green-dim);border:1px solid var(--green)"></div>Profit ${formatCurrency(profit)}</span>
+          <span style="color:var(--text2)">Sell price: ${formatCurrency(sellPrice)}</span>
         </div>
         <div style="font-size:11px;color:var(--text3);margin-top:8px">You added a ${markup.toFixed(1)}% markup on your cost to achieve a ${marginPct}% gross margin.</div>
       </div>
@@ -3360,15 +3399,15 @@ function calcCosting() {
           ${labourCost > 0 ? `
           <tr><td colspan="3" class="quote-section-head">LABOUR</td></tr>
           <tr><th>Description</th><th></th><th>Amount</th></tr>
-          <tr><td>Labour — ${labourDesc}</td><td></td><td>${formatR(labourCost)}</td></tr>` : ''}
+          <tr><td>Labour — ${labourDesc}</td><td></td><td>${formatCurrency(labourCost)}</td></tr>` : ''}
 
           ${deliveryEnabled && deliveryCost > 0 ? `
           <tr><td colspan="3" class="quote-section-head">DELIVERY</td></tr>
-          <tr><td>Delivery — ${deliveryDesc}</td><td></td><td>${formatR(deliveryCost)}</td></tr>` : ''}
+          <tr><td>Delivery — ${deliveryDesc}</td><td></td><td>${formatCurrency(deliveryCost)}</td></tr>` : ''}
 
           <tr class="quote-total-row">
             <td colspan="2">TOTAL</td>
-            <td>${formatR(sellPrice)}</td>
+            <td>${formatCurrency(sellPrice)}</td>
           </tr>
         </table>
 
@@ -3390,7 +3429,10 @@ function calcCosting() {
 }
 
 function copyCostingSummary(sell, cost, profit, margin) {
-  const txt = `GapCalc — Job Costing\n---\nSell price: R ${parseFloat(sell).toFixed(2)}\nTotal cost: R ${parseFloat(cost).toFixed(2)}\nProfit: R ${parseFloat(profit).toFixed(2)}\nMargin: ${margin}%\n\ngapcalc.com`;
+  const sel = document.getElementById('currency-select');
+  const code = sel ? sel.value : 'ZAR';
+  const fmt = (v) => getCurrencySymbol() + ' ' + parseFloat(v).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const txt = `GapCalc — Job Costing\n---\nSell price: ${fmt(sell)} (${code})\nTotal cost: ${fmt(cost)} (${code})\nProfit: ${fmt(profit)} (${code})\nMargin: ${margin}%\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -3409,6 +3451,9 @@ function resetCosting() {
   vatEnabled = false;
   document.getElementById('vat-toggle').checked = false;
   document.getElementById('vat-field').style.display = 'none';
+  const currencySelect = document.getElementById('currency-select');
+  if (currencySelect) currencySelect.value = 'ZAR';
+  updateCurrencyLabels();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
