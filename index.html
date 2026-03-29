@@ -832,6 +832,81 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   .view-toggle, .go-btn, .reset-btn, .action-row, .back-btn-wrap { display: none !important; }
 }
 
+/* ═══════════════════════════════
+   PILL TOGGLE (bolt spacing, drill unit, MIG gas)
+   ═══════════════════════════════ */
+.pill-toggle { display:flex; gap:0; border-radius:8px; overflow:hidden; border:2px solid var(--border); }
+.pill-btn {
+  flex:1; padding:10px 8px;
+  border:none; background:var(--surface2); color:var(--text2);
+  font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:1.5px;
+  cursor:pointer; transition:all 0.2s; text-align:center;
+}
+.pill-btn.active { background:var(--accent-dim); color:var(--accent); }
+.pill-desc { font-size:11px; color:var(--text3); margin-top:8px; line-height:1.5; min-height:2.8em; }
+
+/* unit toggle (metric/imperial) */
+.unit-toggle { display:flex; gap:8px; margin-bottom:14px; }
+.unit-btn {
+  flex:1; padding:12px 8px;
+  border:2px solid var(--border); background:var(--surface2); color:var(--text2);
+  border-radius:8px; font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:1.5px;
+  cursor:pointer; text-align:center; transition:all 0.2s;
+}
+.unit-btn.active { border-color:var(--accent); background:var(--accent-dim); color:var(--accent); }
+
+/* ═══════════════════════════════
+   DRILL REFERENCE
+   ═══════════════════════════════ */
+.drill-size-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(68px,1fr)); gap:8px; }
+.drill-size-btn {
+  padding:10px 4px; border:2px solid var(--border);
+  background:var(--surface2); color:var(--text2);
+  border-radius:8px; font-family:'DM Mono',monospace; font-size:13px; font-weight:500;
+  cursor:pointer; text-align:center; transition:all 0.2s;
+}
+.drill-size-btn.active { border-color:var(--accent); background:var(--accent-dim); color:var(--accent); }
+.drill-result-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
+.drill-val-card { background:var(--surface2); border-radius:8px; padding:12px; border:1px solid var(--border); }
+.drill-val-label { font-size:10px; color:var(--text3); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+.drill-val-num { font-family:'DM Mono',monospace; font-size:18px; color:var(--accent); margin-bottom:4px; }
+.drill-val-desc { font-size:10px; color:var(--text2); line-height:1.4; }
+.drill-table-wrap { margin-top:8px; }
+.drill-table { width:100%; border-collapse:collapse; font-size:12px; }
+.drill-table th { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text3); text-align:left; padding:8px 6px; border-bottom:1px solid var(--border); font-family:'DM Sans',sans-serif; }
+.drill-table td { padding:8px 6px; border-bottom:1px solid var(--border2); font-family:'DM Mono',monospace; color:var(--text); }
+.drill-table tr:last-child td { border-bottom:none; }
+.drill-table td:first-child { color:var(--accent); font-weight:700; }
+.drill-table tr.drill-row-active td { background:var(--accent-dim); }
+.expand-btn {
+  width:100%; padding:11px; margin-top:8px;
+  border:1.5px dashed var(--border); background:transparent;
+  color:var(--text3); border-radius:8px; font-size:12px; font-weight:700;
+  letter-spacing:1px; cursor:pointer; transition:all 0.2s; text-transform:uppercase;
+}
+.expand-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+/* ═══════════════════════════════
+   MIG WIRE ESTIMATOR
+   ═══════════════════════════════ */
+.wire-opt-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.wire-opt-btn {
+  padding:11px 8px; border:2px solid var(--border);
+  background:var(--surface2); color:var(--text2);
+  border-radius:8px; font-size:11px; font-weight:700;
+  cursor:pointer; text-align:left; transition:all 0.2s; line-height:1.4;
+}
+.wire-opt-btn .wire-opt-code { font-family:'DM Mono',monospace; font-size:14px; display:block; margin-bottom:2px; }
+.wire-opt-btn .wire-opt-hint { font-size:10px; font-weight:400; color:var(--text3); }
+.wire-opt-btn.active { border-color:var(--accent); background:var(--accent-dim); color:var(--accent); }
+.wire-opt-btn.active .wire-opt-hint { color:var(--accent); opacity:0.7; }
+.gas-opt-grid { display:grid; grid-template-columns:1fr; gap:8px; }
+.gas-tip {
+  background:rgba(90,171,245,0.08); border:1px solid rgba(90,171,245,0.3);
+  border-radius:8px; padding:10px 14px;
+  font-size:12px; color:#8ac8ff; line-height:1.5; margin-bottom:10px;
+}
+
 </style>
 </head>
 <body>
@@ -911,10 +986,43 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
       <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
+    <div class="feature-card" onclick="openTool('bolts')">
+      <div class="feature-card-icon">○</div>
+      <div class="feature-card-title">BOLT SPACING</div>
+      <div class="feature-card-desc">Space bolts, screws, rivets, or hinges evenly along any length of steel, timber, or plate. Enter your length, fixing size, and count — get exact spacing.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+    <div class="feature-card" onclick="openTool('drill')">
+      <div class="feature-card-icon">⊕</div>
+      <div class="feature-card-title">DRILL REFERENCE</div>
+      <div class="feature-card-desc">Find the correct tap drill, clearance drill, and countersink size for any bolt. Metric and imperial. The reference you always needed in the workshop.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
+    <div class="feature-card" onclick="openTool('mig')">
+      <div class="feature-card-icon">◎</div>
+      <div class="feature-card-title">MIG WIRE ESTIMATOR</div>
+      <div class="feature-card-desc">Calculate how much MIG wire you need for any job. Select your wire diameter, joint type, and material thickness — get kg needed and reels to buy.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
     <div class="coming-soon-card">
       <span class="coming-soon-badge">COMING SOON</span>
-      <div class="coming-soon-title">BOLT SPACING</div>
-      <div class="coming-soon-desc">Evenly space bolts or holes along any length. Same precision as the Gap Calculator — built for drilling and fixing.</div>
+      <div class="coming-soon-title">PAINT &amp; PRIMER COVERAGE</div>
+      <div class="coming-soon-desc">Calculate exactly how much paint or primer you need for any surface. Never run short or overbuy again.</div>
+    </div>
+
+    <div class="coming-soon-card">
+      <span class="coming-soon-badge">COMING SOON</span>
+      <div class="coming-soon-title">MIG SETTINGS GUIDE</div>
+      <div class="coming-soon-desc">Recommended voltage, wire speed, and gas flow settings for your material thickness and wire diameter.</div>
+    </div>
+
+    <div class="coming-soon-card">
+      <span class="coming-soon-badge">COMING SOON</span>
+      <div class="coming-soon-title">SHEET METAL FLAT PATTERN</div>
+      <div class="coming-soon-desc">Calculate the correct flat blank size before bending. Cut right, bend right, first time.</div>
     </div>
 
   </div>
@@ -1765,8 +1873,8 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <div class="margin-explainer">
       <div class="margin-explainer-title">Markup vs Margin — know the difference</div>
       <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px">
-        <strong style="color:var(--text)">Markup</strong> is added on top of your cost. A 30% markup on R1000 = R1300 sell price.<br>
-        <strong style="color:var(--text)">Margin</strong> is your profit as a percentage of your <em>sell price</em>. A 30% margin on R1000 cost = R1428 sell price.<br>
+        <strong style="color:var(--text)">Markup</strong> is added on top of your cost. A 30% markup on 1,000 = 1,300 sell price.<br>
+        <strong style="color:var(--text)">Margin</strong> is your profit as a percentage of your <em>sell price</em>. A 30% margin on 1,000 cost = 1,429 sell price.<br>
         <span style="color:var(--accent)">Same profit goal — different numbers. This tool uses margin.</span>
       </div>
     </div>
@@ -1775,6 +1883,365 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   <button class="go-btn" id="costing-calc-btn" onclick="calcCosting()">R CALCULATE JOB COST</button>
 
   <div class="results" id="costing-results"></div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 7 — BOLT SPACING CALCULATOR
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-bolts">
+
+  <div style="height:8px"></div>
+
+  <div class="formula-box">
+    <div class="formula-title">The formula</div>
+    <div class="formula-text">
+      n = floor( (L + g) / (d + g) )<br>
+      g_actual = (L − n×d) / (n − 1)
+    </div>
+    <div class="formula-note">Same model as the Gap Calculator — fixings fill edge to edge, gaps only between them.</div>
+  </div>
+
+  <!-- Total length -->
+  <div class="card">
+    <div class="card-label">Surface Length</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">The length you are spacing fixings along</span>
+        <span class="input-meta-var">L</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="b-L" inputmode="decimal" placeholder="e.g. 900">
+        <span class="input-unit">mm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fixing diameter -->
+  <div class="card">
+    <div class="card-label">Fixing Diameter</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Diameter of the bolt hole or fixing</span>
+        <span class="input-meta-var">d</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="b-d" inputmode="decimal" placeholder="e.g. 10">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('b-d',5)">M5</button>
+        <button class="chip" onclick="setVal('b-d',6)">M6</button>
+        <button class="chip" onclick="setVal('b-d',8)">M8</button>
+        <button class="chip" onclick="setVal('b-d',10)">M10</button>
+        <button class="chip" onclick="setVal('b-d',12)">M12</button>
+        <button class="chip" onclick="setVal('b-d',16)">M16</button>
+        <button class="chip" onclick="setVal('b-d',20)">M20</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Target spacing + mode toggle -->
+  <div class="card">
+    <div class="card-label">Target Spacing</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Desired spacing between fixings</span>
+        <span class="input-meta-var">g</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="b-g" inputmode="decimal" placeholder="e.g. 150">
+        <span class="input-unit">mm</span>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="input-meta-label" style="font-size:11px;color:var(--text2);margin-bottom:8px">Spacing measurement method:</div>
+      <div class="pill-toggle">
+        <button class="pill-btn active" id="bmode-ctc" onclick="setBoltMode('ctc')">CENTRE TO CENTRE</button>
+        <button class="pill-btn" id="bmode-ete" onclick="setBoltMode('ete')">EDGE TO EDGE</button>
+      </div>
+      <div class="pill-desc" id="bmode-desc">Measured from centre of one fixing to centre of the next — standard engineering practice</div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcBolts()">○ CALCULATE SPACING</button>
+
+  <div class="results" id="b-results"></div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 8 — DRILL BIT & TAP REFERENCE
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-drill">
+
+  <div style="height:8px"></div>
+
+  <div class="note">
+    <strong>Always have the right drill.</strong> Select your thread size to instantly get tap drill, clearance drill, and countersink dimensions — no more guessing at the drill index.
+  </div>
+
+  <!-- Unit toggle -->
+  <div class="card">
+    <div class="card-label">Thread Standard</div>
+    <div class="unit-toggle">
+      <button class="unit-btn active" id="drill-metric-btn" onclick="setDrillUnit('metric')">METRIC</button>
+      <button class="unit-btn" id="drill-imperial-btn" onclick="setDrillUnit('imperial')">IMPERIAL (UNC)</button>
+    </div>
+
+    <!-- Metric sizes -->
+    <div id="drill-metric-sizes">
+      <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Select thread size:</div>
+      <div class="drill-size-grid" id="drill-metric-grid"></div>
+    </div>
+
+    <!-- Imperial sizes -->
+    <div id="drill-imperial-sizes" style="display:none">
+      <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Select thread size:</div>
+      <div class="drill-size-grid" id="drill-imperial-grid"></div>
+    </div>
+  </div>
+
+  <!-- Result card -->
+  <div id="drill-result-wrap" style="display:none">
+    <div class="card">
+      <div class="card-label" id="drill-result-title">M6 — DRILL SIZES</div>
+      <div class="drill-result-grid">
+        <div class="drill-val-card">
+          <div class="drill-val-label">Tap Drill</div>
+          <div class="drill-val-num" id="drill-tap-val">—</div>
+          <div class="drill-val-desc">Drill this size before tapping threads</div>
+        </div>
+        <div class="drill-val-card">
+          <div class="drill-val-label">Clearance Drill</div>
+          <div class="drill-val-num" id="drill-clear-val">—</div>
+          <div class="drill-val-desc">Drill this size for a bolt to pass through freely</div>
+        </div>
+        <div class="drill-val-card">
+          <div class="drill-val-label">Countersink</div>
+          <div class="drill-val-num" id="drill-cs-val">—</div>
+          <div class="drill-val-desc">Use this size for a countersunk head</div>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="act-btn" onclick="copyDrill()">Copy result</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full table toggle -->
+  <div class="card">
+    <button class="expand-btn" id="drill-table-btn" onclick="toggleDrillTable()">VIEW FULL REFERENCE TABLE ▾</button>
+    <div id="drill-table-wrap" style="display:none;margin-top:12px">
+      <div class="drill-table-wrap">
+        <table class="drill-table" id="drill-full-table"></table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 9 — MIG WIRE ESTIMATOR
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-mig">
+
+  <div style="height:8px"></div>
+
+  <!-- SKILL LEVEL -->
+  <div class="card">
+    <div class="card-label">Your Skill Level</div>
+    <div class="input-meta-label" style="margin-bottom:10px;font-size:12px;color:var(--text2);">Be honest — this adjusts the wire quantity for realistic wastage.</div>
+    <div class="skill-grid">
+      <button class="skill-btn active" id="mig-skill-beginner" onclick="setMigSkill('beginner')">
+        <span class="skill-level">BEGINNER</span>
+        New to MIG, still learning wire speed and puddle control.
+        <span class="skill-desc">35% wastage buffer added.</span>
+      </button>
+      <button class="skill-btn" id="mig-skill-intermediate" onclick="setMigSkill('intermediate')">
+        <span class="skill-level">INTERMEDIATE</span>
+        Comfortable with MIG, working on consistency.
+        <span class="skill-desc">20% wastage buffer added.</span>
+      </button>
+      <button class="skill-btn" id="mig-skill-experienced" onclick="setMigSkill('experienced')">
+        <span class="skill-level">EXPERIENCED</span>
+        Confident across joint types and positions.
+        <span class="skill-desc">10% wastage buffer added.</span>
+      </button>
+    </div>
+  </div>
+
+  <div style="padding:4px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text3);text-align:center;">PART 1 — WIRE SELECTOR</div>
+
+  <!-- WIRE DIAMETER -->
+  <div class="card">
+    <div class="card-label">Wire Diameter</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Select the wire diameter for your job.</div>
+    <div class="wire-opt-grid">
+      <button class="wire-opt-btn" id="mwire-06" onclick="setMigWire('0.6')">
+        <span class="wire-opt-code">0.6mm</span>
+        <span class="wire-opt-hint">Thin sheet up to 1.5mm — automotive, bodywork, light fabrication</span>
+      </button>
+      <button class="wire-opt-btn active" id="mwire-08" onclick="setMigWire('0.8')">
+        <span class="wire-opt-code">0.8mm</span>
+        <span class="wire-opt-hint">General purpose — most common, suits 1.5–4mm material</span>
+      </button>
+      <button class="wire-opt-btn" id="mwire-10" onclick="setMigWire('1.0')">
+        <span class="wire-opt-code">1.0mm</span>
+        <span class="wire-opt-hint">Medium fabrication — 4–8mm material, higher deposition</span>
+      </button>
+      <button class="wire-opt-btn" id="mwire-12" onclick="setMigWire('1.2')">
+        <span class="wire-opt-code">1.2mm</span>
+        <span class="wire-opt-hint">Heavy fabrication — 8mm+ plate, structural work</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SHIELDING GAS -->
+  <div class="card">
+    <div class="card-label">Shielding Gas</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Select your shielding gas mix.</div>
+    <div class="gas-opt-grid">
+      <button class="wire-opt-btn active" id="mgas-c25" onclick="setMigGas('c25')">
+        <span class="wire-opt-code">C25 (75% Ar / 25% CO₂)</span>
+        <span class="wire-opt-hint">Most common — good penetration and finish for mild steel</span>
+      </button>
+      <button class="wire-opt-btn" id="mgas-co2" onclick="setMigGas('co2')">
+        <span class="wire-opt-code">Pure CO₂</span>
+        <span class="wire-opt-hint">Deeper penetration, more spatter — budget option for structural work</span>
+      </button>
+      <button class="wire-opt-btn" id="mgas-argon" onclick="setMigGas('argon')">
+        <span class="wire-opt-code">Pure Argon</span>
+        <span class="wire-opt-hint">Stainless steel and aluminium only</span>
+      </button>
+    </div>
+    <div class="gas-tip" id="mig-gas-tip" style="margin-top:10px;margin-bottom:0">C25 is the workshop standard — clean welds, minimal spatter, works well on mild steel 1.5–6mm. Set voltage and wire speed per your machine's chart.</div>
+  </div>
+
+  <!-- PART 2 DIVIDER -->
+  <div style="padding:16px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text3);text-align:center;">PART 2 — WIRE QUANTITY ESTIMATOR</div>
+
+  <!-- JOINT TYPE -->
+  <div class="card">
+    <div class="card-label">Joint Type</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">How are the two pieces of metal meeting?</div>
+    <div class="wire-opt-grid">
+      <button class="wire-opt-btn active" id="mjoint-butt" onclick="setMigJoint('butt')">
+        <span class="wire-opt-code">Butt Joint</span>
+        <span class="wire-opt-hint">Two flat pieces meeting end to end</span>
+      </button>
+      <button class="wire-opt-btn" id="mjoint-fillet" onclick="setMigJoint('fillet')">
+        <span class="wire-opt-code">Fillet / T-Joint</span>
+        <span class="wire-opt-hint">One piece meets another at 90°</span>
+      </button>
+      <button class="wire-opt-btn" id="mjoint-lap" onclick="setMigJoint('lap')">
+        <span class="wire-opt-code">Lap Joint</span>
+        <span class="wire-opt-hint">Two pieces overlapping</span>
+      </button>
+      <button class="wire-opt-btn" id="mjoint-corner" onclick="setMigJoint('corner')">
+        <span class="wire-opt-code">Corner Joint</span>
+        <span class="wire-opt-hint">Two pieces meeting at a corner</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MATERIAL THICKNESS -->
+  <div class="card">
+    <div class="card-label">Material Thickness</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Thickness of the thinner piece being welded</span>
+        <span class="input-meta-var">t</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="mig-thick" inputmode="decimal" placeholder="e.g. 3">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('mig-thick',1.5)">1.5mm</button>
+        <button class="chip" onclick="setVal('mig-thick',2)">2mm</button>
+        <button class="chip" onclick="setVal('mig-thick',3)">3mm</button>
+        <button class="chip" onclick="setVal('mig-thick',4)">4mm</button>
+        <button class="chip" onclick="setVal('mig-thick',5)">5mm</button>
+        <button class="chip" onclick="setVal('mig-thick',6)">6mm</button>
+        <button class="chip" onclick="setVal('mig-thick',8)">8mm</button>
+        <button class="chip" onclick="setVal('mig-thick',10)">10mm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WELD LENGTH -->
+  <div class="card">
+    <div class="card-label">Total Weld Length</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="wire-opt-btn active" id="mweld-simple-btn" onclick="setMigWeldMode('simple')" style="flex:1;text-align:center">
+        <span class="wire-opt-code" style="text-align:center;display:block">SIMPLE</span>
+        <span class="wire-opt-hint" style="display:block;text-align:center">Count your joints</span>
+      </button>
+      <button class="wire-opt-btn" id="mweld-advanced-btn" onclick="setMigWeldMode('advanced')" style="flex:1;text-align:center">
+        <span class="wire-opt-code" style="text-align:center;display:block">ADVANCED</span>
+        <span class="wire-opt-hint" style="display:block;text-align:center">Enter total mm</span>
+      </button>
+    </div>
+
+    <!-- Simple mode -->
+    <div id="mweld-simple-mode">
+      <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:12px">How many individual welds does this job have?</div>
+      <div class="dim-row">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Number of joints</span></div>
+          <div class="input-wrap">
+            <input type="number" id="mig-joints" inputmode="numeric" placeholder="e.g. 18">
+            <span class="input-unit">pcs</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-meta-label" style="font-size:11px;color:var(--text2);margin-bottom:8px;margin-top:4px">Approximate weld size per joint:</div>
+      <div class="wire-opt-grid">
+        <button class="wire-opt-btn active" id="mwsize-small" onclick="setMigWeldSize('small')">
+          <span class="wire-opt-code">Small</span>
+          <span class="wire-opt-hint">~25mm — tacks, thin tube, small brackets</span>
+        </button>
+        <button class="wire-opt-btn" id="mwsize-medium" onclick="setMigWeldSize('medium')">
+          <span class="wire-opt-code">Medium</span>
+          <span class="wire-opt-hint">~50mm — general fabrication</span>
+        </button>
+        <button class="wire-opt-btn" id="mwsize-large" onclick="setMigWeldSize('large')">
+          <span class="wire-opt-code">Large</span>
+          <span class="wire-opt-hint">~100mm — heavier plate, full runs</span>
+        </button>
+        <button class="wire-opt-btn" id="mwsize-full" onclick="setMigWeldSize('full')">
+          <span class="wire-opt-code">Full Run</span>
+          <span class="wire-opt-hint">~150mm+ — long continuous welds</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Advanced mode -->
+    <div id="mweld-advanced-mode" style="display:none">
+      <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Add up the total length of all your welds combined and enter it here.</div>
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Total weld length</span>
+          <span class="input-meta-var">W</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="mig-weldlen" inputmode="decimal" placeholder="e.g. 2400">
+          <span class="input-unit">mm</span>
+        </div>
+        <div class="preset-row">
+          <button class="chip" onclick="setVal('mig-weldlen',500)">500mm</button>
+          <button class="chip" onclick="setVal('mig-weldlen',1000)">1m</button>
+          <button class="chip" onclick="setVal('mig-weldlen',2000)">2m</button>
+          <button class="chip" onclick="setVal('mig-weldlen',5000)">5m</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcMIG()">◎ ESTIMATE WIRE</button>
+
+  <div class="results" id="mig-results"></div>
 
 </div>
 
@@ -1787,7 +2254,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <a href="https://github.com/brendanglover" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">GitHub</a>
   </p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.2.1 &nbsp;·&nbsp; Updated 28 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.3.0 &nbsp;·&nbsp; Updated 29 March 2026</p>
 </footer>
 
 <script>
@@ -2729,7 +3196,7 @@ function resetTab(tabId) {
 // ════════════════════════════════════════
 // HOMEPAGE NAVIGATION
 // ════════════════════════════════════════
-const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing'];
+const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig'];
 
 function goHome() {
   ALL_TABS.forEach(t => {
@@ -2747,7 +3214,10 @@ const TOOL_NAMES = {
   weight: 'WEIGHT CALCULATOR',
   angle: 'ANGLE CUTS',
   rods: 'ROD ESTIMATOR',
-  costing: 'JOB COSTING'
+  costing: 'JOB COSTING',
+  bolts: 'BOLT SPACING',
+  drill: 'DRILL REFERENCE',
+  mig: 'MIG WIRE ESTIMATOR'
 };
 
 function openTool(tool) {
@@ -3467,6 +3937,495 @@ function initCosting() {
   if (dateEl) dateEl.value = today;
 }
 
+// ════════════════════════════════════════
+// BOLT SPACING CALCULATOR
+// ════════════════════════════════════════
+let boltMode = 'ctc'; // 'ctc' = centre-to-centre, 'ete' = edge-to-edge
+
+const BOLT_MODE_DESC = {
+  ctc: 'Measured from centre of one fixing to centre of the next — standard engineering practice',
+  ete: 'Measured from the edge of one hole to the edge of the next — useful for visual spacing'
+};
+
+function setBoltMode(mode) {
+  boltMode = mode;
+  document.getElementById('bmode-ctc').classList.toggle('active', mode === 'ctc');
+  document.getElementById('bmode-ete').classList.toggle('active', mode === 'ete');
+  document.getElementById('bmode-desc').textContent = BOLT_MODE_DESC[mode];
+}
+
+function buildBoltDiagram(n, d, g_ete, L) {
+  const W = 500, H = 90;
+  const scale = W / L;
+  const dW = Math.max(d * scale, 4);
+  const gW = g_ete * scale;
+  let circles = '';
+  const centres = [];
+  for (let i = 0; i < n; i++) {
+    const cx = dW / 2 + i * (dW + gW);
+    centres.push(cx);
+    circles += `<circle cx="${cx.toFixed(2)}" cy="38" r="${(dW/2).toFixed(2)}" fill="#1c1c1c" stroke="#f5820a" stroke-width="2"/>`;
+  }
+  let anno = '';
+  if (n > 1 && centres.length > 1) {
+    const x1 = centres[0], x2 = centres[1];
+    const ay = 72;
+    if (gW > 6) {
+      anno = `
+        <line x1="${x1.toFixed(1)}" y1="${ay}" x2="${x2.toFixed(1)}" y2="${ay}" stroke="#52c47a" stroke-width="1.5"/>
+        <polygon points="${(x1+4).toFixed(1)},${ay-3} ${x1.toFixed(1)},${ay} ${(x1+4).toFixed(1)},${ay+3}" fill="#52c47a"/>
+        <polygon points="${(x2-4).toFixed(1)},${ay-3} ${x2.toFixed(1)},${ay} ${(x2-4).toFixed(1)},${ay+3}" fill="#52c47a"/>
+        <text x="${((x1+x2)/2).toFixed(1)}" y="${ay-4}" text-anchor="middle" fill="#52c47a" font-size="9" font-family="DM Mono,monospace">${g_ete.toFixed(1)}mm e-e</text>
+      `;
+    }
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="${W}" height="${H}" fill="#252525" rx="6"/>
+    <rect x="0" y="28" width="${W}" height="20" fill="#2e2e2e"/>
+    ${circles}${anno}
+  </svg>`;
+}
+
+function calcBolts() {
+  const L = parseFloat(document.getElementById('b-L').value);
+  const d = parseFloat(document.getElementById('b-d').value);
+  const gInput = parseFloat(document.getElementById('b-g').value);
+  const box = document.getElementById('b-results');
+  box.className = 'results show';
+
+  if (!L || !d || !gInput || L <= 0 || d <= 0 || gInput <= 0) {
+    box.innerHTML = errorBox('Fill in surface length, fixing diameter, and target spacing to continue.');
+    return;
+  }
+  if (d >= L) {
+    box.innerHTML = errorBox('Fixing diameter is larger than the surface length. Check your values.');
+    return;
+  }
+
+  // Convert CTC to ETE if needed
+  const g_ete = boltMode === 'ctc' ? gInput - d : gInput;
+  if (g_ete <= 0) {
+    box.innerHTML = errorBox('Target spacing must be larger than the fixing diameter when using edge-to-edge mode.');
+    return;
+  }
+
+  const n = Math.floor((L + g_ete) / (d + g_ete));
+  if (n < 2) {
+    box.innerHTML = errorBox(`Only ${n} fixing fits — you need at least 2 to have any spacing. Try a shorter spacing or smaller fixing.`);
+    return;
+  }
+
+  const gActual_ete = (L - n * d) / (n - 1);
+  const gActual_ctc = gActual_ete + d;
+  const displaySpacing = boltMode === 'ctc' ? gActual_ctc : gActual_ete;
+  const displayTarget = gInput;
+  const diff = displaySpacing - displayTarget;
+  const firstPosCentre = d / 2;
+  const firstPosEdge = 0;
+  const totalCoverage = n * d + (n - 1) * gActual_ete;
+  const modeLabel = boltMode === 'ctc' ? 'centre-to-centre' : 'edge-to-edge';
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">FIXINGS THAT FIT</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <div class="rh-value">${n}</div>
+        <div class="rh-unit">fixings</div>
+      </div>
+      <div class="rh-sub">Along ${L}mm with ${n-1} spaces between them</div>
+    </div>
+
+    <div class="result-hero">
+      <div class="rh-label">ACTUAL SPACING (${modeLabel.toUpperCase()})</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <div class="rh-value">${displaySpacing.toFixed(2)}</div>
+        <div class="rh-unit">mm</div>
+      </div>
+      <div class="rh-sub">You asked for ${displayTarget}mm — difference: ${diff >= 0 ? '+' : ''}${diff.toFixed(2)}mm ${Math.abs(diff) < 1 ? '✓ close enough' : ''}</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">Edge-to-edge spacing</div>
+        <div class="stat-val">${gActual_ete.toFixed(2)} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Centre-to-centre</div>
+        <div class="stat-val">${gActual_ctc.toFixed(2)} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">First hole centre from end</div>
+        <div class="stat-val">${firstPosCentre.toFixed(1)} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total coverage</div>
+        <div class="stat-val">${totalCoverage.toFixed(1)} <span class="u">mm</span></div>
+      </div>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-card-label">Layout preview — top view (not to scale)</div>
+      ${buildBoltDiagram(n, d, gActual_ete, L)}
+    </div>
+
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyBolts(${n},${displaySpacing.toFixed(2)},${gActual_ctc.toFixed(2)},${gActual_ete.toFixed(2)},${L})">Copy result</button>
+    </div>
+    <button class="reset-btn" onclick="resetTab('tab-bolts')">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  gtag('event','bolt_spacing_used', {n_fixings: n, mode: boltMode});
+}
+
+function copyBolts(n, spacing, ctc, ete, L) {
+  const txt = `GapCalc — Bolt Spacing\n---\nLength: ${L}mm | Fixings: ${n}\nCentre-to-centre: ${ctc}mm\nEdge-to-edge: ${ete}mm\n\ngapcalc.com`;
+  copy(txt, event.target);
+}
+
+
+// ════════════════════════════════════════
+// DRILL BIT & TAP REFERENCE
+// ════════════════════════════════════════
+let drillUnit = 'metric';
+let drillSelected = 'M6';
+let drillTableVisible = false;
+
+const DRILL_METRIC = [
+  { name:'M3',  tap:2.5,  clear:3.2,  cs:6  },
+  { name:'M4',  tap:3.3,  clear:4.5,  cs:8  },
+  { name:'M5',  tap:4.2,  clear:5.5,  cs:10 },
+  { name:'M6',  tap:5.0,  clear:6.5,  cs:11 },
+  { name:'M8',  tap:6.75, clear:8.5,  cs:14 },
+  { name:'M10', tap:8.5,  clear:10.5, cs:17 },
+  { name:'M12', tap:10.2, clear:13.0, cs:20 },
+  { name:'M16', tap:14.0, clear:17.0, cs:26 },
+  { name:'M20', tap:17.5, clear:21.0, cs:33 },
+  { name:'M24', tap:21.0, clear:25.0, cs:39 }
+];
+
+const DRILL_IMPERIAL = [
+  { name:'#10-24',   tap:'3.5mm (9/64")',   clear:'4.8mm (3/16")',  cs:'9mm'  },
+  { name:'1/4"-20',  tap:'5.1mm (13/64")',  clear:'6.7mm (17/64")', cs:'11mm' },
+  { name:'5/16"-18', tap:'6.9mm (17/64")',  clear:'8.5mm (21/64")', cs:'14mm' },
+  { name:'3/8"-16',  tap:'8.0mm (5/16")',   clear:'10.0mm (25/64")',cs:'17mm' },
+  { name:'1/2"-13',  tap:'10.7mm (27/64")', clear:'13.5mm (17/32")',cs:'22mm' },
+  { name:'5/8"-11',  tap:'13.5mm (17/32")', clear:'17.0mm (43/64")',cs:'28mm' },
+  { name:'3/4"-10',  tap:'16.5mm (21/32")', clear:'20.5mm (13/16")',cs:'33mm' }
+];
+
+function setDrillUnit(unit) {
+  drillUnit = unit;
+  document.getElementById('drill-metric-btn').classList.toggle('active', unit === 'metric');
+  document.getElementById('drill-imperial-btn').classList.toggle('active', unit === 'imperial');
+  document.getElementById('drill-metric-sizes').style.display = unit === 'metric' ? '' : 'none';
+  document.getElementById('drill-imperial-sizes').style.display = unit === 'imperial' ? '' : 'none';
+  drillSelected = unit === 'metric' ? 'M6' : '1/4"-20';
+  renderDrillResult();
+  renderDrillGridHighlight();
+  if (drillTableVisible) renderDrillTable();
+}
+
+function selectDrillSize(name) {
+  drillSelected = name;
+  renderDrillResult();
+  renderDrillGridHighlight();
+}
+
+function renderDrillGridHighlight() {
+  document.querySelectorAll('.drill-size-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.size === drillSelected);
+  });
+}
+
+function renderDrillResult() {
+  const data = drillUnit === 'metric' ? DRILL_METRIC : DRILL_IMPERIAL;
+  const row = data.find(r => r.name === drillSelected);
+  if (!row) return;
+  document.getElementById('drill-result-wrap').style.display = '';
+  document.getElementById('drill-result-title').textContent = row.name + ' — DRILL SIZES';
+  const tapVal = typeof row.tap === 'number' ? row.tap + 'mm' : row.tap;
+  const clearVal = typeof row.clear === 'number' ? row.clear + 'mm' : row.clear;
+  const csVal = typeof row.cs === 'number' ? row.cs + 'mm' : row.cs;
+  document.getElementById('drill-tap-val').textContent = tapVal;
+  document.getElementById('drill-clear-val').textContent = clearVal;
+  document.getElementById('drill-cs-val').textContent = csVal;
+}
+
+function renderDrillTable() {
+  const data = drillUnit === 'metric' ? DRILL_METRIC : DRILL_IMPERIAL;
+  const t = document.getElementById('drill-full-table');
+  t.innerHTML = `<tr><th>Thread</th><th>Tap Drill</th><th>Clearance</th><th>Countersink</th></tr>` +
+    data.map(r => {
+      const tap = typeof r.tap === 'number' ? r.tap + 'mm' : r.tap;
+      const clr = typeof r.clear === 'number' ? r.clear + 'mm' : r.clear;
+      const cs = typeof r.cs === 'number' ? r.cs + 'mm' : r.cs;
+      const active = r.name === drillSelected ? ' class="drill-row-active"' : '';
+      return `<tr${active}><td>${r.name}</td><td>${tap}</td><td>${clr}</td><td>${cs}</td></tr>`;
+    }).join('');
+}
+
+function toggleDrillTable() {
+  drillTableVisible = !drillTableVisible;
+  document.getElementById('drill-table-wrap').style.display = drillTableVisible ? '' : 'none';
+  document.getElementById('drill-table-btn').textContent = drillTableVisible ? 'HIDE FULL REFERENCE TABLE ▴' : 'VIEW FULL REFERENCE TABLE ▾';
+  if (drillTableVisible) renderDrillTable();
+}
+
+function copyDrill() {
+  const data = drillUnit === 'metric' ? DRILL_METRIC : DRILL_IMPERIAL;
+  const row = data.find(r => r.name === drillSelected);
+  if (!row) return;
+  const tap = typeof row.tap === 'number' ? row.tap + 'mm' : row.tap;
+  const clr = typeof row.clear === 'number' ? row.clear + 'mm' : row.clear;
+  const cs = typeof row.cs === 'number' ? row.cs + 'mm' : row.cs;
+  const txt = `GapCalc — Drill Reference\n---\nThread: ${row.name}\nTap drill: ${tap}\nClearance drill: ${clr}\nCountersink: ${cs}\n\ngapcalc.com`;
+  copy(txt, event.target);
+}
+
+function initDrillGrids() {
+  const mg = document.getElementById('drill-metric-grid');
+  DRILL_METRIC.forEach(r => {
+    const b = document.createElement('button');
+    b.className = 'drill-size-btn' + (r.name === drillSelected ? ' active' : '');
+    b.dataset.size = r.name;
+    b.textContent = r.name;
+    b.onclick = () => selectDrillSize(r.name);
+    mg.appendChild(b);
+  });
+  const ig = document.getElementById('drill-imperial-grid');
+  DRILL_IMPERIAL.forEach(r => {
+    const b = document.createElement('button');
+    b.className = 'drill-size-btn';
+    b.dataset.size = r.name;
+    b.textContent = r.name;
+    b.onclick = () => selectDrillSize(r.name);
+    ig.appendChild(b);
+  });
+  renderDrillResult();
+}
+
+
+// ════════════════════════════════════════
+// MIG WIRE ESTIMATOR
+// ════════════════════════════════════════
+let migSkill = 'beginner';
+let migWire = '0.8';
+let migGas = 'c25';
+let migJoint = 'butt';
+let migWeldMode = 'simple';
+let migWeldSize = 'small';
+
+const MIG_GAS_TIPS = {
+  c25: 'C25 is the workshop standard — clean welds, minimal spatter, works well on mild steel 1.5–6mm. Set voltage and wire speed per your machine\'s chart.',
+  co2: 'Pure CO₂ gives deeper penetration but more spatter. Expect to clean up more. Good for structural work where appearance doesn\'t matter. Budget-friendly.',
+  argon: 'Pure argon is for stainless and aluminium only — not suitable for mild steel. Use a dedicated stainless or aluminium wire to match.'
+};
+
+function setMigSkill(skill) {
+  migSkill = skill;
+  ['beginner','intermediate','experienced'].forEach(s => {
+    document.getElementById('mig-skill-'+s).classList.toggle('active', s === skill);
+  });
+}
+
+function setMigWire(wire) {
+  migWire = wire;
+  ['06','08','10','12'].forEach(id => {
+    const val = id === '06' ? '0.6' : id === '08' ? '0.8' : id === '10' ? '1.0' : '1.2';
+    document.getElementById('mwire-'+id).classList.toggle('active', val === wire);
+  });
+}
+
+function setMigGas(gas) {
+  migGas = gas;
+  ['c25','co2','argon'].forEach(g => {
+    document.getElementById('mgas-'+g).classList.toggle('active', g === gas);
+  });
+  document.getElementById('mig-gas-tip').textContent = MIG_GAS_TIPS[gas];
+}
+
+function setMigJoint(joint) {
+  migJoint = joint;
+  ['butt','fillet','lap','corner'].forEach(j => {
+    document.getElementById('mjoint-'+j).classList.toggle('active', j === joint);
+  });
+}
+
+function setMigWeldMode(mode) {
+  migWeldMode = mode;
+  document.getElementById('mweld-simple-btn').classList.toggle('active', mode === 'simple');
+  document.getElementById('mweld-advanced-btn').classList.toggle('active', mode === 'advanced');
+  document.getElementById('mweld-simple-mode').style.display = mode === 'simple' ? '' : 'none';
+  document.getElementById('mweld-advanced-mode').style.display = mode === 'advanced' ? '' : 'none';
+}
+
+function setMigWeldSize(size) {
+  migWeldSize = size;
+  ['small','medium','large','full'].forEach(s => {
+    document.getElementById('mwsize-'+s).classList.toggle('active', s === size);
+  });
+}
+
+function getMigWeldLengthMm() {
+  if (migWeldMode === 'advanced') {
+    return parseFloat(document.getElementById('mig-weldlen').value) || null;
+  }
+  const joints = parseInt(document.getElementById('mig-joints').value);
+  if (!joints) return null;
+  return joints * WELD_SIZE_MM[migWeldSize];
+}
+
+function getMigPassCount(t, joint) {
+  if (joint === 'lap') {
+    if (t <= 3) return 1;
+    if (t <= 6) return 2;
+    return 3;
+  }
+  if (joint === 'butt' || joint === 'corner') {
+    if (t <= 3) return 1;
+    if (t <= 6) return 2;
+    if (t <= 10) return 3;
+    return Math.ceil(t / 3.5);
+  }
+  // fillet
+  if (t <= 4) return 1;
+  if (t <= 8) return 2;
+  if (t <= 12) return 3;
+  return Math.ceil(t / 4);
+}
+
+function calcMIG() {
+  const box = document.getElementById('mig-results');
+  box.className = 'results show';
+
+  const t = parseFloat(document.getElementById('mig-thick').value);
+  const weldLen = getMigWeldLengthMm();
+
+  document.querySelectorAll('#tab-mig input').forEach(el => el.style.borderColor = '');
+
+  if (!t || !weldLen) {
+    if (!t) { const el=document.getElementById('mig-thick'); el.style.borderColor='var(--red)'; el.addEventListener('input',()=>el.style.borderColor='',{once:true}); }
+    if (!weldLen && migWeldMode==='advanced') { const el=document.getElementById('mig-weldlen'); el.style.borderColor='var(--red)'; el.addEventListener('input',()=>el.style.borderColor='',{once:true}); }
+    if (!weldLen && migWeldMode==='simple') { const el=document.getElementById('mig-joints'); if(el){el.style.borderColor='var(--red)'; el.addEventListener('input',()=>el.style.borderColor='',{once:true});} }
+    box.innerHTML = errorBox('Fill in material thickness and weld length — empty fields highlighted in red.');
+    return;
+  }
+
+  const passes = getMigPassCount(t, migJoint);
+  const WIRE_EFFICIENCY = 0.88;
+  const wastage = WASTAGE[migSkill];
+  const weldLenCm = weldLen / 10;
+  const totalWeldLenCm = weldLenCm * passes;
+
+  // Cross section area (cm²) by joint and thickness
+  const tc = t / 10; // thickness in cm
+  let area;
+  switch (migJoint) {
+    case 'butt':    area = tc * (tc / 2); break;
+    case 'fillet':  area = 0.5 * Math.pow(0.7 * tc, 2); break;
+    case 'lap':     area = 0.5 * tc * (tc * 0.8); break;
+    case 'corner':  area = tc * (tc * 0.6); break;
+    default:        area = tc * (tc / 2);
+  }
+
+  const volumeCm3 = area * totalWeldLenCm;
+  const wireRaw = (volumeCm3 * 7.85) / (1000 * WIRE_EFFICIENCY);
+  const wireKg = wireRaw * wastage;
+
+  // Reel sizes
+  const spool05 = Math.ceil(wireKg / 0.5);
+  const reel5   = Math.ceil(wireKg / 5);
+  const reel15  = Math.ceil(wireKg / 15);
+
+  const skillLabels = { beginner:'Beginner (35% wastage added)', intermediate:'Intermediate (20% wastage added)', experienced:'Experienced (10% wastage added)' };
+  const wireLabel = migWire + 'mm wire';
+  const gasLabel = migGas === 'c25' ? 'C25' : migGas === 'co2' ? 'Pure CO₂' : 'Pure Argon';
+
+  pendingSend = { section: 'consumables', desc: `${migWire}mm MIG wire — ${gasLabel}`, qty: reel5 || 1 };
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">WIRE NEEDED</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <div class="rh-value">${wireKg < 1 ? wireKg.toFixed(3) : wireKg.toFixed(2)}</div>
+        <div class="rh-unit">kg</div>
+      </div>
+      <div class="rh-sub">${wireLabel} — ${passes} pass${passes>1?'es':''} — ${skillLabels[migSkill]}</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">Passes required</div>
+        <div class="stat-val">${passes} <span class="u">pass${passes>1?'es':''}</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total weld length</div>
+        <div class="stat-val">${(weldLen * passes / 1000).toFixed(2)} <span class="u">m</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Wire diameter</div>
+        <div class="stat-val">${migWire} <span class="u">mm</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Shielding gas</div>
+        <div class="stat-val" style="font-size:13px">${gasLabel}</div>
+      </div>
+    </div>
+
+    <div class="pack-result">
+      <div class="pack-label">Reels to buy</div>
+      <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap">
+        <div>
+          <div class="pack-val">${reel15 || 1}</div>
+          <div class="pack-unit">× 15kg reel</div>
+          <div class="pack-sub">Production / heavy use</div>
+        </div>
+        <div style="color:var(--text3);padding-bottom:8px">or</div>
+        <div>
+          <div class="pack-val">${reel5 || 1}</div>
+          <div class="pack-unit">× 5kg reel</div>
+          <div class="pack-sub">Standard workshop</div>
+        </div>
+        <div style="color:var(--text3);padding-bottom:8px">or</div>
+        <div>
+          <div class="pack-val" style="font-size:28px">${spool05}</div>
+          <div class="pack-unit">× 0.5kg spool</div>
+          <div class="pack-sub">Hobby / occasional use</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gas-tip">${MIG_GAS_TIPS[migGas]}</div>
+
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyMIG(${wireKg.toFixed(3)},${reel5||1},${spool05},'${migWire}')">Copy</button>
+      <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
+    </div>
+    <button class="reset-btn" onclick="resetMIG()">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+  gtag('event','mig_estimator_used', {wire: migWire, gas: migGas, skill: migSkill});
+}
+
+function copyMIG(kg, r5, r05, wire) {
+  const txt = `GapCalc — MIG Wire Estimator\n---\nWire needed: ${kg}kg (${wire}mm)\n5kg reels: ${r5}\n0.5kg spools: ${r05}\n\ngapcalc.com`;
+  copy(txt, event.target);
+}
+
+function resetMIG() {
+  document.getElementById('mig-results').className = 'results';
+  document.getElementById('mig-results').innerHTML = '';
+  document.querySelectorAll('#tab-mig input').forEach(el => { el.value=''; el.style.borderColor=''; });
+  setMigWeldMode('simple');
+  setMigWeldSize('small');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+
 // Enter key triggers calculate
 document.getElementById('tab-gaps').addEventListener('keydown', e => { if (e.key==='Enter') calcGaps(); });
 document.getElementById('tab-cutlist').addEventListener('keydown', e => { if (e.key==='Enter') calcCutList(); });
@@ -3474,6 +4433,8 @@ document.getElementById('tab-weight').addEventListener('keydown', e => { if (e.k
 document.getElementById('tab-angle').addEventListener('keydown', e => { if (e.key==='Enter') calcAngle(); });
 document.getElementById('tab-rods').addEventListener('keydown', e => { if (e.key==='Enter') calcRodEstimator(); });
 document.getElementById('tab-costing').addEventListener('keydown', e => { if (e.key==='Enter') calcCosting(); });
+document.getElementById('tab-bolts').addEventListener('keydown', e => { if (e.key==='Enter') calcBolts(); });
+document.getElementById('tab-mig').addEventListener('keydown', e => { if (e.key==='Enter') calcMIG(); });
 
 // Init angle width presets
 renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');
@@ -3482,6 +4443,8 @@ renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');
 renderDimFields('flatbar');
 // Init costing
 initCosting();
+// Init drill reference
+initDrillGrids();
 </script>
 </body>
 </html>
