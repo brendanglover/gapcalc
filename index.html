@@ -1007,6 +1007,13 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
       <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
+    <div class="feature-card" onclick="openTool('settings')">
+      <div class="feature-card-icon">⚙</div>
+      <div class="feature-card-title">SETTINGS GUIDE</div>
+      <div class="feature-card-desc">Get recommended MIG or flux core settings for your machine and material. Includes a weld troubleshooter so you can fix what you're seeing right now.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
     <div class="coming-soon-card">
       <span class="coming-soon-badge">COMING SOON</span>
       <div class="coming-soon-title">PAINT &amp; PRIMER COVERAGE</div>
@@ -1015,8 +1022,8 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
     <div class="coming-soon-card">
       <span class="coming-soon-badge">COMING SOON</span>
-      <div class="coming-soon-title">MIG SETTINGS GUIDE</div>
-      <div class="coming-soon-desc">Recommended voltage, wire speed, and gas flow settings for your material thickness and wire diameter.</div>
+      <div class="coming-soon-title">PROJECT TIMER</div>
+      <div class="coming-soon-desc">Track your time on a job and feed it directly into the Job Costing calculator.</div>
     </div>
 
     <div class="coming-soon-card">
@@ -1471,7 +1478,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
       </button>
       <button class="rod-opt-btn" id="rmat-ss" onclick="setRodMaterial('ss')">
         <span class="rod-opt-code">Stainless Steel</span>
-        <span class="rod-opt-hint">Braais, food equipment, handrails</span>
+        <span class="rod-opt-hint">Barbecue grills, food equipment, handrails</span>
       </button>
     </div>
   </div>
@@ -1549,6 +1556,31 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   <!-- DIVIDER TO ESTIMATOR -->
   <div style="padding:20px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text3);text-align:center;">PART 2 — ROD QUANTITY ESTIMATOR</div>
 
+  <!-- MATERIAL THICKNESS -->
+  <div class="card">
+    <div class="card-label">Material Thickness</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Thickness of the thinner piece being welded</span>
+        <span class="input-meta-var">t</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="rod-thick" inputmode="decimal" placeholder="e.g. 3" oninput="suggestRodDiam()">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('rod-thick',1.5);suggestRodDiam()">1.5mm</button>
+        <button class="chip" onclick="setVal('rod-thick',2);suggestRodDiam()">2mm</button>
+        <button class="chip" onclick="setVal('rod-thick',3);suggestRodDiam()">3mm</button>
+        <button class="chip" onclick="setVal('rod-thick',4);suggestRodDiam()">4mm</button>
+        <button class="chip" onclick="setVal('rod-thick',5);suggestRodDiam()">5mm</button>
+        <button class="chip" onclick="setVal('rod-thick',6);suggestRodDiam()">6mm</button>
+        <button class="chip" onclick="setVal('rod-thick',8);suggestRodDiam()">8mm</button>
+        <button class="chip" onclick="setVal('rod-thick',10);suggestRodDiam()">10mm</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ROD DIAMETER -->
   <div class="card">
     <div class="card-label">Rod Diameter</div>
@@ -1571,31 +1603,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
         <span class="rod-opt-hint">Structural and heavy fabrication — industrial use</span>
       </button>
     </div>
-  </div>
-
-  <!-- MATERIAL THICKNESS -->
-  <div class="card">
-    <div class="card-label">Material Thickness</div>
-    <div class="input-group">
-      <div class="input-meta">
-        <span class="input-meta-label">Thickness of the thinner piece being welded</span>
-        <span class="input-meta-var">t</span>
-      </div>
-      <div class="input-wrap">
-        <input type="number" id="rod-thick" inputmode="decimal" placeholder="e.g. 3">
-        <span class="input-unit">mm</span>
-      </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('rod-thick',1.5)">1.5mm</button>
-        <button class="chip" onclick="setVal('rod-thick',2)">2mm</button>
-        <button class="chip" onclick="setVal('rod-thick',3)">3mm</button>
-        <button class="chip" onclick="setVal('rod-thick',4)">4mm</button>
-        <button class="chip" onclick="setVal('rod-thick',5)">5mm</button>
-        <button class="chip" onclick="setVal('rod-thick',6)">6mm</button>
-        <button class="chip" onclick="setVal('rod-thick',8)">8mm</button>
-        <button class="chip" onclick="setVal('rod-thick',10)">10mm</button>
-      </div>
-    </div>
+    <div style="font-size:11px;color:var(--text2);margin-top:10px;font-style:italic">Suggested based on your material thickness. You can override this.</div>
   </div>
 
   <!-- TOTAL WELD LENGTH — Simple / Advanced -->
@@ -2024,6 +2032,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
         </div>
       </div>
       <div class="action-row">
+        <button class="act-btn" onclick="window.print()">Print</button>
         <button class="act-btn" onclick="copyDrill()">Copy result</button>
       </div>
     </div>
@@ -2073,6 +2082,55 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
   <div style="padding:4px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text3);text-align:center;">PART 1 — WIRE SELECTOR</div>
 
+  <!-- SHIELDING GAS -->
+  <div class="card">
+    <div class="card-label">Shielding Gas</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Select your shielding gas mix.</div>
+    <div class="gas-opt-grid">
+      <button class="wire-opt-btn active" id="mgas-c25" onclick="setMigGas('c25')">
+        <span class="wire-opt-code">C25 (75% Ar / 25% CO₂)</span>
+        <span class="wire-opt-hint">Most common — good penetration and finish for mild steel. Also sold as Argoshield, Magmix, or ArC25 depending on your supplier.</span>
+      </button>
+      <button class="wire-opt-btn" id="mgas-co2" onclick="setMigGas('co2')">
+        <span class="wire-opt-code">Pure CO₂</span>
+        <span class="wire-opt-hint">Deeper penetration, more spatter — budget option for structural work</span>
+      </button>
+      <button class="wire-opt-btn" id="mgas-argon" onclick="setMigGas('argon')">
+        <span class="wire-opt-code">Pure Argon</span>
+        <span class="wire-opt-hint">Stainless steel and aluminium only</span>
+      </button>
+    </div>
+    <div class="gas-tip" id="mig-gas-tip" style="margin-top:10px;margin-bottom:0">C25 is the workshop standard — clean welds, minimal spatter, works well on mild steel 1.5–6mm. Set voltage and wire speed per your machine's chart.</div>
+  </div>
+
+  <!-- PART 2 DIVIDER -->
+  <div style="padding:16px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text3);text-align:center;">PART 2 — WIRE QUANTITY ESTIMATOR</div>
+
+  <!-- MATERIAL THICKNESS -->
+  <div class="card">
+    <div class="card-label">Material Thickness</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Thickness of the thinner piece being welded</span>
+        <span class="input-meta-var">t</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="mig-thick" inputmode="decimal" placeholder="e.g. 3" oninput="suggestMigWire()">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('mig-thick',1.5);suggestMigWire()">1.5mm</button>
+        <button class="chip" onclick="setVal('mig-thick',2);suggestMigWire()">2mm</button>
+        <button class="chip" onclick="setVal('mig-thick',3);suggestMigWire()">3mm</button>
+        <button class="chip" onclick="setVal('mig-thick',4);suggestMigWire()">4mm</button>
+        <button class="chip" onclick="setVal('mig-thick',5);suggestMigWire()">5mm</button>
+        <button class="chip" onclick="setVal('mig-thick',6);suggestMigWire()">6mm</button>
+        <button class="chip" onclick="setVal('mig-thick',8);suggestMigWire()">8mm</button>
+        <button class="chip" onclick="setVal('mig-thick',10);suggestMigWire()">10mm</button>
+      </div>
+    </div>
+  </div>
+
   <!-- WIRE DIAMETER -->
   <div class="card">
     <div class="card-label">Wire Diameter</div>
@@ -2095,31 +2153,8 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
         <span class="wire-opt-hint">Heavy fabrication — 8mm+ plate, structural work</span>
       </button>
     </div>
+    <div style="font-size:11px;color:var(--text2);margin-top:10px;font-style:italic">Suggested based on your material thickness. You can override this.</div>
   </div>
-
-  <!-- SHIELDING GAS -->
-  <div class="card">
-    <div class="card-label">Shielding Gas</div>
-    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:10px">Select your shielding gas mix.</div>
-    <div class="gas-opt-grid">
-      <button class="wire-opt-btn active" id="mgas-c25" onclick="setMigGas('c25')">
-        <span class="wire-opt-code">C25 (75% Ar / 25% CO₂)</span>
-        <span class="wire-opt-hint">Most common — good penetration and finish for mild steel</span>
-      </button>
-      <button class="wire-opt-btn" id="mgas-co2" onclick="setMigGas('co2')">
-        <span class="wire-opt-code">Pure CO₂</span>
-        <span class="wire-opt-hint">Deeper penetration, more spatter — budget option for structural work</span>
-      </button>
-      <button class="wire-opt-btn" id="mgas-argon" onclick="setMigGas('argon')">
-        <span class="wire-opt-code">Pure Argon</span>
-        <span class="wire-opt-hint">Stainless steel and aluminium only</span>
-      </button>
-    </div>
-    <div class="gas-tip" id="mig-gas-tip" style="margin-top:10px;margin-bottom:0">C25 is the workshop standard — clean welds, minimal spatter, works well on mild steel 1.5–6mm. Set voltage and wire speed per your machine's chart.</div>
-  </div>
-
-  <!-- PART 2 DIVIDER -->
-  <div style="padding:16px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text3);text-align:center;">PART 2 — WIRE QUANTITY ESTIMATOR</div>
 
   <!-- JOINT TYPE -->
   <div class="card">
@@ -2142,31 +2177,6 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
         <span class="wire-opt-code">Corner Joint</span>
         <span class="wire-opt-hint">Two pieces meeting at a corner</span>
       </button>
-    </div>
-  </div>
-
-  <!-- MATERIAL THICKNESS -->
-  <div class="card">
-    <div class="card-label">Material Thickness</div>
-    <div class="input-group">
-      <div class="input-meta">
-        <span class="input-meta-label">Thickness of the thinner piece being welded</span>
-        <span class="input-meta-var">t</span>
-      </div>
-      <div class="input-wrap">
-        <input type="number" id="mig-thick" inputmode="decimal" placeholder="e.g. 3">
-        <span class="input-unit">mm</span>
-      </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('mig-thick',1.5)">1.5mm</button>
-        <button class="chip" onclick="setVal('mig-thick',2)">2mm</button>
-        <button class="chip" onclick="setVal('mig-thick',3)">3mm</button>
-        <button class="chip" onclick="setVal('mig-thick',4)">4mm</button>
-        <button class="chip" onclick="setVal('mig-thick',5)">5mm</button>
-        <button class="chip" onclick="setVal('mig-thick',6)">6mm</button>
-        <button class="chip" onclick="setVal('mig-thick',8)">8mm</button>
-        <button class="chip" onclick="setVal('mig-thick',10)">10mm</button>
-      </div>
     </div>
   </div>
 
@@ -2245,6 +2255,158 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
 </div>
 
+<!-- ═══════════════════════════════════════
+     TAB 10 — MIG & FLUX CORE SETTINGS GUIDE
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-settings">
+
+  <div style="height:8px"></div>
+
+  <!-- DISCLAIMER -->
+  <div class="note">
+    These are starting point recommendations only. Every machine, wire brand, and material combination behaves differently. Use these settings as a baseline — then adjust based on what your weld is telling you. A good weld sounds like frying bacon. If you're getting spatter, porosity, or burn-through, the settings need adjusting regardless of what any guide says.
+  </div>
+
+  <!-- PROCESS TOGGLE -->
+  <div class="card">
+    <div class="card-label">Welding Process</div>
+    <div class="pill-toggle">
+      <button class="pill-btn active" id="sprocess-mig" onclick="setSettingsProcess('mig')">MIG (GMAW)</button>
+      <button class="pill-btn" id="sprocess-fcaw" onclick="setSettingsProcess('fcaw')">FLUX CORE (FCAW)</button>
+    </div>
+  </div>
+
+  <!-- MACHINE CAPABILITY -->
+  <div class="card">
+    <div class="card-label">What controls does your machine have?</div>
+    <div class="input-meta-label" style="font-size:12px;color:var(--text2);margin-bottom:14px">Only turn on what your machine actually has. This keeps the output relevant to your setup.</div>
+
+    <div class="toggle-wrap">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:var(--text)">Voltage control</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5">Controls heat input. Higher voltage makes a wider, flatter bead. Lower voltage makes a narrower, more built-up bead.</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="ctrl-voltage" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-wrap">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:var(--text)">Wire feed speed control</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5">Controls how fast wire enters the weld. Too fast and the wire stubs into the work. Too slow and it burns back toward the tip.</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="ctrl-wfs" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-wrap" style="margin-bottom:0">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:var(--text)">Inductance control</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5">Controls how smooth or crisp the arc feels. Higher inductance means a smoother arc with less spatter. Not all machines have this.</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="ctrl-inductance">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- MATERIAL -->
+  <div class="card">
+    <div class="card-label">Material</div>
+    <select class="w-select" id="settings-material" onchange="updateSettingsMaterial()">
+      <option value="mild">Mild Steel (most common)</option>
+      <option value="galv" id="settings-galv-opt">Galvanised Steel (MIG only)</option>
+      <option value="ss" id="settings-ss-opt">Stainless Steel (MIG only)</option>
+    </select>
+  </div>
+
+  <!-- MATERIAL THICKNESS -->
+  <div class="card">
+    <div class="card-label">Material Thickness</div>
+    <div class="input-group">
+      <div class="input-meta">
+        <span class="input-meta-label">Thickness of the thinner piece being welded</span>
+        <span class="input-meta-var">t</span>
+      </div>
+      <div class="input-wrap">
+        <input type="number" id="settings-thick" inputmode="decimal" placeholder="e.g. 3" oninput="suggestSettingsWire()">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('settings-thick',0.8);suggestSettingsWire()">0.8mm</button>
+        <button class="chip" onclick="setVal('settings-thick',1.0);suggestSettingsWire()">1.0mm</button>
+        <button class="chip" onclick="setVal('settings-thick',1.5);suggestSettingsWire()">1.5mm</button>
+        <button class="chip" onclick="setVal('settings-thick',2.0);suggestSettingsWire()">2.0mm</button>
+        <button class="chip" onclick="setVal('settings-thick',3.0);suggestSettingsWire()">3.0mm</button>
+        <button class="chip" onclick="setVal('settings-thick',4.0);suggestSettingsWire()">4.0mm</button>
+        <button class="chip" onclick="setVal('settings-thick',6.0);suggestSettingsWire()">6.0mm</button>
+        <button class="chip" onclick="setVal('settings-thick',8.0);suggestSettingsWire()">8.0mm</button>
+        <button class="chip" onclick="setVal('settings-thick',10.0);suggestSettingsWire()">10.0mm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIRE DIAMETER -->
+  <div class="card">
+    <div class="card-label" id="settings-wire-label">Wire Diameter</div>
+    <div id="settings-wire-opts-mig" class="wire-opt-grid">
+      <button class="wire-opt-btn" id="swire-06" onclick="setSettingsWire('0.6')">
+        <span class="wire-opt-code">0.6mm</span>
+        <span class="wire-opt-hint">Thin sheet up to 1.5mm</span>
+      </button>
+      <button class="wire-opt-btn" id="swire-08" onclick="setSettingsWire('0.8')">
+        <span class="wire-opt-code">0.8mm</span>
+        <span class="wire-opt-hint">General purpose — 1.5–4mm</span>
+      </button>
+      <button class="wire-opt-btn" id="swire-10" onclick="setSettingsWire('1.0')">
+        <span class="wire-opt-code">1.0mm</span>
+        <span class="wire-opt-hint">Medium — 4–8mm material</span>
+      </button>
+      <button class="wire-opt-btn" id="swire-12" onclick="setSettingsWire('1.2')">
+        <span class="wire-opt-code">1.2mm</span>
+        <span class="wire-opt-hint">Heavy — 8mm+ plate</span>
+      </button>
+    </div>
+    <div id="settings-wire-opts-fcaw" class="wire-opt-grid" style="display:none">
+      <button class="wire-opt-btn" id="swire-f08" onclick="setSettingsWire('0.8')">
+        <span class="wire-opt-code">0.8mm</span>
+        <span class="wire-opt-hint">Light material up to 3mm</span>
+      </button>
+      <button class="wire-opt-btn" id="swire-f09" onclick="setSettingsWire('0.9')">
+        <span class="wire-opt-code">0.9mm</span>
+        <span class="wire-opt-hint">General purpose — 3–6mm</span>
+      </button>
+      <button class="wire-opt-btn" id="swire-f10" onclick="setSettingsWire('1.0')">
+        <span class="wire-opt-code">1.0mm</span>
+        <span class="wire-opt-hint">Heavier plate — 6mm+</span>
+      </button>
+    </div>
+    <div style="font-size:11px;color:var(--text2);margin-top:10px;font-style:italic">Suggested based on your material thickness. You can override this.</div>
+  </div>
+
+  <!-- FLUX CORE POLARITY — FCAW only -->
+  <div class="card" id="settings-polarity-card" style="display:none;border-left:3px solid var(--red)">
+    <div class="card-label" style="color:var(--red)">POLARITY — CHECK THIS FIRST</div>
+    <div style="font-size:13px;color:var(--text);line-height:1.7">
+      <p>Flux core wire requires a specific polarity setting that is the OPPOSITE of solid MIG wire.</p>
+      <p style="margin-top:10px"><strong style="color:var(--text)">Your torch lead</strong> → plug into the <strong style="color:var(--red)">NEGATIVE (−)</strong> terminal on your machine.<br>
+      <strong style="color:var(--text)">Your earth clamp</strong> → plug into the <strong style="color:var(--green)">POSITIVE (+)</strong> terminal on your machine.</p>
+      <p style="margin-top:10px">This is called <strong>DCEN (DC Electrode Negative)</strong>. Some machines label it as 'straight polarity'.</p>
+      <p style="margin-top:10px;color:var(--accent)">If you just switched from solid wire to flux core and your welds look terrible — wrong polarity is almost always the reason. Swap your leads before changing anything else.</p>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcSettings()">⚙ GET SETTINGS</button>
+
+  <div class="results" id="settings-results"></div>
+
+</div>
+
 <footer>
   <p>GapCalc — free forever. No login. No data stored.</p>
   <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
@@ -2254,7 +2416,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <a href="https://github.com/brendanglover" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">GitHub</a>
   </p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.3.0 &nbsp;·&nbsp; Updated 29 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.4.0 &nbsp;·&nbsp; Updated 31 March 2026</p>
 </footer>
 
 <script>
@@ -3196,7 +3358,7 @@ function resetTab(tabId) {
 // ════════════════════════════════════════
 // HOMEPAGE NAVIGATION
 // ════════════════════════════════════════
-const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig'];
+const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig','settings'];
 
 function goHome() {
   ALL_TABS.forEach(t => {
@@ -3217,7 +3379,8 @@ const TOOL_NAMES = {
   costing: 'JOB COSTING',
   bolts: 'BOLT SPACING',
   drill: 'DRILL REFERENCE',
-  mig: 'MIG WIRE ESTIMATOR'
+  mig: 'MIG WIRE ESTIMATOR',
+  settings: 'SETTINGS GUIDE'
 };
 
 function openTool(tool) {
@@ -4426,6 +4589,275 @@ function resetMIG() {
 }
 
 
+// ════════════════════════════════════════
+// AUTO-SUGGEST ROD DIAMETER FROM THICKNESS
+// ════════════════════════════════════════
+function suggestRodDiam() {
+  const t = parseFloat(document.getElementById('rod-thick').value);
+  if (!t || t <= 0) return;
+  let suggested;
+  if (t <= 3) suggested = 'rd-25';
+  else if (t <= 6) suggested = 'rd-315';
+  else if (t <= 10) suggested = 'rd-40';
+  else suggested = 'rd-50';
+  ['rd-25','rd-315','rd-40','rd-50'].forEach(id => {
+    document.getElementById(id).classList.toggle('active', id === suggested);
+  });
+  const diamMap = { 'rd-25': 2.5, 'rd-315': 3.15, 'rd-40': 4.0, 'rd-50': 5.0 };
+  rodDiam = diamMap[suggested];
+}
+
+// ════════════════════════════════════════
+// AUTO-SUGGEST MIG WIRE FROM THICKNESS
+// ════════════════════════════════════════
+function suggestMigWire() {
+  const t = parseFloat(document.getElementById('mig-thick').value);
+  if (!t || t <= 0) return;
+  let suggested;
+  if (t <= 1.5) suggested = 'mwire-06';
+  else if (t <= 4) suggested = 'mwire-08';
+  else if (t <= 8) suggested = 'mwire-10';
+  else suggested = 'mwire-12';
+  ['mwire-06','mwire-08','mwire-10','mwire-12'].forEach(id => {
+    document.getElementById(id).classList.toggle('active', id === suggested);
+  });
+  const wireMap = { 'mwire-06': '0.6', 'mwire-08': '0.8', 'mwire-10': '1.0', 'mwire-12': '1.2' };
+  migWire = wireMap[suggested];
+}
+
+// ════════════════════════════════════════
+// MIG & FLUX CORE SETTINGS GUIDE
+// ════════════════════════════════════════
+let settingsProcess = 'mig';
+let settingsWire = '0.8';
+let settingsMaterial = 'mild';
+
+const MIG_SETTINGS_DATA = [
+  { thick: 0.8,  wire: '0.6', v: '14–16V', wfs: '3–4 m/min', note: 'Light sheet — keep moving, short welds to avoid warping' },
+  { thick: 1.5,  wire: '0.8', v: '15–17V', wfs: '4–5 m/min', note: 'Thin plate — good starting point for general hobby work' },
+  { thick: 3.0,  wire: '0.8', v: '17–19V', wfs: '5–6 m/min', note: 'General fabrication range — most comfortable for beginners' },
+  { thick: 4.0,  wire: '0.9', v: '18–20V', wfs: '5–7 m/min', note: 'Standard workshop material — solid range for gates, frames, furniture' },
+  { thick: 6.0,  wire: '1.0', v: '20–22V', wfs: '6–8 m/min', note: 'Heavier plate — may need multiple passes' },
+  { thick: 8.0,  wire: '1.2', v: '22–24V', wfs: '7–9 m/min', note: 'Structural range — preheat recommended in cold conditions' },
+  { thick: 10.0, wire: '1.2', v: '24–28V', wfs: '8–11 m/min', note: 'Heavy fabrication — multiple passes required, allow cooling between passes' },
+];
+
+const FCAW_SETTINGS_DATA = [
+  { thick: 1.5, wire: '0.8', v: '14–16V', wfs: '3–4 m/min', note: 'Run DCEN. Light material — short runs, let it cool between passes' },
+  { thick: 3.0, wire: '0.9', v: '16–18V', wfs: '4–5 m/min', note: 'Run DCEN. Good general range for gasless flux core' },
+  { thick: 4.0, wire: '0.9', v: '17–19V', wfs: '5–6 m/min', note: 'Run DCEN. Standard fabrication material' },
+  { thick: 6.0, wire: '1.0', v: '19–21V', wfs: '5–7 m/min', note: 'Run DCEN. Flux core handles this well without gas' },
+  { thick: 8.0, wire: '1.0', v: '21–24V', wfs: '6–8 m/min', note: 'Run DCEN. Multiple passes — chip slag between each pass' },
+];
+
+const SETTINGS_TROUBLESHOOTER = [
+  { symptom: 'Burning through or holes in the material', cause: 'Too much heat or moving too slowly', fix: 'Reduce voltage, move faster, or use shorter weld runs with cooling time between' },
+  { symptom: 'Wire stubbing into the work and stopping', cause: 'Wire feeding too fast or voltage too low', fix: 'Increase voltage or reduce wire feed speed' },
+  { symptom: 'Holes or pits in the finished weld (porosity)', cause: 'Contamination, wrong polarity, or poor gas coverage', fix: 'Clean the metal with a grinder or wire brush, check polarity, check gas flow rate (MIG only)' },
+  { symptom: 'Weld is too tall and narrow, not fusing into the base metal', cause: 'Voltage too low or moving too fast', fix: 'Increase voltage or slow your travel speed' },
+  { symptom: 'Excessive spatter everywhere', cause: 'Voltage too high, wrong polarity, or dirty metal', fix: 'Reduce voltage slightly, check polarity (flux core especially), clean the base metal' },
+  { symptom: 'Groove or dip along the edge of the weld (this is called undercut)', cause: 'Too much heat or torch angle pointed too far to one side', fix: 'Reduce voltage and point the torch more toward the centre of the joint' },
+  { symptom: 'Weld looks cold, grey, no shine, not fused properly', cause: 'Not enough heat or moving too fast', fix: 'Increase voltage or slow down' },
+  { symptom: 'Arc keeps cutting out or is very unstable', cause: 'Wire feed too slow, voltage too high, or loose connections', fix: 'Increase wire feed speed, reduce voltage, check all connections and earth clamp' },
+];
+
+function setSettingsProcess(proc) {
+  settingsProcess = proc;
+  document.getElementById('sprocess-mig').classList.toggle('active', proc === 'mig');
+  document.getElementById('sprocess-fcaw').classList.toggle('active', proc === 'fcaw');
+  // Show/hide MIG-only materials
+  const galvOpt = document.getElementById('settings-galv-opt');
+  const ssOpt = document.getElementById('settings-ss-opt');
+  galvOpt.style.display = proc === 'mig' ? '' : 'none';
+  ssOpt.style.display = proc === 'mig' ? '' : 'none';
+  if (proc === 'fcaw' && (settingsMaterial === 'galv' || settingsMaterial === 'ss')) {
+    settingsMaterial = 'mild';
+    document.getElementById('settings-material').value = 'mild';
+  }
+  // Show/hide polarity card
+  document.getElementById('settings-polarity-card').style.display = proc === 'fcaw' ? 'block' : 'none';
+  // Show/hide wire options
+  document.getElementById('settings-wire-opts-mig').style.display = proc === 'mig' ? '' : 'none';
+  document.getElementById('settings-wire-opts-fcaw').style.display = proc === 'fcaw' ? '' : 'none';
+  // Re-suggest wire if thickness already entered
+  suggestSettingsWire();
+}
+
+function setSettingsWire(wire) {
+  settingsWire = wire;
+  if (settingsProcess === 'mig') {
+    ['swire-06','swire-08','swire-10','swire-12'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        const map = { 'swire-06': '0.6', 'swire-08': '0.8', 'swire-10': '1.0', 'swire-12': '1.2' };
+        btn.classList.toggle('active', map[id] === wire);
+      }
+    });
+  } else {
+    ['swire-f08','swire-f09','swire-f10'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        const map = { 'swire-f08': '0.8', 'swire-f09': '0.9', 'swire-f10': '1.0' };
+        btn.classList.toggle('active', map[id] === wire);
+      }
+    });
+  }
+}
+
+function updateSettingsMaterial() {
+  settingsMaterial = document.getElementById('settings-material').value;
+}
+
+function suggestSettingsWire() {
+  const t = parseFloat(document.getElementById('settings-thick').value);
+  if (!t || t <= 0) return;
+  if (settingsProcess === 'mig') {
+    let suggested;
+    if (t <= 1.5) suggested = '0.6';
+    else if (t <= 4) suggested = '0.8';
+    else if (t <= 8) suggested = '1.0';
+    else suggested = '1.2';
+    setSettingsWire(suggested);
+  } else {
+    let suggested;
+    if (t <= 3) suggested = '0.8';
+    else if (t <= 6) suggested = '0.9';
+    else suggested = '1.0';
+    setSettingsWire(suggested);
+  }
+}
+
+function getSettingsRow(t, wire) {
+  const data = settingsProcess === 'mig' ? MIG_SETTINGS_DATA : FCAW_SETTINGS_DATA;
+  // Find closest thickness match
+  let best = data[0];
+  let bestDiff = Math.abs(data[0].thick - t);
+  for (const row of data) {
+    const diff = Math.abs(row.thick - t);
+    if (diff < bestDiff) { bestDiff = diff; best = row; }
+  }
+  // If wire matches a row with same thick, prefer that
+  const wireMatch = data.find(r => Math.abs(r.thick - t) === bestDiff && r.wire === wire);
+  return wireMatch || best;
+}
+
+function calcSettings() {
+  const box = document.getElementById('settings-results');
+  box.className = 'results show';
+
+  const t = parseFloat(document.getElementById('settings-thick').value);
+  if (!t || t <= 0) {
+    box.innerHTML = errorBox('Enter your material thickness to get settings.');
+    return;
+  }
+
+  const hasVoltage = document.getElementById('ctrl-voltage').checked;
+  const hasWFS = document.getElementById('ctrl-wfs').checked;
+  const hasInductance = document.getElementById('ctrl-inductance').checked;
+
+  const row = getSettingsRow(t, settingsWire);
+  const processLabel = settingsProcess === 'mig' ? 'MIG (GMAW)' : 'Flux Core (FCAW — E71T-GS gasless)';
+  const wireLabel = settingsWire + 'mm wire';
+
+  let settingsRows = '';
+  if (hasVoltage) {
+    settingsRows += `
+      <div class="stat">
+        <div class="stat-label">Voltage</div>
+        <div class="stat-val" style="font-size:15px">${row.v}</div>
+      </div>`;
+  }
+  if (hasWFS) {
+    settingsRows += `
+      <div class="stat">
+        <div class="stat-label">Wire Feed Speed</div>
+        <div class="stat-val" style="font-size:15px">${row.wfs}</div>
+      </div>`;
+  }
+
+  let inductanceHtml = '';
+  if (hasInductance) {
+    inductanceHtml = `
+      <div class="note" style="margin-bottom:10px">
+        <strong>Inductance:</strong> Start at 40–60% inductance. Increase if spatter is excessive. Decrease if you want a crisper, snappier arc.
+      </div>`;
+  }
+
+  const troubleshooterCards = SETTINGS_TROUBLESHOOTER.map(s => `
+    <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">${s.symptom}</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:4px">${s.cause}</div>
+      <div style="font-size:12px;color:var(--accent)">${s.fix}</div>
+    </div>`).join('');
+
+  window._lastSettings = {
+    process: processLabel, wire: wireLabel, thick: t,
+    v: hasVoltage ? row.v : null, wfs: hasWFS ? row.wfs : null,
+    note: row.note
+  };
+
+  box.innerHTML = `
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-label" style="color:var(--green)">RECOMMENDED SETTINGS</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${processLabel} · ${wireLabel} · ${t}mm material</div>
+      <div class="stat-grid" style="margin-bottom:10px">
+        ${settingsRows}
+      </div>
+      ${inductanceHtml}
+      <div class="note" style="margin-bottom:10px">
+        <strong>Travel speed:</strong> Move at a steady pace — roughly as fast as you would write your name. If the puddle is getting ahead of the arc, slow down. If you are burning through, speed up.
+      </div>
+      <div class="note" style="margin-bottom:0">
+        <strong>Torch angle:</strong> Hold the torch at 10–15° from vertical, pushing the weld pool slightly in the direction of travel. For vertical welds, point slightly upward and use a small side-to-side weave.
+      </div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:#ffb066;line-height:1.5">
+        ${row.note}
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:10px">
+      <button class="expand-btn" id="troubleshoot-btn" onclick="toggleTroubleshooter()" style="margin-top:0">TROUBLESHOOT MY WELD ▾</button>
+      <div id="troubleshoot-wrap" style="display:none;margin-top:12px">
+        ${troubleshooterCards}
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copySettings()">Copy</button>
+    </div>
+    <button class="reset-btn" onclick="resetSettings()">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  gtag('event', 'settings_guide_used', { process: settingsProcess, wire: settingsWire, thickness: t });
+}
+
+let troubleshooterVisible = false;
+function toggleTroubleshooter() {
+  troubleshooterVisible = !troubleshooterVisible;
+  document.getElementById('troubleshoot-wrap').style.display = troubleshooterVisible ? '' : 'none';
+  document.getElementById('troubleshoot-btn').textContent = troubleshooterVisible ? 'TROUBLESHOOT MY WELD ▴' : 'TROUBLESHOOT MY WELD ▾';
+}
+
+function copySettings() {
+  const d = window._lastSettings;
+  if (!d) return;
+  let txt = `GapCalc — Settings Guide\n---\nProcess: ${d.process}\nWire: ${d.wire}\nMaterial thickness: ${d.thick}mm\n`;
+  if (d.v) txt += `Voltage: ${d.v}\n`;
+  if (d.wfs) txt += `Wire feed speed: ${d.wfs}\n`;
+  txt += `Note: ${d.note}\n\ngapcalc.com`;
+  copy(txt, event.target);
+}
+
+function resetSettings() {
+  document.getElementById('settings-results').className = 'results';
+  document.getElementById('settings-results').innerHTML = '';
+  document.getElementById('settings-thick').value = '';
+  troubleshooterVisible = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 // Enter key triggers calculate
 document.getElementById('tab-gaps').addEventListener('keydown', e => { if (e.key==='Enter') calcGaps(); });
 document.getElementById('tab-cutlist').addEventListener('keydown', e => { if (e.key==='Enter') calcCutList(); });
@@ -4435,6 +4867,7 @@ document.getElementById('tab-rods').addEventListener('keydown', e => { if (e.key
 document.getElementById('tab-costing').addEventListener('keydown', e => { if (e.key==='Enter') calcCosting(); });
 document.getElementById('tab-bolts').addEventListener('keydown', e => { if (e.key==='Enter') calcBolts(); });
 document.getElementById('tab-mig').addEventListener('keydown', e => { if (e.key==='Enter') calcMIG(); });
+document.getElementById('tab-settings').addEventListener('keydown', e => { if (e.key==='Enter') calcSettings(); });
 
 // Init angle width presets
 renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');
