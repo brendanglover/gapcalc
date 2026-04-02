@@ -907,6 +907,99 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   font-size:12px; color:#8ac8ff; line-height:1.5; margin-bottom:10px;
 }
 
+/* ═══════════════════════════════
+   SEND TO JOB COSTING BUTTON
+   ═══════════════════════════════ */
+.send-to-costing-btn {
+  width: 100%;
+  padding: 13px;
+  border: 2px solid var(--green);
+  background: var(--green-dim);
+  color: var(--green);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+.send-to-costing-btn:hover {
+  background: var(--green);
+  color: #000;
+}
+
+/* ═══════════════════════════════
+   JOB TIMER
+   ═══════════════════════════════ */
+.timer-display {
+  font-family: 'DM Mono', monospace;
+  font-size: 52px;
+  color: var(--text2);
+  line-height: 1;
+  letter-spacing: 2px;
+  margin: 12px 0;
+  transition: color 0.3s;
+}
+.timer-display.running { color: var(--accent); }
+.timer-name-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  margin-bottom: 12px;
+}
+.timer-name-input:focus { border-color: var(--accent); }
+.timer-name-input::placeholder { color: var(--text3); }
+.timer-name-input.error { border-color: var(--red); }
+.timer-btn-row { display: flex; gap: 8px; margin-top: 4px; }
+.timer-start-btn {
+  flex: 1; padding: 17px;
+  background: var(--green); border: none; border-radius: var(--r);
+  color: #000; font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px;
+  cursor: pointer; transition: all 0.2s;
+}
+.timer-start-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.task-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface2); border-radius: 8px;
+  padding: 10px 14px; margin-bottom: 6px;
+}
+.task-row-name { flex: 1; font-size: 13px; color: var(--text); }
+.task-row-dur {
+  font-family: 'DM Mono', monospace; font-size: 13px;
+  color: var(--accent); flex-shrink: 0;
+}
+.timer-total-bar {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 12px 0 4px;
+}
+.timer-total-label {
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text2);
+}
+.timer-total-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px; color: var(--green); line-height: 1;
+}
+.timer-empty {
+  font-size: 13px; color: var(--text3);
+  text-align: center; padding: 16px 0;
+}
+.timer-inline-msg {
+  font-size: 12px; color: var(--red);
+  margin-top: 4px; min-height: 18px;
+}
+
 </style>
 </head>
 <body>
@@ -1014,6 +1107,13 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
       <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
+    <div class="feature-card" onclick="openTool('timer')">
+      <div class="feature-card-icon">◷</div>
+      <div class="feature-card-title">JOB TIMER</div>
+      <div class="feature-card-desc">Track time spent on each task of a job. See where your hours actually go — then send the total straight to Job Costing.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+    </div>
+
     <div class="coming-soon-card">
       <span class="coming-soon-badge">COMING SOON</span>
       <div class="coming-soon-title">PAINT &amp; PRIMER COVERAGE</div>
@@ -1022,8 +1122,8 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
     <div class="coming-soon-card">
       <span class="coming-soon-badge">COMING SOON</span>
-      <div class="coming-soon-title">PROJECT TIMER</div>
-      <div class="coming-soon-desc">Track your time on a job and feed it directly into the Job Costing calculator.</div>
+      <div class="coming-soon-title">PIPE &amp; TUBE BENDING</div>
+      <div class="coming-soon-desc">Calculate bend allowance, flat length, and springback for any pipe or tube. Plan your bends before you touch the bender.</div>
     </div>
 
     <div class="coming-soon-card">
@@ -1479,6 +1579,10 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
       <button class="rod-opt-btn" id="rmat-ss" onclick="setRodMaterial('ss')">
         <span class="rod-opt-code">Stainless Steel</span>
         <span class="rod-opt-hint">Barbecue grills, food equipment, handrails</span>
+      </button>
+      <button class="rod-opt-btn" id="rmat-alum" onclick="setRodMaterial('alum')">
+        <span class="rod-opt-code">Aluminium</span>
+        <span class="rod-opt-hint">TIG, spool gun MIG, or specialist process — not standard stick welding</span>
       </button>
     </div>
   </div>
@@ -2407,6 +2511,46 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
 </div>
 
+<!-- ═══════════════════════════════════════
+     TAB 11 — JOB TIMER
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-timer">
+
+  <div style="height:8px"></div>
+
+  <div class="note">
+    <strong>Start a task, run the timer, stop when done.</strong> Add as many tasks as your job needs. Your times are saved automatically — even if you close this tab and come back.
+  </div>
+
+  <!-- ACTIVE TIMER CARD -->
+  <div class="card">
+    <div class="card-label">Current Task</div>
+    <input type="text" class="timer-name-input" id="timer-task-name" placeholder="e.g. Welding, Grinding, Cutting...">
+    <div id="timer-name-msg" class="timer-inline-msg"></div>
+    <div class="timer-display" id="timer-display">00:00:00</div>
+    <div class="timer-btn-row">
+      <button class="timer-start-btn" id="timer-start-btn" onclick="startTimer()">START</button>
+      <button class="act-btn" id="timer-pause-btn" onclick="pauseTimer()" style="display:none;flex:1;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;">PAUSE</button>
+      <button class="act-btn" id="timer-stop-btn" onclick="stopAndSave()" style="display:none;flex:1;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;border-color:var(--accent);color:var(--accent);">STOP &amp; SAVE</button>
+    </div>
+  </div>
+
+  <!-- JOB LOG CARD -->
+  <div class="card">
+    <div class="card-label">Job Log</div>
+    <div id="job-log-wrap">
+      <div class="timer-empty">No tasks recorded yet. Start your first task above.</div>
+    </div>
+    <div class="timer-total-bar">
+      <span class="timer-total-label">Total Job Time</span>
+      <span class="timer-total-value" id="total-job-time">0:00:00</span>
+    </div>
+    <button class="send-to-costing-btn" id="timer-send-btn" onclick="sendTimerToCosting()" style="display:none">+ Send Total to Job Costing</button>
+    <button class="reset-btn" id="timer-reset-btn" onclick="resetTimer()" style="margin-top:8px">↺ Clear all tasks</button>
+  </div>
+
+</div>
+
 <footer>
   <p>GapCalc — free forever. No login. No data stored.</p>
   <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
@@ -2416,7 +2560,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <a href="https://github.com/brendanglover" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">GitHub</a>
   </p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.4.0 &nbsp;·&nbsp; Updated 31 March 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.5.0 &nbsp;·&nbsp; Updated 2 April 2026</p>
 </footer>
 
 <script>
@@ -2740,6 +2884,7 @@ function calcCutList() {
       <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut.toFixed(0)})">Copy</button>
       <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
+    <button class="send-to-costing-btn" onclick="sendCutListToCosting()">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetTab('tab-cutlist')">↺ Start over</button>
   `;
 
@@ -2937,6 +3082,7 @@ function calcWeight() {
       <button class="act-btn" onclick="copyWeightResult(${totalWeight.toFixed(2)},${weightPerPiece.toFixed(2)},${weightPerMetre.toFixed(3)},${Q})">Copy</button>
       <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
+    <button class="send-to-costing-btn" onclick="sendWeightToCosting()">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetTab('tab-weight')">↺ Start over</button>`;
   box.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -3358,7 +3504,7 @@ function resetTab(tabId) {
 // ════════════════════════════════════════
 // HOMEPAGE NAVIGATION
 // ════════════════════════════════════════
-const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig','settings'];
+const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig','settings','timer'];
 
 function goHome() {
   ALL_TABS.forEach(t => {
@@ -3380,7 +3526,8 @@ const TOOL_NAMES = {
   bolts: 'BOLT SPACING',
   drill: 'DRILL REFERENCE',
   mig: 'MIG WIRE ESTIMATOR',
-  settings: 'SETTINGS GUIDE'
+  settings: 'SETTINGS GUIDE',
+  timer: 'JOB TIMER'
 };
 
 function openTool(tool) {
@@ -3463,6 +3610,13 @@ const ROD_DB = {
     why: 'Stainless steel requires a dedicated stainless electrode. The 308L is suitable for 304 grade stainless which covers most braai, handrail, and food-grade applications. Keep heat input low to avoid warping and sensitisation.',
     tip: 'Use the lowest amperage that maintains a stable arc. Stainless conducts heat poorly — it warps easily. Clamp, tack frequently, and weld in short runs with cooling time between passes.',
     alt: 'E316L for marine or chemical environments'
+  },
+  alum: {
+    rec: 'NOT RECOMMENDED',
+    full: 'Standard stick welding cannot weld aluminium cleanly',
+    why: 'Aluminium requires either AC TIG welding or MIG with a spool gun and 100% Argon shielding gas. Standard DC stick welding and regular MIG setups are not suitable. Attempting to weld aluminium with the wrong process produces weak, porous welds that look acceptable but have very little strength.',
+    tip: 'For clean aluminium welds you need: AC TIG (the preferred method), or MIG with a spool gun, 100% Argon gas, and ER4043 or ER5356 aluminium wire. If you do not have this equipment, find a fabricator who does — do not risk a structural failure on an incorrect process.',
+    alt: 'AC TIG welding or spool gun MIG with 100% Argon'
   }
 };
 
@@ -3486,7 +3640,7 @@ function setSkill(skill) {
 
 function setRodMaterial(mat) {
   rodMaterial = mat;
-  ['mild','galv','cast','ss'].forEach(m => {
+  ['mild','galv','cast','ss','alum'].forEach(m => {
     document.getElementById('rmat-'+m).classList.toggle('active', m === mat);
   });
 }
@@ -3528,15 +3682,25 @@ function calcRodSelector() {
   const warningHtml = (isAdvancedPos && isBeginner) ?
     `<div class="bakkie-note warn" style="margin-top:8px">⚠ This weld position is advanced. As a beginner, practise in the flat (1G/1F) position first until your technique is consistent before attempting ${rodPosition.toUpperCase()}.</div>` : '';
 
+  const isAlum = rodMaterial === 'alum';
+  const recCardClass = isAlum ? 'rod-recommendation' : 'rod-recommendation';
+  const recCardStyle = isAlum ? 'border-left-color:var(--accent);background:var(--accent-dim)' : '';
+  const recNameStyle = isAlum ? 'color:var(--accent);font-size:20px' : '';
+
   box.innerHTML = `
-    <div class="rod-recommendation">
-      <div class="rod-rec-label">RECOMMENDED ROD</div>
-      <div class="rod-rec-name">${rec.rec}</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:6px">${rec.full}</div>
+    ${isAlum ? `<div class="result-hero warn" style="margin-bottom:10px">
+      <div class="rh-label">WRONG PROCESS — DO NOT ATTEMPT</div>
+      <div class="rh-value warn" style="font-size:28px;line-height:1.2">NOT RECOMMENDED</div>
+      <div class="rh-sub">${rec.full}</div>
+    </div>` : ''}
+    <div class="rod-recommendation" style="${recCardStyle}">
+      <div class="rod-rec-label">${isAlum ? 'WHY STICK WELDING FAILS ON ALUMINIUM' : 'RECOMMENDED ROD'}</div>
+      ${!isAlum ? `<div class="rod-rec-name">${rec.rec}</div>` : ''}
+      ${!isAlum ? `<div style="font-size:12px;color:var(--text2);margin-bottom:6px">${rec.full}</div>` : ''}
       <div class="rod-rec-why">${rec.why}</div>
-      ${rec.alt ? `<div style="font-size:11px;color:var(--text3);margin-top:6px">Alternative: ${rec.alt}</div>` : ''}
-      ${posNote ? `<div class="rod-rec-tip"><strong>Position note (${rodPosition.toUpperCase()}):</strong> ${posNote}</div>` : ''}
-      <div class="rod-rec-tip"><strong>Workshop tip:</strong> ${rec.tip}</div>
+      ${rec.alt ? `<div style="font-size:11px;color:var(--text3);margin-top:6px">Use instead: ${rec.alt}</div>` : ''}
+      ${posNote && !isAlum ? `<div class="rod-rec-tip"><strong>Position note (${rodPosition.toUpperCase()}):</strong> ${posNote}</div>` : ''}
+      <div class="rod-rec-tip"><strong>${isAlum ? 'What to do instead:' : 'Workshop tip:'}</strong> ${rec.tip}</div>
       ${warningHtml}
     </div>
     <div class="action-row">
@@ -4099,6 +4263,292 @@ function initCosting() {
   const dateEl = document.getElementById('q-date');
   if (dateEl) dateEl.value = today;
 }
+
+// ════════════════════════════════════════
+// SEND TO JOB COSTING — WEIGHT & CUTLIST
+// ════════════════════════════════════════
+function sendWeightToCosting() {
+  const totalWeight = document.querySelector('#w-results .rh-value')?.textContent;
+  openTool('costing');
+  setTimeout(() => {
+    const wrap = document.getElementById('materials-wrap');
+    if (!wrap) return;
+    addLineItem('materials');
+    const rows = wrap.querySelectorAll('.line-item-row');
+    const last = rows[rows.length - 1];
+    if (!last) return;
+    const id = last.id.replace('materials-row-', '');
+    const desc = document.getElementById('materials-desc-' + id);
+    const qty = document.getElementById('materials-qty-' + id);
+    if (desc) desc.value = 'Steel/Timber order (' + (totalWeight || '') + 'kg)';
+    if (qty) qty.value = 1;
+    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+  gtag('event', 'send_to_costing', { source: 'weight' });
+}
+
+function sendCutListToCosting() {
+  const lengths = document.querySelector('#c-results .rh-value')?.textContent;
+  const pieceLen = document.getElementById('c-piece')?.value;
+  const stock = document.getElementById('c-stock')?.value;
+  openTool('costing');
+  setTimeout(() => {
+    const wrap = document.getElementById('materials-wrap');
+    if (!wrap) return;
+    addLineItem('materials');
+    const rows = wrap.querySelectorAll('.line-item-row');
+    const last = rows[rows.length - 1];
+    if (!last) return;
+    const id = last.id.replace('materials-row-', '');
+    const desc = document.getElementById('materials-desc-' + id);
+    const qty = document.getElementById('materials-qty-' + id);
+    if (desc) desc.value = (stock ? (stock / 1000).toFixed(1) + 'm lengths' : 'Steel lengths') +
+      (pieceLen ? ' cut to ' + pieceLen + 'mm' : '');
+    if (qty) qty.value = lengths || 1;
+    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+  gtag('event', 'send_to_costing', { source: 'cutlist' });
+}
+
+
+// ════════════════════════════════════════
+// JOB TIMER
+// ════════════════════════════════════════
+let timerRunning = false;
+let timerPaused = false;
+let timerStart = null;
+let timerElapsed = 0;
+let timerInterval = null;
+let timerTasks = [];
+let timerResetConfirm = false;
+let taskIdCounter = 0;
+
+function formatMs(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+function getTotalMs() {
+  return timerTasks.reduce((sum, t) => sum + t.duration, 0);
+}
+
+function updateTimerDisplay() {
+  const elapsed = Date.now() - timerStart;
+  document.getElementById('timer-display').textContent = formatMs(elapsed);
+}
+
+function startTimer() {
+  const nameEl = document.getElementById('timer-task-name');
+  const msgEl = document.getElementById('timer-name-msg');
+  if (!nameEl.value.trim()) {
+    nameEl.classList.add('error');
+    msgEl.textContent = 'Give this task a name first.';
+    nameEl.addEventListener('input', () => {
+      nameEl.classList.remove('error');
+      msgEl.textContent = '';
+    }, { once: true });
+    return;
+  }
+  timerRunning = true;
+  timerPaused = false;
+  timerStart = Date.now() - timerElapsed;
+  timerInterval = setInterval(updateTimerDisplay, 100);
+  document.getElementById('timer-start-btn').style.display = 'none';
+  document.getElementById('timer-pause-btn').style.display = '';
+  document.getElementById('timer-stop-btn').style.display = '';
+  document.getElementById('timer-display').classList.add('running');
+  saveActiveTimer();
+}
+
+function pauseTimer() {
+  timerElapsed = Date.now() - timerStart;
+  clearInterval(timerInterval);
+  timerPaused = true;
+  timerRunning = false;
+  const btn = document.getElementById('timer-pause-btn');
+  btn.textContent = 'RESUME';
+  btn.onclick = resumeTimer;
+  saveActiveTimer();
+}
+
+function resumeTimer() {
+  timerStart = Date.now() - timerElapsed;
+  timerInterval = setInterval(updateTimerDisplay, 100);
+  timerRunning = true;
+  timerPaused = false;
+  const btn = document.getElementById('timer-pause-btn');
+  btn.textContent = 'PAUSE';
+  btn.onclick = pauseTimer;
+  saveActiveTimer();
+}
+
+function stopAndSave() {
+  clearInterval(timerInterval);
+  const duration = timerPaused ? timerElapsed : Date.now() - timerStart;
+  if (duration < 1000) {
+    timerElapsed = 0;
+    timerRunning = false;
+    timerPaused = false;
+    document.getElementById('timer-display').textContent = '00:00:00';
+    document.getElementById('timer-display').classList.remove('running');
+    document.getElementById('timer-start-btn').style.display = '';
+    document.getElementById('timer-pause-btn').style.display = 'none';
+    document.getElementById('timer-stop-btn').style.display = 'none';
+    return;
+  }
+  const name = document.getElementById('timer-task-name').value.trim() || 'Task';
+  const task = {
+    id: ++taskIdCounter,
+    name,
+    duration,
+    durationFormatted: formatMs(duration)
+  };
+  timerTasks.push(task);
+  localStorage.setItem('gc_timer_tasks', JSON.stringify(timerTasks));
+  localStorage.removeItem('gc_timer_active');
+  timerElapsed = 0;
+  timerRunning = false;
+  timerPaused = false;
+  timerStart = null;
+  document.getElementById('timer-task-name').value = '';
+  document.getElementById('timer-display').textContent = '00:00:00';
+  document.getElementById('timer-display').classList.remove('running');
+  document.getElementById('timer-start-btn').style.display = '';
+  document.getElementById('timer-pause-btn').style.display = 'none';
+  document.getElementById('timer-stop-btn').style.display = 'none';
+  const pauseBtn = document.getElementById('timer-pause-btn');
+  pauseBtn.textContent = 'PAUSE';
+  pauseBtn.onclick = pauseTimer;
+  renderTaskList();
+  gtag('event', 'timer_task_saved', { duration_sec: Math.floor(duration / 1000) });
+}
+
+function saveActiveTimer() {
+  if (!timerStart) return;
+  localStorage.setItem('gc_timer_active', JSON.stringify({
+    name: document.getElementById('timer-task-name').value,
+    startTime: timerStart,
+    elapsed: timerElapsed
+  }));
+}
+
+function deleteTask(id) {
+  timerTasks = timerTasks.filter(t => t.id !== id);
+  localStorage.setItem('gc_timer_tasks', JSON.stringify(timerTasks));
+  renderTaskList();
+}
+
+function renderTaskList() {
+  const wrap = document.getElementById('job-log-wrap');
+  const sendBtn = document.getElementById('timer-send-btn');
+  if (timerTasks.length === 0) {
+    wrap.innerHTML = '<div class="timer-empty">No tasks recorded yet. Start your first task above.</div>';
+    if (sendBtn) sendBtn.style.display = 'none';
+  } else {
+    wrap.innerHTML = timerTasks.map(t => `
+      <div class="task-row" id="task-row-${t.id}">
+        <span class="task-row-name">${t.name}</span>
+        <span class="task-row-dur">${t.durationFormatted}</span>
+        <button class="remove-btn" onclick="deleteTask(${t.id})">×</button>
+      </div>
+    `).join('');
+    if (sendBtn) sendBtn.style.display = '';
+  }
+  const totalEl = document.getElementById('total-job-time');
+  if (totalEl) totalEl.textContent = formatMs(getTotalMs());
+}
+
+function sendTimerToCosting() {
+  const totalHours = getTotalMs() / 3600000;
+  openTool('costing');
+  setTimeout(() => {
+    const hoursEl = document.getElementById('labour-hours');
+    if (hoursEl) {
+      hoursEl.value = totalHours.toFixed(2);
+      hoursEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 300);
+  gtag('event', 'send_to_costing', { source: 'timer' });
+}
+
+function resetTimer() {
+  const btn = document.getElementById('timer-reset-btn');
+  if (!timerResetConfirm) {
+    timerResetConfirm = true;
+    btn.textContent = 'Tap again to confirm — this clears all tasks';
+    btn.style.borderColor = 'var(--red)';
+    btn.style.color = 'var(--red)';
+    setTimeout(() => {
+      timerResetConfirm = false;
+      btn.textContent = '↺ Clear all tasks';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 3000);
+    return;
+  }
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerPaused = false;
+  timerStart = null;
+  timerElapsed = 0;
+  timerTasks = [];
+  timerResetConfirm = false;
+  taskIdCounter = 0;
+  localStorage.removeItem('gc_timer_tasks');
+  localStorage.removeItem('gc_timer_active');
+  document.getElementById('timer-task-name').value = '';
+  document.getElementById('timer-display').textContent = '00:00:00';
+  document.getElementById('timer-display').classList.remove('running');
+  document.getElementById('timer-start-btn').style.display = '';
+  document.getElementById('timer-pause-btn').style.display = 'none';
+  document.getElementById('timer-stop-btn').style.display = 'none';
+  const pauseBtn = document.getElementById('timer-pause-btn');
+  pauseBtn.textContent = 'PAUSE';
+  pauseBtn.onclick = pauseTimer;
+  btn.textContent = '↺ Clear all tasks';
+  btn.style.borderColor = '';
+  btn.style.color = '';
+  renderTaskList();
+}
+
+function initTimer() {
+  const saved = localStorage.getItem('gc_timer_tasks');
+  if (saved) {
+    try {
+      timerTasks = JSON.parse(saved);
+      if (timerTasks.length > 0) {
+        taskIdCounter = Math.max(...timerTasks.map(t => t.id));
+      }
+    } catch(e) { timerTasks = []; }
+  }
+  renderTaskList();
+
+  const active = localStorage.getItem('gc_timer_active');
+  if (active) {
+    try {
+      const data = JSON.parse(active);
+      timerElapsed = (data.elapsed || 0) + (Date.now() - data.startTime);
+      const nameEl = document.getElementById('timer-task-name');
+      if (nameEl && data.name) nameEl.value = data.name;
+      timerStart = Date.now() - timerElapsed;
+      timerRunning = true;
+      timerInterval = setInterval(updateTimerDisplay, 100);
+      document.getElementById('timer-start-btn').style.display = 'none';
+      document.getElementById('timer-pause-btn').style.display = '';
+      document.getElementById('timer-stop-btn').style.display = '';
+      document.getElementById('timer-display').classList.add('running');
+      const msgEl = document.getElementById('timer-name-msg');
+      if (msgEl) {
+        msgEl.style.color = 'var(--green)';
+        msgEl.textContent = 'Timer restored — it kept running while you were away.';
+      }
+    } catch(e) { localStorage.removeItem('gc_timer_active'); }
+  }
+}
+
 
 // ════════════════════════════════════════
 // BOLT SPACING CALCULATOR
@@ -4868,6 +5318,7 @@ document.getElementById('tab-costing').addEventListener('keydown', e => { if (e.
 document.getElementById('tab-bolts').addEventListener('keydown', e => { if (e.key==='Enter') calcBolts(); });
 document.getElementById('tab-mig').addEventListener('keydown', e => { if (e.key==='Enter') calcMIG(); });
 document.getElementById('tab-settings').addEventListener('keydown', e => { if (e.key==='Enter') calcSettings(); });
+document.getElementById('tab-timer').addEventListener('keydown', e => { if (e.key==='Enter' && !timerRunning) startTimer(); });
 
 // Init angle width presets
 renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');
@@ -4878,6 +5329,8 @@ renderDimFields('flatbar');
 initCosting();
 // Init drill reference
 initDrillGrids();
+// Init timer
+initTimer();
 </script>
 </body>
 </html>
