@@ -319,13 +319,22 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
 /* PRINT */
 @media print {
-  body { background: #fff; color: #000; }
-  header { background: #fff; border-bottom: 3px solid #f5820a; position: static; }
-  .nav, .go-btn, .action-row, footer, .formula-box, .chip, .preset-row { display: none !important; }
-  .section { display: block !important; }
+  header, .back-btn-wrap, .nav,
+  .go-btn, .reset-btn, .act-btn,
+  .send-to-costing-btn, footer,
+  .formula-box, .preset-row,
+  .chip, .note { display: none !important; }
+
+  .section { display: none !important; }
+  .section.active { display: block !important; }
+
   .results { display: block !important; }
+
+  body { background: #fff; color: #000; }
   .result-hero { border: 2px solid #ccc; }
   .rh-value { color: #f5820a !important; }
+  .stat { background: #f5f5f5; }
+  .quote-doc { box-shadow: none; }
 }
 
 @media (max-width: 380px) {
@@ -827,10 +836,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 .cost-summary-card.warn { border: 1px solid var(--accent); }
 .cost-summary-card.warn .cost-summary-val { color: var(--accent); }
 
-@media print {
-  .quote-doc { box-shadow: none; }
-  .view-toggle, .go-btn, .reset-btn, .action-row, .back-btn-wrap { display: none !important; }
-}
+/* quote-doc print handled by main @media print block above */
 
 /* ═══════════════════════════════
    PILL TOGGLE (bolt spacing, drill unit, MIG gas)
@@ -1339,6 +1345,20 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     </div>
   </div>
 
+  <!-- Steel grade / material sub-selector -->
+  <div class="card" id="w-steel-material-card">
+    <div class="card-label">Steel Grade</div>
+    <div class="input-group">
+      <select class="w-select" id="w-steel-material">
+        <option value="mild">Mild Steel (7.85 g/cm³) — most common</option>
+        <option value="stainless">Stainless Steel (7.93 g/cm³)</option>
+        <option value="aluminium">Aluminium (2.71 g/cm³)</option>
+        <option value="copper">Copper (8.96 g/cm³)</option>
+        <option value="brass">Brass (8.50 g/cm³)</option>
+      </select>
+    </div>
+  </div>
+
   <!-- Profile selector (steel) -->
   <div class="card" id="w-profile-card">
     <div class="card-label">Steel Profile</div>
@@ -1811,41 +1831,151 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <p style="font-size:12px;color:var(--text2);margin-top:8px">All amounts will display in your selected currency. Enter your local prices.</p>
   </div>
 
-  <!-- QUOTE DETAILS -->
+  <!-- CARD 1 — YOUR BUSINESS DETAILS (collapsed by default) -->
   <div class="card">
-    <div class="card-label">Quote Details</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleBizDetails()">
+      <div class="card-label" style="margin-bottom:0">YOUR BUSINESS DETAILS</div>
+      <span id="biz-toggle-icon" style="color:var(--text3);font-size:20px;line-height:1">+</span>
+    </div>
+    <div class="note" style="margin-top:8px;margin-bottom:0;font-size:11px">Tip: Keep your business details handy to paste in quickly — the app won't save these between sessions.</div>
+    <div id="biz-details-body" style="display:none;margin-top:12px">
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Quote #</span></div>
+        <div class="input-wrap">
+          <input type="text" id="q-quote-num" placeholder="e.g. GC-001" style="font-size:16px">
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">Write this down — the app won't remember it next time.</div>
+      </div>
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Business name</span></div>
+        <div class="input-wrap">
+          <input type="text" id="q-bizname" placeholder="e.g. Brendan Fabrication" style="font-size:16px">
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Address</span></div>
+        <textarea id="q-biz-address" placeholder="e.g. 12 Workshop Street, Cape Town, 8001" rows="2" style="width:100%;background:var(--surface2);border:2px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:12px 16px;outline:none;resize:vertical;-webkit-appearance:none;transition:border-color 0.2s"></textarea>
+      </div>
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Phone</span></div>
+        <div class="input-wrap">
+          <input type="text" id="q-biz-phone" placeholder="e.g. +27 82 123 4567" style="font-size:16px">
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Email</span></div>
+        <div class="input-wrap">
+          <input type="text" id="q-biz-email" placeholder="e.g. hello@yourbusiness.com" style="font-size:16px">
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Website</span></div>
+        <div class="input-wrap">
+          <input type="text" id="q-biz-website" placeholder="e.g. www.yourbusiness.com" style="font-size:16px">
+        </div>
+      </div>
+      <div id="vat-field" style="display:none">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">VAT number</span></div>
+          <div class="input-wrap">
+            <input type="text" id="q-vat" placeholder="e.g. 4123456789" style="font-size:16px">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 — CLIENT DETAILS -->
+  <div class="card">
+    <div class="card-label">Client Details</div>
     <div class="input-group">
-      <div class="input-meta"><span class="input-meta-label">Your business name</span></div>
+      <div class="input-meta"><span class="input-meta-label">Client / company name</span></div>
       <div class="input-wrap">
-        <input type="text" id="q-bizname" placeholder="e.g. Brendan Fabrication" style="font-size:16px">
+        <input type="text" id="q-client" placeholder="e.g. John Smith / ABC Construction" style="font-size:16px">
       </div>
     </div>
     <div class="input-group">
-      <div class="input-meta"><span class="input-meta-label">Client name</span></div>
+      <div class="input-meta"><span class="input-meta-label">Contact person</span></div>
       <div class="input-wrap">
-        <input type="text" id="q-client" placeholder="e.g. John Smith" style="font-size:16px">
+        <input type="text" id="q-contact-person" placeholder="e.g. John Smith" style="font-size:16px">
       </div>
     </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Address</span></div>
+      <textarea id="q-client-address" placeholder="e.g. 5 Main Road, Johannesburg" rows="2" style="width:100%;background:var(--surface2);border:2px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:12px 16px;outline:none;resize:vertical;-webkit-appearance:none;transition:border-color 0.2s"></textarea>
+    </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Phone</span></div>
+      <div class="input-wrap">
+        <input type="text" id="q-client-phone" placeholder="e.g. +27 11 456 7890" style="font-size:16px">
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Email</span></div>
+      <div class="input-wrap">
+        <input type="text" id="q-client-email" placeholder="e.g. john@abcconstruction.co.za" style="font-size:16px">
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Client VAT number</span></div>
+      <div class="input-wrap">
+        <input type="text" id="q-client-vat" placeholder="e.g. 4987654321" style="font-size:16px">
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Client company reg number</span></div>
+      <div class="input-wrap">
+        <input type="text" id="q-client-reg" placeholder="e.g. 2019/123456/07" style="font-size:16px">
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 — QUOTE INFO -->
+  <div class="card">
+    <div class="card-label">Quote Info</div>
     <div class="input-group">
       <div class="input-meta"><span class="input-meta-label">Quote date</span></div>
       <div class="input-wrap">
         <input type="date" id="q-date" style="font-size:16px;color-scheme:dark">
       </div>
     </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Valid until</span></div>
+      <div class="input-wrap">
+        <input type="date" id="q-valid-until" style="font-size:16px;color-scheme:dark">
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-meta"><span class="input-meta-label">Payment terms</span></div>
+      <select class="w-select" id="q-payment-terms" onchange="togglePaymentTerms()">
+        <option value="due">Due on Receipt</option>
+        <option value="7">7 Days</option>
+        <option value="14">14 Days</option>
+        <option value="30">30 Days</option>
+        <option value="other">Other / Custom</option>
+      </select>
+    </div>
+    <div id="payment-custom-wrap" style="display:none">
+      <div class="input-group">
+        <textarea id="q-payment-custom" placeholder="Enter your payment terms and conditions..." rows="3" style="width:100%;background:var(--surface2);border:2px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:12px 16px;outline:none;resize:vertical;-webkit-appearance:none;transition:border-color 0.2s"></textarea>
+      </div>
+    </div>
     <!-- VAT toggle -->
     <div class="toggle-wrap" style="margin-top:4px">
-      <span class="toggle-label">VAT registered — include VAT number on quote</span>
+      <span class="toggle-label">VAT registered — include VAT on quote</span>
       <label class="toggle-switch">
         <input type="checkbox" id="vat-toggle" onchange="toggleVAT()">
         <span class="toggle-slider"></span>
       </label>
     </div>
-    <div id="vat-field" style="display:none">
+    <div id="vat-rate-field" style="display:none">
       <div class="input-group">
-        <div class="input-meta"><span class="input-meta-label">VAT registration number</span></div>
+        <div class="input-meta"><span class="input-meta-label">VAT Rate</span></div>
         <div class="input-wrap">
-          <input type="text" id="q-vat" placeholder="e.g. 4123456789" style="font-size:16px">
+          <input type="number" id="q-vat-rate" inputmode="decimal" placeholder="15" value="15">
+          <span class="input-unit">%</span>
         </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">Standard SA VAT is 15%. Adjust if your region uses a different rate.</div>
       </div>
     </div>
   </div>
@@ -2519,7 +2649,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   <div style="height:8px"></div>
 
   <div class="note">
-    <strong>Start a task, run the timer, stop when done.</strong> Add as many tasks as your job needs. Your times are saved automatically — even if you close this tab and come back.
+    Start a task, run the timer, stop when done. Add as many tasks as your job needs. <strong>Your tasks are saved in this browser automatically</strong> — they will still be here if you close and reopen this tab. Clearing your browser data or using private/incognito mode will reset the timer.
   </div>
 
   <!-- ACTIVE TIMER CARD -->
@@ -2560,7 +2690,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
     <a href="https://github.com/brendanglover" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">GitHub</a>
   </p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.5.0 &nbsp;·&nbsp; Updated 2 April 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.6.0 &nbsp;·&nbsp; Updated 4 April 2026</p>
 </footer>
 
 <script>
@@ -2882,7 +3012,6 @@ function calcCutList() {
     <div class="action-row" style="margin-top:10px">
       <button class="act-btn" onclick="window.print()">Print cut list</button>
       <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut.toFixed(0)})">Copy</button>
-      <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
     <button class="send-to-costing-btn" onclick="sendCutListToCosting()">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetTab('tab-cutlist')">↺ Start over</button>
@@ -2929,7 +3058,13 @@ renderChips('g-gap-presets', GAP_PRESETS, 'g-gap');
 // ════════════════════════════════════════
 let wMaterial = 'steel';
 let wProfile = 'flatbar';
-const STEEL_DENSITY = 7.85;
+
+function getSteelDensity() {
+  if (wMaterial !== 'steel') return 7.85;
+  const sel = document.getElementById('w-steel-material');
+  const densities = { mild: 7.85, stainless: 7.93, aluminium: 2.71, copper: 8.96, brass: 8.50 };
+  return densities[sel?.value] || 7.85;
+}
 
 const PROFILE_FIELDS = {
   flatbar: [{id:'w-width',label:'Width',placeholder:'e.g. 40',unit:'mm'},{id:'w-thick',label:'Thickness',placeholder:'e.g. 4.5',unit:'mm'}],
@@ -2948,6 +3083,7 @@ function setWMaterial(mat) {
   const sb = document.getElementById('wmat-steel'), wb = document.getElementById('wmat-wood');
   sb.style.cssText = isSteel ? 'flex:1;padding:12px;border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;' : 'flex:1;padding:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text2);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;';
   wb.style.cssText = !isSteel ? 'flex:1;padding:12px;border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;' : 'flex:1;padding:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text2);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;';
+  document.getElementById('w-steel-material-card').style.display = isSteel ? '' : 'none';
   document.getElementById('w-profile-card').style.display = isSteel ? '' : 'none';
   document.getElementById('w-species-card').style.display = isSteel ? 'none' : '';
   document.getElementById('w-qty-label').textContent = isSteel ? 'Number of lengths' : 'Number of pieces';
@@ -3010,7 +3146,7 @@ function getCrossSectionCm2() {
 }
 
 function getDensity() {
-  if (wMaterial === 'steel') return STEEL_DENSITY;
+  if (wMaterial === 'steel') return getSteelDensity();
   const sel = document.getElementById('w-species');
   if (sel.value === 'custom') return parseFloat(document.getElementById('w-custom-density')?.value)||null;
   return parseFloat(sel.value);
@@ -3080,7 +3216,6 @@ function calcWeight() {
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
       <button class="act-btn" onclick="copyWeightResult(${totalWeight.toFixed(2)},${weightPerPiece.toFixed(2)},${weightPerMetre.toFixed(3)},${Q})">Copy</button>
-      <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
     <button class="send-to-costing-btn" onclick="sendWeightToCosting()">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetTab('tab-weight')">↺ Start over</button>`;
@@ -3538,6 +3673,10 @@ function openTool(tool) {
   document.getElementById('back-bar').style.display = 'block';
   const nameEl = document.getElementById('current-tool-name');
   if (nameEl) nameEl.textContent = TOOL_NAMES[tool] || '';
+  if (tool === 'costing') {
+    document.getElementById('costing-results').className = 'results';
+    document.getElementById('costing-results').innerHTML = '';
+  }
   window.scrollTo({top:0, behavior:'smooth'});
   gtag('event','open_tool', {tool_name: tool});
 }
@@ -3643,6 +3782,8 @@ function setRodMaterial(mat) {
   ['mild','galv','cast','ss','alum'].forEach(m => {
     document.getElementById('rmat-'+m).classList.toggle('active', m === mat);
   });
+  document.getElementById('rod-selector-results').className = 'results';
+  document.getElementById('rod-selector-results').innerHTML = '';
 }
 
 function setJoint(joint) {
@@ -3827,8 +3968,8 @@ function calcRodEstimator() {
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
       <button class="act-btn" onclick="copyRodEst(${rodsNeeded},${packs5kg},${packs500g},${rodDiam})">Copy</button>
-      <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
+    <button class="send-to-costing-btn" onclick="sendRodToCosting()">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetRodEst()">↺ Start over</button>
   `;
 
@@ -3899,6 +4040,20 @@ let consCount = 0;
 function toggleVAT() {
   vatEnabled = document.getElementById('vat-toggle').checked;
   document.getElementById('vat-field').style.display = vatEnabled ? '' : 'none';
+  document.getElementById('vat-rate-field').style.display = vatEnabled ? '' : 'none';
+}
+
+function toggleBizDetails() {
+  const body = document.getElementById('biz-details-body');
+  const icon = document.getElementById('biz-toggle-icon');
+  const expanded = body.style.display !== 'none';
+  body.style.display = expanded ? 'none' : '';
+  icon.textContent = expanded ? '+' : '−';
+}
+
+function togglePaymentTerms() {
+  const val = document.getElementById('q-payment-terms').value;
+  document.getElementById('payment-custom-wrap').style.display = val === 'other' ? '' : 'none';
 }
 
 function toggleDelivery() {
@@ -4024,11 +4179,32 @@ function calcCosting() {
   const box = document.getElementById('costing-results');
   box.className = 'results show';
 
-  // Gather data
-  const bizName = document.getElementById('q-bizname').value || 'Your Business';
-  const client = document.getElementById('q-client').value || 'Client';
-  const date = document.getElementById('q-date').value || new Date().toISOString().split('T')[0];
+  // Gather business details
+  const bizName = document.getElementById('q-bizname').value || '';
+  const quoteNum = document.getElementById('q-quote-num')?.value || '';
+  const bizAddress = document.getElementById('q-biz-address')?.value || '';
+  const bizPhone = document.getElementById('q-biz-phone')?.value || '';
+  const bizEmail = document.getElementById('q-biz-email')?.value || '';
+  const bizWebsite = document.getElementById('q-biz-website')?.value || '';
   const vatNum = vatEnabled ? (document.getElementById('q-vat').value || '') : '';
+
+  // Gather client details
+  const client = document.getElementById('q-client').value || '';
+  const contactPerson = document.getElementById('q-contact-person')?.value || '';
+  const clientAddress = document.getElementById('q-client-address')?.value || '';
+  const clientPhone = document.getElementById('q-client-phone')?.value || '';
+  const clientEmail = document.getElementById('q-client-email')?.value || '';
+  const clientVat = document.getElementById('q-client-vat')?.value || '';
+  const clientReg = document.getElementById('q-client-reg')?.value || '';
+
+  // Gather quote info
+  const date = document.getElementById('q-date').value || new Date().toISOString().split('T')[0];
+  const validUntilDate = document.getElementById('q-valid-until')?.value || '';
+  const paymentTermsVal = document.getElementById('q-payment-terms')?.value || 'due';
+  const paymentCustom = document.getElementById('q-payment-custom')?.value || '';
+  const PAYMENT_TERMS_LABELS = { due: 'Due on Receipt', '7': '7 Days', '14': '14 Days', '30': '30 Days' };
+  const paymentTermsText = paymentTermsVal === 'other' ? paymentCustom : (PAYMENT_TERMS_LABELS[paymentTermsVal] || 'Due on Receipt');
+
   const marginPct = parseFloat(document.getElementById('q-margin').value) || 30;
 
   const materials = getLineItems('materials');
@@ -4082,21 +4258,26 @@ function calcCosting() {
   const profit = sellPrice - totalCost;
   const markup = ((sellPrice - totalCost) / totalCost * 100);
 
-  // Format date
+  // VAT calculation
+  const vatRate = vatEnabled ? (parseFloat(document.getElementById('q-vat-rate')?.value) || 15) / 100 : 0;
+  const vatAmount = sellPrice * vatRate;
+  const totalIncVAT = sellPrice + vatAmount;
+
+  // Format dates
   const dateFormatted = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-ZA', {day:'numeric',month:'long',year:'numeric'}) : '';
-
-  // Build material rows for quote
-  const matRows = materials.map(i =>
-    `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${i.qty} × ${formatCurrency(i.price)}</td><td>${formatCurrency(i.total)}</td></tr>`
-  ).join('');
-
-  const consRows = consumables.map(i =>
-    `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${i.qty} × ${formatCurrency(i.price)}</td><td>${formatCurrency(i.total)}</td></tr>`
-  ).join('');
+  const validUntilFormatted = validUntilDate ? new Date(validUntilDate + 'T00:00:00').toLocaleDateString('en-ZA', {day:'numeric',month:'long',year:'numeric'}) : '';
 
   // Visual margin bar
   const costPct = (totalCost / sellPrice * 100).toFixed(1);
   const profitPct = (profit / sellPrice * 100).toFixed(1);
+
+  // Build flat line items for quote
+  const allLineItems = [
+    ...materials.map(i => `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(i.total)}</td></tr>`),
+    ...consumables.map(i => `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(i.total)}</td></tr>`),
+    ...(labourCost > 0 ? [`<tr><td>Labour — ${labourDesc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(labourCost)}</td></tr>`] : []),
+    ...(deliveryEnabled && deliveryCost > 0 ? [`<tr><td>Delivery — ${deliveryDesc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(deliveryCost)}</td></tr>`] : []),
+  ].join('');
 
   box.innerHTML = `
     <div class="view-toggle">
@@ -4107,7 +4288,7 @@ function calcCosting() {
     <!-- INTERNAL VIEW -->
     <div id="costing-internal-view">
       <div class="result-hero">
-        <div class="rh-label">SELL PRICE (INCL. ${marginPct}% MARGIN)</div>
+        <div class="rh-label">SELL PRICE (EXCL. VAT, INCL. ${marginPct}% MARGIN)</div>
         <div style="display:flex;align-items:baseline;gap:8px">
           <div class="rh-value" style="font-size:52px">${formatCurrency(sellPrice)}</div>
         </div>
@@ -4144,6 +4325,15 @@ function calcCosting() {
           <div class="cost-summary-label">Actual margin</div>
           <div class="cost-summary-val">${marginPct}<span class="u">%</span></div>
         </div>
+        ${vatEnabled ? `
+        <div class="cost-summary-card">
+          <div class="cost-summary-label">VAT (${(vatRate*100).toFixed(0)}%)</div>
+          <div class="cost-summary-val">${formatCurrency(vatAmount)}</div>
+        </div>
+        <div class="cost-summary-card highlight" style="border-color:var(--green)">
+          <div class="cost-summary-label">Total incl. VAT</div>
+          <div class="cost-summary-val">${formatCurrency(totalIncVAT)}</div>
+        </div>` : ''}
       </div>
 
       <div class="margin-explainer">
@@ -4170,46 +4360,75 @@ function calcCosting() {
     <!-- CLIENT QUOTE VIEW -->
     <div id="costing-quote-view" style="display:none">
       <div class="quote-doc">
+
+        <!-- HEADER -->
         <div class="quote-doc-header">
           <div>
-            <div class="quote-biz-name">${bizName}</div>
-            ${vatNum ? `<div class="quote-biz-vat">VAT Reg: ${vatNum}</div>` : ''}
+            ${bizName ? `<div class="quote-biz-name" style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:#f5820a">${bizName}</div>` : ''}
+            ${bizAddress ? `<div style="font-size:12px;color:#555;margin-top:2px">${bizAddress.replace(/\n/g,'<br>')}</div>` : ''}
+            ${(bizPhone || bizEmail) ? `<div style="font-size:12px;color:#555;margin-top:2px">${[bizPhone, bizEmail].filter(Boolean).join(' | ')}</div>` : ''}
+            ${bizWebsite ? `<div style="font-size:12px;color:#555;margin-top:2px">${bizWebsite}</div>` : ''}
+            ${vatEnabled && vatNum ? `<div class="quote-biz-vat">VAT Reg: ${vatNum}</div>` : ''}
           </div>
-          <div class="quote-meta">
-            <strong>QUOTATION</strong>
-            <span>For: ${client}</span><br>
-            <span>${dateFormatted}</span>
+          <div class="quote-meta" style="text-align:right">
+            <strong style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#111;display:block">QUOTATION</strong>
+            ${quoteNum ? `<span style="font-size:12px;color:#444">Quote #: ${quoteNum}</span><br>` : ''}
+            <span style="font-size:12px;color:#444">Date: ${dateFormatted}</span>${validUntilFormatted ? `<br><span style="font-size:12px;color:#444">Valid until: ${validUntilFormatted}</span>` : ''}
           </div>
         </div>
 
+        <!-- CLIENT SECTION -->
+        ${(client || contactPerson || clientAddress || clientPhone || clientEmail || clientVat || clientReg) ? `
+        <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #eee">
+          <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Billed to:</div>
+          ${client ? `<div style="font-size:14px;font-weight:700;color:#111">${client}</div>` : ''}
+          ${contactPerson ? `<div style="font-size:12px;color:#444">${contactPerson}</div>` : ''}
+          ${clientAddress ? `<div style="font-size:12px;color:#555">${clientAddress.replace(/\n/g,'<br>')}</div>` : ''}
+          ${(clientPhone || clientEmail) ? `<div style="font-size:12px;color:#555">${[clientPhone, clientEmail].filter(Boolean).join(' | ')}</div>` : ''}
+          ${clientVat ? `<div style="font-size:11px;color:#777">Client VAT: ${clientVat}</div>` : ''}
+          ${clientReg ? `<div style="font-size:11px;color:#777">Company Reg: ${clientReg}</div>` : ''}
+        </div>` : ''}
+
+        <!-- LINE ITEMS TABLE -->
         <table class="quote-table">
-          ${materials.length > 0 ? `
-          <tr><td colspan="3" class="quote-section-head">MATERIALS</td></tr>
-          <tr><th>Description</th><th style="text-align:right">Qty</th><th>Amount</th></tr>
-          ${matRows}` : ''}
-
-          ${consumables.length > 0 ? `
-          <tr><td colspan="3" class="quote-section-head">CONSUMABLES</td></tr>
-          <tr><th>Description</th><th style="text-align:right">Qty</th><th>Amount</th></tr>
-          ${consRows}` : ''}
-
-          ${labourCost > 0 ? `
-          <tr><td colspan="3" class="quote-section-head">LABOUR</td></tr>
-          <tr><th>Description</th><th></th><th>Amount</th></tr>
-          <tr><td>Labour — ${labourDesc}</td><td></td><td>${formatCurrency(labourCost)}</td></tr>` : ''}
-
-          ${deliveryEnabled && deliveryCost > 0 ? `
-          <tr><td colspan="3" class="quote-section-head">DELIVERY</td></tr>
-          <tr><td>Delivery — ${deliveryDesc}</td><td></td><td>${formatCurrency(deliveryCost)}</td></tr>` : ''}
-
-          <tr class="quote-total-row">
-            <td colspan="2">TOTAL</td>
-            <td>${formatCurrency(sellPrice)}</td>
+          <tr>
+            <th>Description</th>
+            <th style="text-align:right">Amount${vatEnabled ? ' (excl. VAT)' : ''}</th>
           </tr>
+          ${allLineItems}
         </table>
 
+        ${vatEnabled ? `<div style="font-size:11px;color:#888;margin-bottom:12px;font-style:italic">All amounts exclude VAT unless otherwise stated.</div>` : ''}
+
+        <!-- FINANCIAL SUMMARY -->
+        <div style="border-top:1px solid #ddd;padding-top:12px">
+          ${vatEnabled ? `
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#444;margin-bottom:6px">
+            <span>Subtotal (excl. VAT)</span>
+            <span style="font-family:'DM Mono',monospace">${formatCurrency(sellPrice)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#444;margin-bottom:6px">
+            <span>VAT (${(vatRate*100).toFixed(0)}%)</span>
+            <span style="font-family:'DM Mono',monospace">${formatCurrency(vatAmount)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:17px;font-weight:700;color:#111;padding-top:8px;border-top:2px solid #111">
+            <span>Total (incl. VAT)</span>
+            <span style="font-family:'DM Mono',monospace">${formatCurrency(totalIncVAT)}</span>
+          </div>` : `
+          <div style="display:flex;justify-content:space-between;font-size:17px;font-weight:700;color:#111;padding-top:8px;border-top:2px solid #111">
+            <span>Total</span>
+            <span style="font-family:'DM Mono',monospace">${formatCurrency(sellPrice)}</span>
+          </div>`}
+        </div>
+
+        <!-- PAYMENT TERMS -->
+        ${paymentTermsText ? `
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid #eee;font-size:12px;color:#555">
+          <strong style="color:#333">Payment Terms:</strong> ${paymentTermsText}
+        </div>` : ''}
+
         <div class="quote-footer">
-          This quotation is valid for 30 days from the date of issue.<br>
+          This quotation is valid for 7 days from the date of issue.<br>
           Generated by GapCalc — gapcalc.com
         </div>
       </div>
@@ -4236,7 +4455,7 @@ function copyCostingSummary(sell, cost, profit, margin) {
 function resetCosting() {
   document.getElementById('costing-results').className = 'results';
   document.getElementById('costing-results').innerHTML = '';
-  document.querySelectorAll('#tab-costing input').forEach(el => { el.value = ''; el.style.borderColor = ''; });
+  document.querySelectorAll('#tab-costing input, #tab-costing textarea').forEach(el => { el.value = ''; el.style.borderColor = ''; });
   document.getElementById('materials-wrap').innerHTML = '';
   document.getElementById('consumables-wrap').innerHTML = '';
   matCount = 0; consCount = 0;
@@ -4248,6 +4467,29 @@ function resetCosting() {
   vatEnabled = false;
   document.getElementById('vat-toggle').checked = false;
   document.getElementById('vat-field').style.display = 'none';
+  document.getElementById('vat-rate-field').style.display = 'none';
+  // Reset VAT rate to default 15
+  const vatRateEl = document.getElementById('q-vat-rate');
+  if (vatRateEl) vatRateEl.value = 15;
+  // Reset payment terms
+  const ptEl = document.getElementById('q-payment-terms');
+  if (ptEl) ptEl.value = 'due';
+  const pcWrap = document.getElementById('payment-custom-wrap');
+  if (pcWrap) pcWrap.style.display = 'none';
+  // Reset valid until to 7 days from today
+  const validUntil = new Date();
+  validUntil.setDate(validUntil.getDate() + 7);
+  const validUntilEl = document.getElementById('q-valid-until');
+  if (validUntilEl) validUntilEl.value = validUntil.toISOString().split('T')[0];
+  // Set today as quote date
+  const today = new Date().toISOString().split('T')[0];
+  const dateEl = document.getElementById('q-date');
+  if (dateEl) dateEl.value = today;
+  // Collapse business details
+  const bizBody = document.getElementById('biz-details-body');
+  if (bizBody) bizBody.style.display = 'none';
+  const bizIcon = document.getElementById('biz-toggle-icon');
+  if (bizIcon) bizIcon.textContent = '+';
   const currencySelect = document.getElementById('currency-select');
   if (currencySelect) currencySelect.value = 'ZAR';
   updateCurrencyLabels();
@@ -4262,6 +4504,11 @@ function initCosting() {
   const today = new Date().toISOString().split('T')[0];
   const dateEl = document.getElementById('q-date');
   if (dateEl) dateEl.value = today;
+  // Set valid until to 7 days from today
+  const validUntil = new Date();
+  validUntil.setDate(validUntil.getDate() + 7);
+  const validUntilEl = document.getElementById('q-valid-until');
+  if (validUntilEl) validUntilEl.value = validUntil.toISOString().split('T')[0];
 }
 
 // ════════════════════════════════════════
@@ -4308,6 +4555,40 @@ function sendCutListToCosting() {
     last.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 300);
   gtag('event', 'send_to_costing', { source: 'cutlist' });
+}
+
+function sendRodToCosting() {
+  openTool('costing');
+  setTimeout(() => {
+    addLineItem('consumables');
+    const wrap = document.getElementById('consumables-wrap');
+    const rows = wrap.querySelectorAll('.line-item-row');
+    const last = rows[rows.length - 1];
+    const id = last.id.replace('consumables-row-', '');
+    const desc = document.getElementById('consumables-desc-' + id);
+    const qty = document.getElementById('consumables-qty-' + id);
+    if (desc) desc.value = rodDiam + 'mm welding rods';
+    if (qty) qty.value = 1;
+    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+  gtag('event', 'send_to_costing', { source: 'rods' });
+}
+
+function sendMIGToCosting() {
+  openTool('costing');
+  setTimeout(() => {
+    addLineItem('consumables');
+    const wrap = document.getElementById('consumables-wrap');
+    const rows = wrap.querySelectorAll('.line-item-row');
+    const last = rows[rows.length - 1];
+    const id = last.id.replace('consumables-row-', '');
+    const desc = document.getElementById('consumables-desc-' + id);
+    const qty = document.getElementById('consumables-qty-' + id);
+    if (desc) desc.value = migWire + 'mm MIG wire';
+    if (qty) qty.value = 1;
+    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+  gtag('event', 'send_to_costing', { source: 'mig' });
 }
 
 
@@ -4462,15 +4743,33 @@ function renderTaskList() {
 }
 
 function sendTimerToCosting() {
-  const totalHours = getTotalMs() / 3600000;
+  if (timerTasks.length === 0) return;
   openTool('costing');
   setTimeout(() => {
-    const hoursEl = document.getElementById('labour-hours');
-    if (hoursEl) {
-      hoursEl.value = totalHours.toFixed(2);
-      hoursEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, 300);
+    timerTasks.forEach(task => {
+      addLineItem('materials');
+      const wrap = document.getElementById('materials-wrap');
+      const rows = wrap.querySelectorAll('.line-item-row');
+      const last = rows[rows.length - 1];
+      const id = last.id.replace('materials-row-', '');
+      const desc = document.getElementById('materials-desc-' + id);
+      const qty = document.getElementById('materials-qty-' + id);
+      if (desc) desc.value = 'Labour — ' + task.name + ' (' + task.durationFormatted + ')';
+      if (qty) qty.value = 1;
+    });
+
+    const wrap = document.getElementById('materials-wrap');
+    if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const note = document.createElement('div');
+    note.className = 'note';
+    note.style.marginTop = '8px';
+    note.innerHTML = '<strong>Tasks imported from Job Timer.</strong> Add your hourly rate to the unit price field for each task to calculate labour cost.';
+    const card = wrap ? wrap.closest('.card') : null;
+    if (card) card.appendChild(note);
+    setTimeout(() => note.remove(), 6000);
+
+  }, 400);
   gtag('event', 'send_to_costing', { source: 'timer' });
 }
 
@@ -5015,8 +5314,8 @@ function calcMIG() {
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
       <button class="act-btn" onclick="copyMIG(${wireKg.toFixed(3)},${reel5||1},${spool05},'${migWire}')">Copy</button>
-      <button class="act-btn" onclick="sendToJobCosting()">Send to Costing</button>
     </div>
+    <button class="send-to-costing-btn" onclick="sendMIGToCosting()">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetMIG()">↺ Start over</button>
   `;
 
