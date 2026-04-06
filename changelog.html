@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Changelog — GapCalc</title>
+<meta name="description" content="GapCalc changelog — every update, every fix, every new tool documented.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gapcalc.com/changelog.html">
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KEMY3NEYCQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KEMY3NEYCQ');
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111;
+  --surface: #1c1c1c;
+  --surface2: #252525;
+  --surface3: #2e2e2e;
+  --border: #333;
+  --border2: #444;
+  --accent: #f5820a;
+  --accent-dim: rgba(245,130,10,0.15);
+  --green: #52c47a;
+  --blue: #5aabf5;
+  --red: #e05252;
+  --text: #efefef;
+  --text2: #888;
+  --text3: #555;
+  --r: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 60px; }
+
+/* HEADER */
+header {
+  background: var(--surface);
+  border-bottom: 3px solid var(--accent);
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+}
+.logo-mark {
+  width: 44px; height: 44px; background: var(--accent); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  text-decoration: none;
+}
+.logo-mark svg { width: 44px; height: 44px; }
+.logo-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; line-height: 1; }
+.logo-tagline { font-size: 10px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+
+/* MAIN */
+.page { max-width: 640px; margin: 0 auto; padding: 16px 18px; }
+
+.back-link {
+  display: inline-block;
+  font-size: 13px; color: var(--text2);
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px; letter-spacing: 3px;
+  line-height: 1; color: var(--text);
+  margin-bottom: 8px;
+}
+.page-sub {
+  font-size: 14px; color: var(--text2);
+  margin-bottom: 32px; line-height: 1.5;
+}
+
+/* VERSION CARDS */
+.version-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.version-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 4px; flex-wrap: wrap;
+}
+.version-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px; letter-spacing: 2px;
+  color: var(--accent); line-height: 1;
+}
+.version-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; color: var(--text3);
+}
+.version-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--text2); margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+.version-changes {
+  list-style: none; padding: 0;
+}
+.version-changes li {
+  font-size: 14px; color: var(--text);
+  line-height: 1.6;
+  padding: 4px 0 4px 16px;
+  position: relative;
+}
+.version-changes li::before {
+  content: '—';
+  position: absolute; left: 0;
+  color: var(--text3);
+}
+
+/* FOOTER */
+footer {
+  text-align: center; padding: 30px 18px 0;
+  font-size: 11px; color: var(--text3);
+}
+footer a { color: var(--text3); text-decoration: none; border-bottom: 1px solid var(--border); }
+footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo-mark" aria-label="Back to GapCalc">
+    <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+      <text x="50%" y="68%" text-anchor="middle" dominant-baseline="middle"
+        font-family="Bebas Neue, sans-serif" font-size="20" fill="#000" letter-spacing="1">GC</text>
+    </svg>
+  </a>
+  <div>
+    <div class="logo-title">GAPCALC</div>
+    <div class="logo-tagline">What's New</div>
+  </div>
+</header>
+
+<div class="page">
+  <a href="index.html" class="back-link">← Back to GapCalc</a>
+
+  <h1 class="page-heading">CHANGELOG</h1>
+  <p class="page-sub">Every update, every fix, every new tool — documented.</p>
+
+  <!-- v2.6.1 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.6.1</span>
+      <span class="version-date">6 April 2026</span>
+    </div>
+    <div class="version-title">Bolt Spacing Fix, Quote Print & Changelog</div>
+    <ul class="version-changes">
+      <li>Bolt spacing centre-to-centre and edge-to-edge formulas corrected — results now match real-world layout</li>
+      <li>Bolt diagram rebuilt — always shows 3 illustrative holes with correct dimension line and spacing label per mode</li>
+      <li>Client quote print fixed — Print / Save PDF now correctly shows quote view only</li>
+      <li>MY NUMBERS print — stat boxes and result cards get borders so values don't float on white page</li>
+      <li>Changelog page added</li>
+      <li>Favicon references removed</li>
+    </ul>
+  </div>
+
+  <!-- v2.6.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.6.0</span>
+      <span class="version-date">6 April 2026</span>
+    </div>
+    <div class="version-title">Job Costing Overhaul & Print Fixes</div>
+    <ul class="version-changes">
+      <li>Complete client quote redesign — professional header, business and client details, VAT handling, payment terms, valid until date</li>
+      <li>VAT calculation with configurable rate — subtotal, VAT amount, and total including VAT</li>
+      <li>Client quote shows descriptions and totals only — margins and costs stay private</li>
+      <li>Print function fixed — each calculator prints only its own results</li>
+      <li>Weight Calculator steel grade selector — Mild Steel, Stainless, Aluminium, Copper, Brass with correct densities</li>
+      <li>Job Timer sends each named task as its own line item to Job Costing</li>
+      <li>Duplicate send-to-costing buttons removed across all calculators</li>
+      <li>Rod Estimator clears results on material change</li>
+    </ul>
+  </div>
+
+  <!-- v2.5.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.5.0</span>
+      <span class="version-date">2 April 2026</span>
+    </div>
+    <div class="version-title">Job Timer, Send to Job Costing & Aluminium Warning</div>
+    <ul class="version-changes">
+      <li>Job Timer with named task tracking, localStorage persistence, and total job time summary</li>
+      <li>Send to Job Costing buttons on Weight Calculator, Cut List, Rod Estimator, and MIG Wire Estimator</li>
+      <li>Aluminium added to Rod Selector with honest equipment disclaimer</li>
+      <li>Pipe &amp; Tube Bending added as Coming Soon</li>
+    </ul>
+  </div>
+
+  <!-- v2.4.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.4.0</span>
+      <span class="version-date">29 March 2026</span>
+    </div>
+    <div class="version-title">MIG &amp; Flux Core Settings Guide</div>
+    <ul class="version-changes">
+      <li>MIG and Flux Core settings guide with machine capability toggles</li>
+      <li>Weld troubleshooter with plain English symptom descriptions</li>
+      <li>Flux core polarity explained — DCEN, torch and earth clamp terminals</li>
+      <li>Material thickness moved above rod/wire diameter in estimators with auto-suggested diameter</li>
+      <li>Drill Reference print button added</li>
+      <li>International language fixes — Braais to Barbecue grills</li>
+      <li>C25 gas aliases added — Argoshield, Magmix, ArC25</li>
+    </ul>
+  </div>
+
+  <!-- v2.3.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.3.0</span>
+      <span class="version-date">29 March 2026</span>
+    </div>
+    <div class="version-title">Bolt Spacing, Drill Reference &amp; MIG Wire Estimator</div>
+    <ul class="version-changes">
+      <li>Bolt Spacing Calculator — centre-to-centre and edge-to-edge modes with SVG diagram</li>
+      <li>Drill Bit &amp; Tap Reference — metric and imperial, tap drill, clearance, and countersink sizes</li>
+      <li>MIG Wire Estimator — kg needed, reel breakdown, skill level wastage adjustment</li>
+      <li>Coming Soon cards updated</li>
+    </ul>
+  </div>
+
+  <!-- v2.2.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.2.0</span>
+      <span class="version-date">28 March 2026</span>
+    </div>
+    <div class="version-title">Currency Selector &amp; International Fixes</div>
+    <ul class="version-changes">
+      <li>Currency selector in Job Costing — ZAR, USD, GBP, EUR, AUD, CAD, NZD</li>
+      <li>Rectangular Tube added to Weight Calculator</li>
+      <li>Bakkie replaced with vehicle throughout — international language</li>
+    </ul>
+  </div>
+
+  <!-- v2.1.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.1.0</span>
+      <span class="version-date">26 March 2026</span>
+    </div>
+    <div class="version-title">Job Costing Calculator &amp; GC Logo</div>
+    <ul class="version-changes">
+      <li>Job Costing Calculator with materials, consumables, labour, delivery, and margin calculation</li>
+      <li>Client quote output with MY NUMBERS and CLIENT QUOTE views</li>
+      <li>Redesigned GC logo mark</li>
+      <li>Favicon added (later removed)</li>
+      <li>Full SEO package — meta tags, Open Graph, JSON-LD, sitemap, robots.txt, llms.txt</li>
+      <li>gapcalc.com custom domain live</li>
+      <li>Migrated from Netlify to Cloudflare Pages</li>
+    </ul>
+  </div>
+
+  <!-- v2.0.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.0.0</span>
+      <span class="version-date">23 March 2026</span>
+    </div>
+    <div class="version-title">Homepage Redesign &amp; Rod Estimator</div>
+    <ul class="version-changes">
+      <li>Homepage with feature cards replacing horizontal tab bar</li>
+      <li>Rod Estimator with Rod Selector and Rod Quantity Estimator</li>
+      <li>Skill level selector with honest wastage factors</li>
+      <li>All weld positions with industry codes</li>
+      <li>Simple/Advanced weld length mode</li>
+      <li>Navigation redesign — back button with calculator name</li>
+    </ul>
+  </div>
+
+  <!-- v1.2.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v1.2.0</span>
+      <span class="version-date">20 March 2026</span>
+    </div>
+    <div class="version-title">Angle Cuts Calculator</div>
+    <ul class="version-changes">
+      <li>Angle Cuts Calculator — single end, double mitre, double parallel</li>
+      <li>SVG cut diagram with short point, long point, and cut face dimensions</li>
+      <li>Reset buttons on all calculators</li>
+    </ul>
+  </div>
+
+  <!-- v1.1.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v1.1.0</span>
+      <span class="version-date">19 March 2026</span>
+    </div>
+    <div class="version-title">Weight Calculator</div>
+    <ul class="version-changes">
+      <li>Weight Calculator for steel profiles and timber</li>
+      <li>Five steel profiles — flat bar, square tube, round bar, round tube, angle iron</li>
+      <li>Timber species selector with SA standard size presets</li>
+      <li>Vehicle load indicator with progress bar</li>
+    </ul>
+  </div>
+
+  <!-- v1.0.0 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v1.0.0</span>
+      <span class="version-date">19 March 2026</span>
+    </div>
+    <div class="version-title">Initial Launch</div>
+    <ul class="version-changes">
+      <li>Gap Calculator — edge-to-edge bar spacing formula</li>
+      <li>Cut List Calculator — cuts per length, offcut sizes, waste percentage</li>
+      <li>GitHub to Cloudflare Pages auto-deploy pipeline</li>
+      <li>Google Analytics tracking</li>
+      <li>Google Search Console submitted</li>
+      <li>SUGGEST A FEATURE form</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  <p>GapCalc — free forever. No login. No data stored.</p>
+  <p style="margin-top:8px;"><a href="https://gapcalc.com">gapcalc.com</a></p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.6.1</p>
+</footer>
+
+</body>
+</html>
