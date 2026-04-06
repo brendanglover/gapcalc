@@ -967,6 +967,33 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 }
 
 /* ═══════════════════════════════
+   PAINT & PRIMER CALCULATOR
+   ═══════════════════════════════ */
+.paint-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.paint-type-btn {
+  padding: 12px 10px;
+  border: 2px solid var(--border);
+  background: var(--surface2);
+  color: var(--text2);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  line-height: 1.3;
+}
+.paint-type-btn:hover { border-color: var(--border2); color: var(--text); }
+.paint-type-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+.paint-type-name { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 1px; margin-bottom: 4px; }
+.paint-type-hint { font-size: 10px; color: inherit; opacity: 0.8; line-height: 1.4; }
+.paint-type-last { grid-column: 1 / -1; }
+
+/* ═══════════════════════════════
    JOB TIMER
    ═══════════════════════════════ */
 .timer-display {
@@ -1150,10 +1177,11 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
       <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
-    <div class="coming-soon-card">
-      <span class="coming-soon-badge">COMING SOON</span>
-      <div class="coming-soon-title">PAINT &amp; PRIMER COVERAGE</div>
-      <div class="coming-soon-desc">Calculate exactly how much paint or primer you need for any surface. Never run short or overbuy again.</div>
+    <div class="feature-card" onclick="openTool('paint')">
+      <div class="feature-card-icon">▲</div>
+      <div class="feature-card-title">PAINT &amp; PRIMER COVERAGE</div>
+      <div class="feature-card-desc">Calculate exactly how much paint, primer, or rust converter you need for any surface. Never run short or overbuy again.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
     <div class="coming-soon-card">
@@ -2711,6 +2739,248 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
 </div>
 
+<!-- ═══════════════════════════════════════
+     TAB — PAINT & PRIMER COVERAGE
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-paint">
+
+  <div style="height:8px"></div>
+
+  <div class="note">Select your paint type first — changing it will reset the calculator so you get a fresh result for each coat.</div>
+
+  <!-- CARD 1: PAINT TYPE -->
+  <div class="card">
+    <div class="card-label">PAINT TYPE</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5;">Select your coating. The calculator resets when you change this.</div>
+    <div class="paint-type-grid">
+      <button class="paint-type-btn" id="ptype-primer" onclick="setPaintType('primer')">
+        <div class="paint-type-name">BARE METAL PRIMER</div>
+        <div class="paint-type-hint">8 m²/litre — first coat on bare steel</div>
+      </button>
+      <button class="paint-type-btn" id="ptype-etch" onclick="setPaintType('etch')">
+        <div class="paint-type-name">ETCH PRIMER</div>
+        <div class="paint-type-hint">10 m²/litre — etches into bare metal for better adhesion</div>
+      </button>
+      <button class="paint-type-btn" id="ptype-rust" onclick="setPaintType('rust')">
+        <div class="paint-type-name">RUST CONVERTER</div>
+        <div class="paint-type-hint">6 m²/litre — converts rust, no sanding required</div>
+      </button>
+      <button class="paint-type-btn" id="ptype-enamel" onclick="setPaintType('enamel')">
+        <div class="paint-type-name">ENAMEL / TOPCOAT</div>
+        <div class="paint-type-hint">12 m²/litre — gloss or satin finish coat</div>
+      </button>
+      <button class="paint-type-btn paint-type-last" id="ptype-spray" onclick="setPaintType('spray')">
+        <div class="paint-type-name">SPRAY CAN / AEROSOL</div>
+        <div class="paint-type-hint">Output in cans — standard or custom size</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- CARD 2: SPRAY CAN SIZE -->
+  <div class="card" id="paint-spray-card" style="display:none">
+    <div class="card-label">CAN SIZE</div>
+    <div class="pill-toggle">
+      <button class="pill-btn active" id="spray-standard-btn" onclick="setSprayCanMode('standard')">Standard (300ml)</button>
+      <button class="pill-btn" id="spray-custom-btn" onclick="setSprayCanMode('custom')">Custom size</button>
+    </div>
+    <div class="pill-desc">~1.5 m² per coat — standard rattle can</div>
+    <div id="spray-custom-input" style="display:none;margin-top:10px">
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Can size</span></div>
+        <div class="input-wrap">
+          <input type="number" id="paint-can-ml" min="1" inputmode="decimal" placeholder="e.g. 400">
+          <span class="input-unit">ml</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: SURFACE AREA -->
+  <div class="card">
+    <div class="card-label">SURFACE AREA</div>
+    <div class="pill-toggle" style="margin-bottom:14px">
+      <button class="pill-btn active" id="mode-simple-btn" onclick="setPaintMode('simple')">SIMPLE</button>
+      <button class="pill-btn" id="mode-build-btn" onclick="setPaintMode('build')">BUILD</button>
+    </div>
+
+    <!-- SIMPLE MODE -->
+    <div id="paint-simple-mode">
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Total surface area</span></div>
+        <div class="input-wrap">
+          <input type="number" id="paint-area-direct" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 2.5">
+          <span class="input-unit">m²</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUILD MODE -->
+    <div id="paint-build-mode" style="display:none">
+      <div class="input-group" style="margin-bottom:14px">
+        <div class="input-meta"><span class="input-meta-label">Shape</span></div>
+        <select class="w-select" id="paint-shape" onchange="setPaintShape(this.value)">
+          <option value="flat">Flat Plate / Sheet</option>
+          <option value="box">Box / Frame / Enclosure</option>
+          <option value="tube">Round Tube / Pipe</option>
+          <option value="angle">Angle Iron</option>
+          <option value="custom">Structural / Custom Section</option>
+        </select>
+      </div>
+
+      <!-- FLAT PLATE -->
+      <div id="paint-shape-flat">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Length</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-length" min="0" inputmode="decimal" placeholder="e.g. 1200">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Width</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-width" min="0" inputmode="decimal" placeholder="e.g. 600">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Sides to paint</span></div>
+          <div class="pill-toggle">
+            <button class="pill-btn" id="sides-one-btn" onclick="setPaintSides('one')">ONE SIDE</button>
+            <button class="pill-btn active" id="sides-both-btn" onclick="setPaintSides('both')">BOTH SIDES</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOX / FRAME -->
+      <div id="paint-shape-box" style="display:none">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Length</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-box-l" min="0" inputmode="decimal" placeholder="e.g. 1200">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Width</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-box-w" min="0" inputmode="decimal" placeholder="e.g. 800">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Height</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-box-h" min="0" inputmode="decimal" placeholder="e.g. 600">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <label class="toggle-switch">
+            <input type="checkbox" id="paint-inside">
+            <span class="toggle-slider"></span>
+          </label>
+          <span style="font-size:13px;color:var(--text2)">Include inside faces</span>
+        </div>
+      </div>
+
+      <!-- ROUND TUBE / PIPE -->
+      <div id="paint-shape-tube" style="display:none">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Outer diameter</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-tube-d" min="0" inputmode="decimal" placeholder="e.g. 50">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Length</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-tube-l" min="0" inputmode="decimal" placeholder="e.g. 3000">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANGLE IRON -->
+      <div id="paint-shape-angle" style="display:none">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Leg width</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-angle-w" min="0" inputmode="decimal" placeholder="e.g. 40">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Leg height</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-angle-h" min="0" inputmode="decimal" placeholder="e.g. 40">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Length</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-angle-l" min="0" inputmode="decimal" placeholder="e.g. 6000">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Calculates both legs, outer faces only</div>
+      </div>
+
+      <!-- STRUCTURAL / CUSTOM SECTION -->
+      <div id="paint-shape-custom" style="display:none">
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Section perimeter</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-perim" min="0" inputmode="decimal" placeholder="e.g. 200">
+            <span class="input-unit">mm</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">Measure around the outside of your section profile</div>
+        </div>
+        <div class="input-group">
+          <div class="input-meta"><span class="input-meta-label">Length</span></div>
+          <div class="input-wrap">
+            <input type="number" id="paint-custom-l" min="0" inputmode="decimal" placeholder="e.g. 6000">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUANTITY (shared by all build shapes) -->
+      <div class="input-group">
+        <div class="input-meta"><span class="input-meta-label">Number of pieces</span></div>
+        <div class="input-wrap">
+          <input type="number" id="paint-qty" min="1" inputmode="numeric" placeholder="e.g. 14" value="1">
+          <span class="input-unit">pcs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4: NUMBER OF COATS -->
+  <div class="card">
+    <div class="card-label">COATS</div>
+    <div class="input-group">
+      <div class="input-wrap">
+        <input type="number" id="paint-coats" min="1" max="6" inputmode="numeric" value="1">
+        <span class="input-unit">coats</span>
+      </div>
+    </div>
+    <div class="preset-row">
+      <button class="chip" onclick="document.getElementById('paint-coats').value=1">1 coat</button>
+      <button class="chip" onclick="document.getElementById('paint-coats').value=2">2 coats</button>
+      <button class="chip" onclick="document.getElementById('paint-coats').value=3">3 coats</button>
+    </div>
+    <div style="font-size:12px;color:var(--text2);margin-top:10px;line-height:1.5">Most jobs need 2 coats for full coverage and durability.</div>
+  </div>
+
+  <button class="go-btn" onclick="calcPaint()">▲ CALCULATE COVERAGE</button>
+
+  <div class="results" id="paint-results"></div>
+
+</div>
+
 <footer>
   <p>GapCalc — free forever. No login. No data stored.</p>
   <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
@@ -2721,7 +2991,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   </p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
   <p style="margin-top:8px;"><a href="/changelog.html" target="_blank" style="color:var(--text3);font-size:12px;text-decoration:none;border-bottom:1px solid var(--border);">What's new</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.6.1 &nbsp;·&nbsp; Updated 6 April 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.7.0 &nbsp;·&nbsp; Updated 6 April 2026</p>
 </footer>
 
 <script>
@@ -3670,7 +3940,7 @@ function resetTab(tabId) {
 // ════════════════════════════════════════
 // HOMEPAGE NAVIGATION
 // ════════════════════════════════════════
-const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig','settings','timer'];
+const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig','settings','timer','paint'];
 
 function goHome() {
   ALL_TABS.forEach(t => {
@@ -3693,7 +3963,8 @@ const TOOL_NAMES = {
   drill: 'DRILL REFERENCE',
   mig: 'MIG WIRE ESTIMATOR',
   settings: 'SETTINGS GUIDE',
-  timer: 'JOB TIMER'
+  timer: 'JOB TIMER',
+  paint: 'PAINT & PRIMER COVERAGE'
 };
 
 function openTool(tool) {
@@ -4852,6 +5123,276 @@ function resetTimer() {
   renderTaskList();
 }
 
+// ════════════════════════════════════════
+// PAINT & PRIMER COVERAGE CALCULATOR
+// ════════════════════════════════════════
+
+let paintType = null;
+let paintMode = 'simple';
+let paintShape = 'flat';
+let paintSides = 'both';
+let sprayCanMode = 'standard';
+
+const PAINT_COVERAGE = {
+  primer: 8,
+  etch: 10,
+  rust: 6,
+  enamel: 12,
+  spray: null
+};
+
+const SPRAY_CAN_ML = 300;
+const SPRAY_CAN_COVERAGE = 1.5;
+
+function setPaintType(type) {
+  paintType = type;
+  document.querySelectorAll('[id^="ptype-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('ptype-' + type)?.classList.add('active');
+  document.getElementById('paint-spray-card').style.display = type === 'spray' ? '' : 'none';
+  resetPaintCalc(false);
+}
+
+function setSprayCanMode(mode) {
+  sprayCanMode = mode;
+  document.getElementById('spray-standard-btn').classList.toggle('active', mode === 'standard');
+  document.getElementById('spray-custom-btn').classList.toggle('active', mode === 'custom');
+  document.getElementById('spray-custom-input').style.display = mode === 'custom' ? '' : 'none';
+}
+
+function setPaintMode(mode) {
+  paintMode = mode;
+  document.getElementById('mode-simple-btn').classList.toggle('active', mode === 'simple');
+  document.getElementById('mode-build-btn').classList.toggle('active', mode === 'build');
+  document.getElementById('paint-simple-mode').style.display = mode === 'simple' ? '' : 'none';
+  document.getElementById('paint-build-mode').style.display = mode === 'build' ? '' : 'none';
+  const r = document.getElementById('paint-results');
+  r.className = 'results';
+  r.innerHTML = '';
+}
+
+function setPaintShape(shape) {
+  paintShape = shape;
+  ['flat','box','tube','angle','custom'].forEach(s => {
+    const el = document.getElementById('paint-shape-' + s);
+    if (el) el.style.display = 'none';
+  });
+  const active = document.getElementById('paint-shape-' + shape);
+  if (active) active.style.display = '';
+}
+
+function setPaintSides(sides) {
+  paintSides = sides;
+  document.getElementById('sides-one-btn').classList.toggle('active', sides === 'one');
+  document.getElementById('sides-both-btn').classList.toggle('active', sides === 'both');
+}
+
+function calcSurfaceArea() {
+  const qty = parseFloat(document.getElementById('paint-qty')?.value) || 1;
+
+  if (paintMode === 'simple') {
+    return parseFloat(document.getElementById('paint-area-direct')?.value) || 0;
+  }
+
+  let areaMm2 = 0;
+
+  if (paintShape === 'flat') {
+    const l = parseFloat(document.getElementById('paint-length')?.value) || 0;
+    const w = parseFloat(document.getElementById('paint-width')?.value) || 0;
+    const sides = paintSides === 'both' ? 2 : 1;
+    areaMm2 = l * w * sides * qty;
+  } else if (paintShape === 'box') {
+    const l = parseFloat(document.getElementById('paint-box-l')?.value) || 0;
+    const w = parseFloat(document.getElementById('paint-box-w')?.value) || 0;
+    const h = parseFloat(document.getElementById('paint-box-h')?.value) || 0;
+    const inside = document.getElementById('paint-inside')?.checked ? 2 : 1;
+    areaMm2 = inside * (2*l*w + 2*l*h + 2*w*h) * qty;
+  } else if (paintShape === 'tube') {
+    const d = parseFloat(document.getElementById('paint-tube-d')?.value) || 0;
+    const len = parseFloat(document.getElementById('paint-tube-l')?.value) || 0;
+    areaMm2 = Math.PI * d * len * qty;
+  } else if (paintShape === 'angle') {
+    const aw = parseFloat(document.getElementById('paint-angle-w')?.value) || 0;
+    const ah = parseFloat(document.getElementById('paint-angle-h')?.value) || 0;
+    const al = parseFloat(document.getElementById('paint-angle-l')?.value) || 0;
+    areaMm2 = (aw + ah) * al * qty;
+  } else if (paintShape === 'custom') {
+    const p = parseFloat(document.getElementById('paint-perim')?.value) || 0;
+    const cl = parseFloat(document.getElementById('paint-custom-l')?.value) || 0;
+    areaMm2 = p * cl * qty;
+  }
+
+  return areaMm2 / 1_000_000;
+}
+
+function calcOptimalTins(totalLitres) {
+  const tins = [5, 2.5, 1, 0.5, 0.25];
+  let remaining = totalLitres;
+  const result = [];
+  tins.forEach(size => {
+    const count = Math.floor(remaining / size);
+    if (count > 0) {
+      result.push({ size, count });
+      remaining -= count * size;
+    }
+  });
+  if (remaining > 0.01) {
+    const smallest = tins[tins.length - 1];
+    const last = result.find(r => r.size === smallest);
+    if (last) last.count++;
+    else result.push({ size: smallest, count: 1 });
+  }
+  return result;
+}
+
+function formatTinSize(litres) {
+  if (litres >= 1) return litres + 'L';
+  return (litres * 1000) + 'ml';
+}
+
+function calcPaint() {
+  const box = document.getElementById('paint-results');
+  box.className = 'results show';
+
+  if (!paintType) {
+    box.innerHTML = errorBox('Select a paint type to get started.');
+    return;
+  }
+
+  const coats = parseInt(document.getElementById('paint-coats')?.value) || 1;
+  const area = calcSurfaceArea();
+
+  if (area <= 0) {
+    box.innerHTML = errorBox('Enter your surface dimensions to calculate coverage.');
+    return;
+  }
+
+  if (paintType === 'spray') {
+    let canCoverage = SPRAY_CAN_COVERAGE;
+    let canMl = SPRAY_CAN_ML;
+    if (sprayCanMode === 'custom') {
+      canMl = parseFloat(document.getElementById('paint-can-ml')?.value) || 300;
+      canCoverage = SPRAY_CAN_COVERAGE * (canMl / SPRAY_CAN_ML);
+    }
+    const cansPerCoat = Math.ceil(area / canCoverage);
+    const totalCans = cansPerCoat * coats;
+
+    box.innerHTML = `
+      <div class="result-hero">
+        <div class="rh-label">SPRAY CANS NEEDED</div>
+        <div class="rh-value">${totalCans}</div>
+        <div class="rh-sub">${cansPerCoat} can${cansPerCoat>1?'s':''} per coat × ${coats} coat${coats>1?'s':''} — ${area.toFixed(2)}m² total area</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-label">AREA TO PAINT</div><div class="stat-val">${area.toFixed(2)} <span class="u">m²</span></div></div>
+        <div class="stat"><div class="stat-label">CAN SIZE</div><div class="stat-val">${canMl} <span class="u">ml</span></div></div>
+        <div class="stat"><div class="stat-label">COVERAGE PER CAN</div><div class="stat-val">${canCoverage.toFixed(1)} <span class="u">m²</span></div></div>
+        <div class="stat"><div class="stat-label">NUMBER OF COATS</div><div class="stat-val">${coats}</div></div>
+      </div>
+      <div class="note" style="margin-top:12px"><strong>Buy at least one extra can.</strong> Spray coverage varies significantly with spray distance, technique, surface texture, and temperature.</div>
+      <div class="action-row">
+        <button class="act-btn" onclick="window.print()">Print</button>
+        <button class="act-btn" onclick="copyPaintResult(${totalCans},'cans',${area.toFixed(2)})">Copy</button>
+      </div>
+      <button class="send-to-costing-btn" onclick="sendPaintToCosting(${totalCans},'spray cans')">+ Add to Job Costing</button>
+      <button class="reset-btn" onclick="resetPaintCalc(true)">↺ Start over</button>
+    `;
+
+    box.scrollIntoView({behavior:'smooth',block:'nearest'});
+    gtag('event','paint_calc_used',{type:paintType});
+    return;
+  }
+
+  const coverage = PAINT_COVERAGE[paintType];
+  const litresPerCoat = area / coverage;
+  const totalLitres = litresPerCoat * coats;
+  const tins = calcOptimalTins(totalLitres);
+  const tinsStr = tins.map(t => t.count + ' × ' + formatTinSize(t.size) + ' tin' + (t.count > 1 ? 's' : '')).join(', ');
+  const tinsCover = tins.reduce((s, t) => s + t.count * t.size, 0);
+
+  const paintTypeNames = {
+    primer: 'Bare Metal Primer',
+    etch: 'Etch Primer',
+    rust: 'Rust Converter',
+    enamel: 'Enamel / Topcoat'
+  };
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">TOTAL PAINT NEEDED</div>
+      <div class="rh-value">${totalLitres.toFixed(2)}<span style="font-size:24px">L</span></div>
+      <div class="rh-sub">${litresPerCoat.toFixed(2)}L per coat × ${coats} coat${coats>1?'s':''} — ${area.toFixed(2)}m² total area</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-label">AREA TO PAINT</div><div class="stat-val">${area.toFixed(2)} <span class="u">m²</span></div></div>
+      <div class="stat"><div class="stat-label">COVERAGE RATE</div><div class="stat-val">${coverage} <span class="u">m²/L</span></div></div>
+      <div class="stat"><div class="stat-label">LITRES PER COAT</div><div class="stat-val">${litresPerCoat.toFixed(2)} <span class="u">L</span></div></div>
+      <div class="stat"><div class="stat-label">NUMBER OF COATS</div><div class="stat-val">${coats}</div></div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="card-label">RECOMMENDED TINS TO BUY</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);letter-spacing:1px;margin:8px 0">${tinsStr}</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">Total: ${totalLitres.toFixed(2)}L needed — tins cover ${tinsCover.toFixed(2)}L</div>
+    </div>
+    <div class="note" style="margin-top:10px"><strong>We recommend buying one extra tin.</strong> Coverage varies with application method, surface texture, temperature, and how porous the surface is.</div>
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyPaintResult(${totalLitres.toFixed(2)},'litres',${area.toFixed(2)})">Copy</button>
+    </div>
+    <button class="send-to-costing-btn" onclick="sendPaintToCosting(${totalLitres.toFixed(2)},'${paintTypeNames[paintType]}')">+ Add to Job Costing</button>
+    <button class="reset-btn" onclick="resetPaintCalc(true)">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  gtag('event','paint_calc_used',{type:paintType,coats,area:area.toFixed(2)});
+}
+
+function sendPaintToCosting(qty, desc) {
+  openTool('costing');
+  setTimeout(() => {
+    addLineItem('consumables');
+    const wrap = document.getElementById('consumables-wrap');
+    const rows = wrap.querySelectorAll('.line-item-row');
+    const last = rows[rows.length - 1];
+    const id = last.id.replace('consumables-row-', '');
+    const descEl = document.getElementById('consumables-desc-' + id);
+    const qtyEl = document.getElementById('consumables-qty-' + id);
+    if (descEl) descEl.value = desc;
+    if (qtyEl) qtyEl.value = 1;
+    last.scrollIntoView({behavior:'smooth',block:'center'});
+  }, 300);
+  gtag('event','send_to_costing',{source:'paint'});
+}
+
+function copyPaintResult(qty, unit, area) {
+  const txt = 'GapCalc — Paint & Primer Coverage\n---\nTotal needed: ' + qty + ' ' + unit + '\nSurface area: ' + area + 'm²\ngapcalc.com';
+  copy(txt, event.target);
+}
+
+function resetPaintCalc(fullReset) {
+  const r = document.getElementById('paint-results');
+  r.className = 'results';
+  r.innerHTML = '';
+  document.querySelectorAll('#tab-paint input[type="number"]').forEach(el => el.value = '');
+  document.getElementById('paint-coats').value = 1;
+  document.getElementById('paint-qty').value = 1;
+  if (fullReset) {
+    paintType = null;
+    document.querySelectorAll('[id^="ptype-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('paint-spray-card').style.display = 'none';
+  }
+}
+
+function initPaint() {
+  setPaintMode('simple');
+  setPaintShape('flat');
+  document.getElementById('paint-spray-card').style.display = 'none';
+  document.getElementById('paint-coats').value = 1;
+}
+
+document.getElementById('tab-paint').addEventListener('keydown', e => {
+  if (e.key === 'Enter') calcPaint();
+});
+
 function initTimer() {
   const saved = localStorage.getItem('gc_timer_tasks');
   if (saved) {
@@ -5690,6 +6231,8 @@ initCosting();
 initDrillGrids();
 // Init timer
 initTimer();
+// Init paint
+initPaint();
 </script>
 </body>
 </html>
