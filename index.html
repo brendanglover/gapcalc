@@ -1184,16 +1184,18 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
       <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
-    <div class="coming-soon-card">
-      <span class="coming-soon-badge">COMING SOON</span>
-      <div class="coming-soon-title">PIPE &amp; TUBE BENDING</div>
-      <div class="coming-soon-desc">Calculate bend allowance, flat length, and springback for any pipe or tube. Plan your bends before you touch the bender.</div>
+    <div class="feature-card" onclick="openTool('sheet')">
+      <div class="feature-card-icon">◱</div>
+      <div class="feature-card-title">SHEET METAL FLAT PATTERN</div>
+      <div class="feature-card-desc">Calculate the correct flat blank size before bending sheet metal. Enter your material, thickness, bend radius, and face dimensions — get the exact length to cut.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
-    <div class="coming-soon-card">
-      <span class="coming-soon-badge">COMING SOON</span>
-      <div class="coming-soon-title">SHEET METAL FLAT PATTERN</div>
-      <div class="coming-soon-desc">Calculate the correct flat blank size before bending. Cut right, bend right, first time.</div>
+    <div class="feature-card" onclick="openTool('bend')">
+      <div class="feature-card-icon">⌒</div>
+      <div class="feature-card-title">PIPE &amp; TUBE BENDING</div>
+      <div class="feature-card-desc">Calculate developed length and overbend angle for tube and pipe bending. Enter your diameter, wall thickness, bend radius, and angle — get exact marks before you bend.</div>
+      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
   </div>
@@ -2981,6 +2983,231 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 
 </div>
 
+<!-- ═══════════════════════════════════════
+     TAB — SHEET METAL FLAT PATTERN
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-sheet">
+
+  <div style="height:8px"></div>
+
+  <div class="note">Calculate your flat blank size before making a single cut. Enter your finished dimensions and let GapCalc work backwards to give you the correct flat length to cut.</div>
+
+  <!-- CARD 1: MATERIAL -->
+  <div class="card">
+    <div class="card-label">MATERIAL</div>
+    <div class="skill-grid">
+      <button class="skill-btn" id="smat-mild" onclick="setSheetMaterial('mild')">
+        <span class="skill-level">MILD STEEL</span>
+        <span class="skill-desc">K-factor 0.44 — most common workshop material</span>
+      </button>
+      <button class="skill-btn" id="smat-alum" onclick="setSheetMaterial('alum')">
+        <span class="skill-level">ALUMINIUM</span>
+        <span class="skill-desc">K-factor 0.50 — springs back more than steel</span>
+      </button>
+      <button class="skill-btn" id="smat-ss" onclick="setSheetMaterial('ss')">
+        <span class="skill-level">STAINLESS STEEL</span>
+        <span class="skill-desc">K-factor 0.38 — less springback, work hardens quickly</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- CARD 2: MATERIAL THICKNESS -->
+  <div class="card">
+    <div class="card-label">MATERIAL THICKNESS</div>
+    <div class="input-group">
+      <div class="input-wrap">
+        <input type="number" id="sheet-thickness" placeholder="e.g. 2" min="0" step="0.1">
+        <span class="input-unit">mm</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('sheet-thickness',0.8)">0.8mm</button>
+        <button class="chip" onclick="setVal('sheet-thickness',1.0)">1.0mm</button>
+        <button class="chip" onclick="setVal('sheet-thickness',1.2)">1.2mm</button>
+        <button class="chip" onclick="setVal('sheet-thickness',1.5)">1.5mm</button>
+        <button class="chip" onclick="setVal('sheet-thickness',2.0)">2.0mm</button>
+        <button class="chip" onclick="setVal('sheet-thickness',2.5)">2.5mm</button>
+        <button class="chip" onclick="setVal('sheet-thickness',3.0)">3.0mm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: INSIDE BEND RADIUS -->
+  <div class="card">
+    <div class="card-label">INSIDE BEND RADIUS</div>
+    <div class="input-group">
+      <div class="input-wrap">
+        <input type="number" id="sheet-radius" placeholder="e.g. 2" min="0" step="0.5">
+        <span class="input-unit">mm</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5">The radius of your die or former — measure on the inside of the bend. A tighter radius increases springback.</div>
+    </div>
+  </div>
+
+  <!-- CARD 4: BEND ANGLE -->
+  <div class="card">
+    <div class="card-label">BEND ANGLE</div>
+    <div class="input-group">
+      <div class="input-wrap">
+        <input type="number" id="sheet-angle" placeholder="e.g. 90" min="1" max="179" step="1">
+        <span class="input-unit">°</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('sheet-angle',45)">45°</button>
+        <button class="chip" onclick="setVal('sheet-angle',90)">90°</button>
+        <button class="chip" onclick="setVal('sheet-angle',135)">135°</button>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5">The final angle of the bend — not the angle you press to.</div>
+    </div>
+  </div>
+
+  <!-- CARD 5: FACE DIMENSIONS -->
+  <div class="card">
+    <div class="card-label">FACE DIMENSIONS</div>
+    <div class="dim-row">
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Face A</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="sheet-face-a" placeholder="e.g. 50" min="0" step="1">
+          <span class="input-unit">mm</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">First flat face length</div>
+      </div>
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Face B</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="sheet-face-b" placeholder="e.g. 80" min="0" step="1">
+          <span class="input-unit">mm</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Second flat face length</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcSheet()">◱ CALCULATE FLAT PATTERN</button>
+
+  <div class="results" id="sheet-results"></div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB — PIPE & TUBE BENDING
+     ═══════════════════════════════════════ -->
+<div class="section" id="tab-bend">
+
+  <div style="height:8px"></div>
+
+  <div class="note">Know your marks before you bend. Enter your tube dimensions and target angle — GapCalc tells you the developed length and where to mark your tube.</div>
+
+  <!-- CARD 1: MATERIAL -->
+  <div class="card">
+    <div class="card-label">MATERIAL</div>
+    <div class="skill-grid">
+      <button class="skill-btn" id="bmat-mild" onclick="setBendMaterial('mild')">
+        <span class="skill-level">MILD STEEL TUBE</span>
+        <span class="skill-desc">3-5° springback typical</span>
+      </button>
+      <button class="skill-btn" id="bmat-alum" onclick="setBendMaterial('alum')">
+        <span class="skill-level">ALUMINIUM TUBE</span>
+        <span class="skill-desc">5-8° springback — softer, bends more easily</span>
+      </button>
+      <button class="skill-btn" id="bmat-ss" onclick="setBendMaterial('ss')">
+        <span class="skill-level">STAINLESS TUBE</span>
+        <span class="skill-desc">5-7° springback — work hardens, use slower bending speed</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- CARD 2: TUBE DIMENSIONS -->
+  <div class="card">
+    <div class="card-label">TUBE DIMENSIONS</div>
+    <div class="dim-row">
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Outside diameter (OD)</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="bend-od" placeholder="e.g. 25" min="0" step="0.5">
+          <span class="input-unit">mm</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Wall thickness</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="bend-wall" placeholder="e.g. 1.6" min="0" step="0.1">
+          <span class="input-unit">mm</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: BEND RADIUS -->
+  <div class="card">
+    <div class="card-label">CENTRELINE BEND RADIUS</div>
+    <div class="input-group">
+      <div class="input-wrap">
+        <input type="number" id="bend-radius" placeholder="e.g. 75" min="0" step="1">
+        <span class="input-unit">mm</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5">Measure from the centre of the tube to the centre of the bend arc. Minimum recommended: 3 × outside diameter to avoid kinking.</div>
+    </div>
+  </div>
+
+  <!-- CARD 4: BEND ANGLE -->
+  <div class="card">
+    <div class="card-label">BEND ANGLE (TARGET)</div>
+    <div class="input-group">
+      <div class="input-wrap">
+        <input type="number" id="bend-angle" placeholder="e.g. 90" min="1" max="179" step="1">
+        <span class="input-unit">°</span>
+      </div>
+      <div class="preset-row">
+        <button class="chip" onclick="setVal('bend-angle',45)">45°</button>
+        <button class="chip" onclick="setVal('bend-angle',90)">90°</button>
+        <button class="chip" onclick="setVal('bend-angle',135)">135°</button>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5">The finished angle you want to achieve — not the angle you press to.</div>
+    </div>
+  </div>
+
+  <!-- CARD 5: LEG LENGTHS -->
+  <div class="card">
+    <div class="card-label">STRAIGHT LEGS</div>
+    <div class="dim-row">
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Leg A</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="bend-leg-a" placeholder="e.g. 200" min="0" step="1">
+          <span class="input-unit">mm</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Straight length before the bend</div>
+      </div>
+      <div class="input-group">
+        <div class="input-meta">
+          <span class="input-meta-label">Leg B</span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="bend-leg-b" placeholder="e.g. 200" min="0" step="1">
+          <span class="input-unit">mm</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Straight length after the bend</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="calcBend()">⌒ CALCULATE BEND</button>
+
+  <div class="results" id="bend-results"></div>
+
+</div>
+
 <footer>
   <p>GapCalc — free forever. No login. No data stored.</p>
   <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
@@ -2991,7 +3218,7 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
   </p>
   <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
   <p style="margin-top:8px;"><a href="/changelog.html" target="_blank" style="color:var(--text3);font-size:12px;text-decoration:none;border-bottom:1px solid var(--border);">What's new</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.7.0 &nbsp;·&nbsp; Updated 6 April 2026</p>
+  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.8.0 &nbsp;·&nbsp; Updated 7 April 2026</p>
 </footer>
 
 <script>
@@ -3940,7 +4167,7 @@ function resetTab(tabId) {
 // ════════════════════════════════════════
 // HOMEPAGE NAVIGATION
 // ════════════════════════════════════════
-const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig','settings','timer','paint'];
+const ALL_TABS = ['home','gaps','cutlist','weight','angle','rods','costing','bolts','drill','mig','settings','timer','paint','sheet','bend'];
 
 function goHome() {
   ALL_TABS.forEach(t => {
@@ -3964,7 +4191,9 @@ const TOOL_NAMES = {
   mig: 'MIG WIRE ESTIMATOR',
   settings: 'SETTINGS GUIDE',
   timer: 'JOB TIMER',
-  paint: 'PAINT & PRIMER COVERAGE'
+  paint: 'PAINT & PRIMER COVERAGE',
+  sheet: 'SHEET METAL FLAT PATTERN',
+  bend: 'PIPE & TUBE BENDING'
 };
 
 function openTool(tool) {
@@ -6208,6 +6437,245 @@ function resetSettings() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ════════════════════════════════════════
+// SHEET METAL FLAT PATTERN
+// ════════════════════════════════════════
+let sheetMaterial = null;
+
+const SHEET_K = { mild: 0.44, alum: 0.50, ss: 0.38 };
+const SHEET_SPRINGBACK = { mild: 3, alum: 6, ss: 5 };
+
+function setSheetMaterial(mat) {
+  sheetMaterial = mat;
+  document.querySelectorAll('[id^="smat-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('smat-' + mat)?.classList.add('active');
+}
+
+function calcSheet() {
+  const box = document.getElementById('sheet-results');
+  box.className = 'results show';
+
+  if (!sheetMaterial) {
+    box.innerHTML = errorBox('Select a material to continue.');
+    return;
+  }
+
+  const t = parseFloat(document.getElementById('sheet-thickness')?.value) || 0;
+  const r = parseFloat(document.getElementById('sheet-radius')?.value) || 0;
+  const angle = parseFloat(document.getElementById('sheet-angle')?.value) || 0;
+  const faceA = parseFloat(document.getElementById('sheet-face-a')?.value) || 0;
+  const faceB = parseFloat(document.getElementById('sheet-face-b')?.value) || 0;
+
+  if (!t || !r || !angle || !faceA || !faceB) {
+    box.innerHTML = errorBox('Fill in all fields to calculate the flat pattern.');
+    return;
+  }
+
+  if (r < t / 2) {
+    box.innerHTML = errorBox('Inside radius is too tight for this material thickness. Minimum recommended radius is half the material thickness.');
+    return;
+  }
+
+  const k = SHEET_K[sheetMaterial];
+  const springback = SHEET_SPRINGBACK[sheetMaterial];
+  const BA = (Math.PI / 180) * angle * (r + k * t);
+  const totalLength = faceA + BA + faceB;
+  const overbendAngle = angle + springback;
+
+  const matNames = { mild: 'Mild Steel', alum: 'Aluminium', ss: 'Stainless Steel' };
+
+  const svgWidth = 500;
+  const svgHeight = 120;
+  const margin = 40;
+  const drawWidth = svgWidth - margin * 2;
+  const scaleA = (faceA / totalLength) * drawWidth;
+  const scaleBA = (BA / totalLength) * drawWidth;
+  const scaleB = (faceB / totalLength) * drawWidth;
+  const rectY = 35;
+  const rectH = 30;
+  const x0 = margin;
+  const xFold1 = x0 + scaleA;
+  const xFold2 = xFold1 + scaleBA;
+  const x1 = xFold2 + scaleB;
+
+  const svg = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:12px 0;border-radius:8px;background:var(--surface2)">
+    <rect x="${x0}" y="${rectY}" width="${scaleA}" height="${rectH}" fill="var(--surface3)" stroke="var(--border)" stroke-width="1"/>
+    <rect x="${xFold1}" y="${rectY}" width="${scaleBA}" height="${rectH}" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3,2"/>
+    <rect x="${xFold2}" y="${rectY}" width="${scaleB}" height="${rectH}" fill="var(--surface3)" stroke="var(--border)" stroke-width="1"/>
+    <line x1="${xFold1}" y1="${rectY - 8}" x2="${xFold1}" y2="${rectY + rectH + 8}" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <line x1="${xFold2}" y1="${rectY - 8}" x2="${xFold2}" y2="${rectY + rectH + 8}" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="${x0 + scaleA/2}" y="${rectY + rectH/2 + 5}" font-family="'Bebas Neue',sans-serif" font-size="13" fill="var(--text)" text-anchor="middle">FACE A</text>
+    <text x="${xFold1 + scaleBA/2}" y="${rectY + rectH/2 + 5}" font-family="'DM Mono',monospace" font-size="10" fill="var(--accent)" text-anchor="middle">BA</text>
+    <text x="${xFold2 + scaleB/2}" y="${rectY + rectH/2 + 5}" font-family="'Bebas Neue',sans-serif" font-size="13" fill="var(--text)" text-anchor="middle">FACE B</text>
+    <line x1="${x0}" y1="${rectY + rectH + 18}" x2="${x1}" y2="${rectY + rectH + 18}" stroke="var(--text3)" stroke-width="1"/>
+    <text x="${x0 + drawWidth/2}" y="${rectY + rectH + 30}" font-family="'DM Mono',monospace" font-size="11" fill="var(--text2)" text-anchor="middle">${totalLength.toFixed(1)}mm total</text>
+  </svg>`;
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">FLAT BLANK LENGTH</div>
+      <div class="rh-value">${totalLength.toFixed(1)}<span style="font-size:24px">mm</span></div>
+      <div class="rh-sub">Face A ${faceA}mm + BA ${BA.toFixed(2)}mm + Face B ${faceB}mm</div>
+    </div>
+    ${svg}
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-label">BEND ALLOWANCE</div><div class="stat-val">${BA.toFixed(2)} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">FOLD LINE FROM END A</div><div class="stat-val">${faceA.toFixed(1)} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">FOLD LINE FROM END B</div><div class="stat-val">${faceB.toFixed(1)} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">OVERBEND TO ACHIEVE ${angle}°</div><div class="stat-val">${overbendAngle} <span class="u">°</span></div></div>
+      <div class="stat"><div class="stat-label">K-FACTOR USED</div><div class="stat-val">${k}</div></div>
+      <div class="stat"><div class="stat-label">MATERIAL</div><div class="stat-val" style="font-size:14px">${matNames[sheetMaterial]}</div></div>
+    </div>
+    <div class="note" style="margin-top:12px"><strong>Always do a test bend first.</strong> Bend allowance varies with your specific tooling, material grade, and temper. These calculations use standard K-factors — verify on scrap material before cutting your final piece.</div>
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copySheetResult(${totalLength.toFixed(1)},${BA.toFixed(2)},${faceA},${faceB})">Copy</button>
+    </div>
+    <button class="reset-btn" onclick="resetSheet()">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  gtag('event','sheet_calc_used',{material:sheetMaterial,angle});
+}
+
+function copySheetResult(total, ba, faceA, faceB) {
+  const txt = 'GapCalc — Sheet Metal Flat Pattern\n---\nFlat blank length: ' + total + 'mm\nBend allowance: ' + ba + 'mm\nFace A: ' + faceA + 'mm\nFace B: ' + faceB + 'mm\ngapcalc.com';
+  copy(txt, event.target);
+}
+
+function resetSheet() {
+  sheetMaterial = null;
+  document.querySelectorAll('[id^="smat-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#tab-sheet input').forEach(el => el.value = '');
+  document.getElementById('sheet-results').className = 'results';
+  document.getElementById('sheet-results').innerHTML = '';
+}
+
+// ════════════════════════════════════════
+// PIPE & TUBE BENDING
+// ════════════════════════════════════════
+let bendMaterial = null;
+
+const BEND_SPRINGBACK = { mild: 4, alum: 6, ss: 6 };
+
+function setBendMaterial(mat) {
+  bendMaterial = mat;
+  document.querySelectorAll('[id^="bmat-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('bmat-' + mat)?.classList.add('active');
+}
+
+function calcBend() {
+  const box = document.getElementById('bend-results');
+  box.className = 'results show';
+
+  if (!bendMaterial) {
+    box.innerHTML = errorBox('Select a material to continue.');
+    return;
+  }
+
+  const od = parseFloat(document.getElementById('bend-od')?.value) || 0;
+  const wall = parseFloat(document.getElementById('bend-wall')?.value) || 0;
+  const radius = parseFloat(document.getElementById('bend-radius')?.value) || 0;
+  const angle = parseFloat(document.getElementById('bend-angle')?.value) || 0;
+  const legA = parseFloat(document.getElementById('bend-leg-a')?.value) || 0;
+  const legB = parseFloat(document.getElementById('bend-leg-b')?.value) || 0;
+
+  if (!od || !wall || !radius || !angle || !legA || !legB) {
+    box.innerHTML = errorBox('Fill in all fields to calculate the bend.');
+    return;
+  }
+
+  if (wall >= od / 2) {
+    box.innerHTML = errorBox('Wall thickness cannot be greater than the tube radius.');
+    return;
+  }
+
+  if (radius < od) {
+    box.innerHTML = errorBox('Bend radius is very tight for this tube size — risk of kinking or collapse. Minimum recommended radius is 3 × outside diameter (' + (od * 3) + 'mm).');
+    return;
+  }
+
+  const springback = BEND_SPRINGBACK[bendMaterial];
+  const BA = (Math.PI / 180) * angle * radius;
+  const totalLength = legA + BA + legB;
+  const overbendAngle = angle + springback;
+  const markStart = legA;
+  const markEnd = legA + BA;
+
+  const matNames = { mild: 'Mild Steel', alum: 'Aluminium', ss: 'Stainless Steel' };
+
+  const svgW = 500;
+  const svgH = 160;
+  const legLen = 80;
+  const bendR = 50;
+  const startX = 50;
+  const startY = 100;
+  const legAEndX = startX + legLen;
+  const legAEndY = startY;
+  const arcCY = startY - bendR;
+  const arcEndX = legAEndX + bendR;
+  const legBEndY = arcCY - legLen;
+
+  const svg = `<svg viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:12px 0;border-radius:8px;background:var(--surface2)">
+    <line x1="${startX}" y1="${startY}" x2="${legAEndX}" y2="${legAEndY}" stroke="var(--text2)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M ${legAEndX} ${startY} A ${bendR} ${bendR} 0 0 1 ${arcEndX} ${arcCY}" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/>
+    <line x1="${arcEndX}" y1="${arcCY}" x2="${arcEndX}" y2="${legBEndY}" stroke="var(--text2)" stroke-width="6" stroke-linecap="round"/>
+    <text x="${startX + legLen/2}" y="${startY + 20}" font-family="'Bebas Neue',sans-serif" font-size="12" fill="var(--text2)" text-anchor="middle">LEG A ${legA}mm</text>
+    <text x="${legAEndX + bendR/2}" y="${startY - bendR/2}" font-family="'DM Mono',monospace" font-size="10" fill="var(--accent)" text-anchor="middle">${angle}°</text>
+    <text x="${arcEndX + 35}" y="${arcCY - legLen/2}" font-family="'Bebas Neue',sans-serif" font-size="12" fill="var(--text2)" text-anchor="middle">LEG B ${legB}mm</text>
+    <line x1="${legAEndX}" y1="${startY - 12}" x2="${legAEndX}" y2="${startY + 12}" stroke="var(--green)" stroke-width="2" stroke-dasharray="3,2"/>
+    <line x1="${arcEndX}" y1="${arcCY - 12}" x2="${arcEndX}" y2="${arcCY + 12}" stroke="var(--green)" stroke-width="2" stroke-dasharray="3,2"/>
+    <text x="${svgW - 10}" y="${svgH - 10}" font-family="'DM Sans',sans-serif" font-size="9" fill="var(--text3)" text-anchor="end">Diagram illustrative — not to scale</text>
+  </svg>`;
+
+  box.innerHTML = `
+    <div class="result-hero">
+      <div class="rh-label">TOTAL DEVELOPED LENGTH</div>
+      <div class="rh-value">${totalLength.toFixed(1)}<span style="font-size:24px">mm</span></div>
+      <div class="rh-sub">Leg A ${legA}mm + Arc ${BA.toFixed(1)}mm + Leg B ${legB}mm</div>
+    </div>
+    ${svg}
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-label">ARC LENGTH (BA)</div><div class="stat-val">${BA.toFixed(1)} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">OVERBEND TO ACHIEVE ${angle}°</div><div class="stat-val">${overbendAngle} <span class="u">°</span></div></div>
+      <div class="stat"><div class="stat-label">MARK BEND START</div><div class="stat-val">${markStart.toFixed(1)} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">MARK BEND END</div><div class="stat-val">${markEnd.toFixed(1)} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">CENTRELINE RADIUS</div><div class="stat-val">${radius} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">MATERIAL</div><div class="stat-val" style="font-size:14px">${matNames[bendMaterial]}</div></div>
+    </div>
+    <div class="card" style="margin-top:10px;border-left:3px solid var(--green)">
+      <div class="card-label">HOW TO MARK YOUR TUBE</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.8">
+        1. Measure <strong style="color:var(--text)">${markStart.toFixed(1)}mm</strong> from the end of Leg A — mark this as your <strong style="color:var(--green)">bend start.</strong><br>
+        2. Measure a further <strong style="color:var(--text)">${BA.toFixed(1)}mm</strong> from that mark — this is your <strong style="color:var(--green)">bend end.</strong><br>
+        3. Set your bender to <strong style="color:var(--accent)">${overbendAngle}°</strong> to achieve a finished ${angle}° after springback.
+      </div>
+    </div>
+    <div class="note" style="margin-top:12px"><strong>Always do a test bend first.</strong> Springback varies with material grade, wall thickness, and your specific bender. These are calculated starting points — verify on scrap tube before bending your final piece.</div>
+    <div class="action-row">
+      <button class="act-btn" onclick="window.print()">Print</button>
+      <button class="act-btn" onclick="copyBendResult(${totalLength.toFixed(1)},${BA.toFixed(1)},${markStart.toFixed(1)},${markEnd.toFixed(1)},${overbendAngle})">Copy</button>
+    </div>
+    <button class="reset-btn" onclick="resetBend()">↺ Start over</button>
+  `;
+
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  gtag('event','bend_calc_used',{material:bendMaterial,angle});
+}
+
+function copyBendResult(total, ba, markStart, markEnd, overbend) {
+  const txt = 'GapCalc — Pipe & Tube Bending\n---\nTotal developed length: ' + total + 'mm\nArc length: ' + ba + 'mm\nMark bend start: ' + markStart + 'mm from end\nMark bend end: ' + markEnd + 'mm from end\nOverbend to: ' + overbend + '°\ngapcalc.com';
+  copy(txt, event.target);
+}
+
+function resetBend() {
+  bendMaterial = null;
+  document.querySelectorAll('[id^="bmat-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#tab-bend input').forEach(el => el.value = '');
+  document.getElementById('bend-results').className = 'results';
+  document.getElementById('bend-results').innerHTML = '';
+}
+
 // Enter key triggers calculate
 document.getElementById('tab-gaps').addEventListener('keydown', e => { if (e.key==='Enter') calcGaps(); });
 document.getElementById('tab-cutlist').addEventListener('keydown', e => { if (e.key==='Enter') calcCutList(); });
@@ -6219,6 +6687,8 @@ document.getElementById('tab-bolts').addEventListener('keydown', e => { if (e.ke
 document.getElementById('tab-mig').addEventListener('keydown', e => { if (e.key==='Enter') calcMIG(); });
 document.getElementById('tab-settings').addEventListener('keydown', e => { if (e.key==='Enter') calcSettings(); });
 document.getElementById('tab-timer').addEventListener('keydown', e => { if (e.key==='Enter' && !timerRunning) startTimer(); });
+document.getElementById('tab-sheet').addEventListener('keydown', e => { if (e.key === 'Enter') calcSheet(); });
+document.getElementById('tab-bend').addEventListener('keydown', e => { if (e.key === 'Enter') calcBend(); });
 
 // Init angle width presets
 renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');

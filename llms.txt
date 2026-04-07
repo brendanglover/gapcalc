@@ -1,22 +1,43 @@
 # GapCalc
 > Free workshop calculators for welders, fabricators, and makers.
 
-GapCalc is a free, no-login web application built for welders, metal fabricators, woodworkers, and DIY makers. It provides practical calculators to help plan and execute workshop projects accurately.
+GapCalc is a free, no-login web application built for welders, metal fabricators, woodworkers, and DIY makers. It provides practical calculators to help plan and execute workshop projects accurately. All tools are free forever with no data collection and no paywalls.
 
 ## Tools available
 
-- **Gap Calculator**: Calculates equal bar or slat spacing across a frame. Uses edge-to-edge formula with n-1 gaps.
-- **Cut List Calculator**: Plans steel or timber cuts from standard stock lengths. Shows cuts per length, offcut sizes, and waste percentage including blade kerf.
-- **Weight Calculator**: Calculates total order weight for steel profiles (flat bar, square tube, round bar, round tube, angle iron) and timber sections. Includes vehicle load indicator.
-- **Angle Cuts Calculator**: Calculates short point, long point, cut face length, and offset for any cut angle. Generates SVG cut diagrams for single end, mitre, and parallel cuts.
-- **Rod Estimator**: Recommends welding rod type based on material, joint type, and weld position. Estimates rod quantity and packs to buy with skill-level wastage adjustment.
-- **Job Costing Calculator**: Calculates material, consumable, labour, and delivery costs. Applies margin pricing and generates a clean client quote output.
+- **Gap Calculator**: Calculates equal bar or slat spacing across a frame using the edge-to-edge formula. Outputs number of bars, actual gap, and materials list.
 
-## Target audience
-South African welders, fabricators, makers, and small workshop businesses.
+- **Cut List Calculator**: Plans steel or timber cuts from standard stock lengths. Shows cuts per length, offcut sizes, and waste percentage including blade kerf.
+
+- **Weight Calculator**: Calculates total order weight for steel profiles (flat bar, square tube, rectangular tube, round bar, round tube, angle iron) and timber. Steel grade selector includes Mild Steel, Stainless, Aluminium, Copper, and Brass with correct densities. Includes vehicle load indicator.
+
+- **Angle Cuts Calculator**: Calculates short point, long point, cut face length, and offset for any cut angle. Generates SVG cut diagrams for single end, mitre, and parallel cuts.
+
+- **Rod Estimator**: Recommends welding rod type based on material (Mild Steel, Galvanised, Cast Iron, Stainless, Aluminium), joint type, and weld position. Estimates rod quantity with skill-level wastage adjustment. Includes aluminium disclaimer.
+
+- **Job Costing Calculator**: Calculates material, consumable, labour, and delivery costs. Applies margin pricing and generates a professional client quote with VAT handling, payment terms, and business details. Supports ZAR, USD, GBP, EUR, AUD, CAD, NZD.
+
+- **Bolt Spacing Calculator**: Spaces bolts, screws, rivets, or fixings evenly along any length. Centre-to-centre and edge-to-edge modes with SVG diagram.
+
+- **Drill Bit & Tap Reference**: Lookup table for tap drill, clearance drill, and countersink sizes. Metric (M3-M24) and Imperial UNC (#10-24 through 3/4"-10). Expandable full reference table.
+
+- **MIG Wire Estimator**: Calculates MIG wire needed in kg and reels to buy. Wire diameter, shielding gas, joint type, material thickness, and skill level inputs.
+
+- **MIG & Flux Core Settings Guide**: Recommended voltage and wire feed speed ranges for MIG and flux core welding. Machine capability toggles, flux core polarity explanation, and weld troubleshooter with plain English symptom descriptions.
+
+- **Job Timer**: Named task time tracking with localStorage persistence. Sends each named task as its own line item to the Job Costing calculator.
+
+- **Paint & Primer Coverage**: Calculates litres or spray cans needed for any surface. Five coating types, five shape calculators, optimal tin combination recommendation.
+
+- **Sheet Metal Flat Pattern**: Calculates flat blank size before bending using bend allowance formula. Single bend, three materials, SVG fold line diagram.
+
+- **Pipe & Tube Bending**: Calculates developed length and overbend angle for tube and pipe bending. Outside diameter, wall thickness, bend radius, and angle inputs.
 
 ## URL
 https://gapcalc.com
 
 ## Creator
 Brendan Glover — https://x.com/brendanglover_x
+
+## Community
+The Forge Builds — https://www.facebook.com/groups/theforgebuilds
