@@ -70,28 +70,29 @@
   gtag('js', new Date());
   gtag('config', 'G-KEMY3NEYCQ');
 </script>
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #111;
-  --surface: #1c1c1c;
-  --surface2: #252525;
-  --surface3: #2e2e2e;
-  --border: #333;
-  --border2: #444;
-  --accent: #f5820a;
-  --accent-dim: rgba(245,130,10,0.15);
-  --green: #52c47a;
-  --green-dim: rgba(82,196,122,0.12);
-  --blue: #5aabf5;
-  --blue-dim: rgba(90,171,245,0.12);
-  --red: #e05252;
-  --red-dim: rgba(224,82,82,0.12);
-  --text: #efefef;
-  --text2: #888;
-  --text3: #555;
-  --r: 10px;
+  --bg:          #0f0f0d;
+  --surface:     #1a1a16;
+  --surface2:    #232320;
+  --surface3:    #2a2a25;
+  --border:      #2e2e2a;
+  --border2:     #3a3a35;
+  --accent:      #f5820a;
+  --accent-dim:  rgba(245,130,10,0.12);
+  --green:       #52c47a;
+  --green-dim:   rgba(82,196,122,0.12);
+  --blue:        #5aabf5;
+  --blue-dim:    rgba(90,171,245,0.12);
+  --red:         #e05252;
+  --red-dim:     rgba(224,82,82,0.12);
+  --text:        #e8e4dc;
+  --text2:       #666;
+  --text3:       #444;
+  --r:           10px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -100,18 +101,37 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 /* HEADER */
 header {
   background: var(--surface);
-  border-bottom: 3px solid var(--accent);
-  padding: 14px 18px;
-  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 28px;
+  height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0; z-index: 100;
 }
-.logo-mark {
-  width: 44px; height: 44px; background: var(--accent); border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+.nav-left { display: flex; align-items: center; gap: 14px; }
+.logo-wordmark {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px; line-height: 1;
+  color: var(--text);
 }
-.logo-mark svg { width: 44px; height: 44px; }
-.logo-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; line-height: 1; }
-.logo-tagline { font-size: 10px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+.logo-wordmark span { color: var(--accent); }
+.nav-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid rgba(245,130,10,0.22);
+  padding: 2px 8px; border-radius: 99px;
+  letter-spacing: 0.5px;
+}
+.nav-links { display: flex; align-items: center; gap: 20px; list-style: none; }
+.nav-links a {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--text2); text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text); }
 
 /* NAV TABS */
 .nav {
@@ -315,7 +335,21 @@ header {
 .dot { width: 10px; height: 10px; border-radius: 2px; }
 
 /* FOOTER */
-footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(--text3); }
+footer {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 20px 28px;
+  max-width: 1140px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--text3); letter-spacing: 0.5px;
+}
+@media (max-width: 600px) {
+  footer { flex-direction: column; gap: 6px; text-align: center; padding: 20px 18px; }
+  header { padding: 0 18px; }
+  .home-hero { padding: 44px 18px 36px; }
+  .home-stats { gap: 20px; }
+  .nav-links { display: none; }
+}
 
 /* PRINT */
 @media print {
@@ -503,62 +537,114 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 /* ═══════════════════════════════
    HOMEPAGE
    ═══════════════════════════════ */
+
+/* Grain texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9999;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
 .home-hero {
-  padding: 28px 18px 20px;
-  max-width: 640px; margin: 0 auto;
-  text-align: center;
+  position: relative;
+  padding: 64px 28px 52px;
+  max-width: 1140px; margin: 0 auto;
+  overflow: hidden;
+}
+.home-hero::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 40%; height: 100%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent, transparent 18px,
+    rgba(245,130,10,0.03) 18px,
+    rgba(245,130,10,0.03) 19px
+  );
+  pointer-events: none;
+}
+.home-hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 18px;
 }
 .home-hero-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 32px; letter-spacing: 3px;
-  color: var(--text); line-height: 1.1;
-  margin-bottom: 10px;
+  font-size: clamp(52px, 6vw, 80px);
+  letter-spacing: 2px; line-height: 0.95;
+  color: var(--text);
+  margin-bottom: 20px;
+  max-width: 680px;
 }
 .home-hero-title span { color: var(--accent); }
 .home-hero-sub {
-  font-size: 14px; color: var(--text2);
-  line-height: 1.6; max-width: 420px;
-  margin: 0 auto;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px; color: var(--text2);
+  line-height: 1.7; max-width: 420px;
+  margin-bottom: 36px;
 }
+.home-stats {
+  display: flex; gap: 36px;
+}
+.home-stat-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 22px; font-weight: 500;
+  color: var(--accent);
+  display: block; line-height: 1; margin-bottom: 5px;
+}
+.home-stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* Tool grid */
 .card-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; padding: 0 18px 24px;
-  max-width: 640px; margin: 0 auto;
+  max-width: 1140px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--bg);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .feature-card {
   background: var(--surface);
-  border: 2px solid var(--border);
-  border-radius: var(--r);
-  padding: 18px 14px;
-  cursor: pointer; transition: all 0.2s;
-  text-align: left;
-  display: flex; flex-direction: column; gap: 8px;
+  padding: 20px 18px 18px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s;
+  display: flex; flex-direction: column; gap: 7px;
+  min-height: 130px;
 }
-.feature-card:hover {
-  border-color: var(--accent);
-  background: rgba(245,130,10,0.05);
-  transform: translateY(-2px);
+.feature-card:hover { background: var(--surface2); }
+.feature-card:hover .feature-card-arrow { color: var(--accent); }
+.feature-card-arrow {
+  position: absolute; top: 16px; right: 16px;
+  font-size: 13px; color: var(--text3);
+  transition: color 0.15s; line-height: 1;
 }
-.feature-card-icon {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 22px; color: var(--accent);
-  letter-spacing: 1px;
-}
+.feature-card-icon { font-size: 18px; color: var(--accent); line-height: 1; margin-bottom: 2px; }
 .feature-card-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 17px; letter-spacing: 1.5px;
-  color: var(--text); line-height: 1.1;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px; font-weight: 500;
+  color: var(--text); line-height: 1.3;
+  padding-right: 20px;
 }
 .feature-card-desc {
-  font-size: 11px; color: var(--text2);
-  line-height: 1.5;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10px; color: var(--text2);
+  line-height: 1.55; margin-top: auto;
 }
-.feature-card-arrow {
-  font-size: 12px; color: var(--text3);
-  margin-top: auto; padding-top: 6px;
-  letter-spacing: 1px;
-}
-.feature-card:hover .feature-card-arrow { color: var(--accent); }
+
+@media (max-width: 1024px) { .card-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px)  { .card-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* ═══════════════════════════════
    BACK BUTTON
@@ -1068,15 +1154,13 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 <body>
 
 <header onclick="goHome()" style="cursor:pointer;" title="Back to home">
-  <div class="logo-mark">
-    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-      <text x="18" y="29" font-family="'Bebas Neue', sans-serif" font-size="30" fill="#111" text-anchor="middle" letter-spacing="-1">GC</text>
-    </svg>
+  <div class="nav-left">
+    <div class="logo-wordmark">Gap<span>Calc</span></div>
+    <div class="nav-badge">v2.8.1</div>
   </div>
-  <div>
-    <div class="logo-title">GapCalc</div>
-    <div class="logo-tagline">Workshop Calculator for Welders & Makers</div>
-  </div>
+  <ul class="nav-links" onclick="event.stopPropagation()">
+    <li><a href="/changelog.html">Changelog</a></li>
+  </ul>
 </header>
 
 <!-- Back button bar — hidden on homepage -->
@@ -1094,108 +1178,130 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 <div id="tab-home" class="section active" style="padding-bottom:40px;padding-left:0;padding-right:0;max-width:100%">
 
   <div class="home-hero">
-    <div class="home-hero-title">YOUR WORKSHOP,<br><span>CALCULATED.</span></div>
-    <p class="home-hero-sub">Free calculators built for welders, fabricators, and makers. Plan your gaps, cuts, material weight, and angles before you touch the grinder — then get back to building.</p>
+    <p class="home-hero-eyebrow">// Free Workshop Calculator</p>
+    <div class="home-hero-title">Your Workshop,<br><span>Calculated.</span></div>
+    <p class="home-hero-sub">No guesswork. No wasted steel. Just clean builds.</p>
+    <div class="home-stats">
+      <div>
+        <span class="home-stat-value">15</span>
+        <span class="home-stat-label">Tools</span>
+      </div>
+      <div>
+        <span class="home-stat-value">Free</span>
+        <span class="home-stat-label">Always</span>
+      </div>
+      <div>
+        <span class="home-stat-value">Zero</span>
+        <span class="home-stat-label">Login Required</span>
+      </div>
+    </div>
   </div>
 
   <div class="card-grid">
 
     <div class="feature-card" onclick="openTool('gaps')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">⊞</div>
-      <div class="feature-card-title">GAP CALCULATOR</div>
+      <div class="feature-card-title">Gap Calculator</div>
       <div class="feature-card-desc">Space bars or slats evenly across any frame. Enter your frame size and bar width — get exact gap measurements.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
     <div class="feature-card" onclick="openTool('cutlist')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">✂</div>
-      <div class="feature-card-title">CUT LIST</div>
+      <div class="feature-card-title">Cut List</div>
       <div class="feature-card-desc">Plan your cuts before ordering. Know how many lengths to buy, cuts per length, offcut sizes, and waste percentage.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
     <div class="feature-card" onclick="openTool('weight')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">⚖</div>
-      <div class="feature-card-title">WEIGHT CALCULATOR</div>
+      <div class="feature-card-title">Weight Calculator</div>
       <div class="feature-card-desc">Calculate your total order weight before heading to the supplier. Includes a vehicle load indicator so you know what you can carry.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
     <div class="feature-card" onclick="openTool('angle')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">∠</div>
-      <div class="feature-card-title">ANGLE CUTS</div>
+      <div class="feature-card-title">Angle Cuts</div>
       <div class="feature-card-desc">Get short point, long point, and a cut diagram for any angle. Mark directly from the diagram — no guesswork at the grinder.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
     <div class="feature-card" onclick="openTool('rods')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">▬</div>
-      <div class="feature-card-title">ROD ESTIMATOR</div>
+      <div class="feature-card-title">Welding Rod Estimator</div>
       <div class="feature-card-desc">Not sure which rod to use or how many to buy? Get a rod recommendation for your job and an accurate quantity estimate.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
     <div class="feature-card" onclick="openTool('costing')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">R</div>
-      <div class="feature-card-title">JOB COSTING</div>
+      <div class="feature-card-title">Job Costing</div>
       <div class="feature-card-desc">Price your work properly. Calculate material, labour, and consumable costs — then generate a clean client quote in your local currency.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
     </div>
 
     <div class="feature-card" onclick="openTool('bolts')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">○</div>
-      <div class="feature-card-title">BOLT SPACING</div>
-      <div class="feature-card-desc">Space bolts, screws, rivets, or hinges evenly along any length of steel, timber, or plate. Enter your length, fixing size, and count — get exact spacing.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+      <div class="feature-card-title">Bolt Spacing</div>
+      <div class="feature-card-desc">Space bolts, screws, rivets, or hinges evenly along any length of steel, timber, or plate.</div>
     </div>
 
     <div class="feature-card" onclick="openTool('drill')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">⊕</div>
-      <div class="feature-card-title">DRILL REFERENCE</div>
-      <div class="feature-card-desc">Find the correct tap drill, clearance drill, and countersink size for any bolt. Metric and imperial. The reference you always needed in the workshop.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+      <div class="feature-card-title">Drill Reference</div>
+      <div class="feature-card-desc">Tap drill, clearance drill, and countersink size for any bolt. Metric and imperial.</div>
     </div>
 
     <div class="feature-card" onclick="openTool('mig')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">◎</div>
-      <div class="feature-card-title">MIG WIRE ESTIMATOR</div>
-      <div class="feature-card-desc">Calculate how much MIG wire you need for any job. Select your wire diameter, joint type, and material thickness — get kg needed and reels to buy.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+      <div class="feature-card-title">MIG Wire Estimator</div>
+      <div class="feature-card-desc">Wire diameter, joint type, material thickness — get kg needed and reels to buy.</div>
     </div>
 
     <div class="feature-card" onclick="openTool('settings')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">⚙</div>
-      <div class="feature-card-title">SETTINGS GUIDE</div>
-      <div class="feature-card-desc">Get recommended MIG or flux core settings for your machine and material. Includes a weld troubleshooter so you can fix what you're seeing right now.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+      <div class="feature-card-title">Settings Guide</div>
+      <div class="feature-card-desc">Recommended MIG or flux core settings for your machine and material.</div>
     </div>
 
     <div class="feature-card" onclick="openTool('timer')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">◷</div>
-      <div class="feature-card-title">JOB TIMER</div>
-      <div class="feature-card-desc">Track time spent on each task of a job. See where your hours actually go — then send the total straight to Job Costing.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+      <div class="feature-card-title">Job Timer</div>
+      <div class="feature-card-desc">Track time spent on each task. Send the total straight to Job Costing.</div>
     </div>
 
     <div class="feature-card" onclick="openTool('paint')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">▲</div>
-      <div class="feature-card-title">PAINT &amp; PRIMER COVERAGE</div>
-      <div class="feature-card-desc">Calculate exactly how much paint, primer, or rust converter you need for any surface. Never run short or overbuy again.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+      <div class="feature-card-title">Paint Coverage</div>
+      <div class="feature-card-desc">Estimate how much paint, primer, or rust converter your job needs.</div>
     </div>
 
     <div class="feature-card" onclick="openTool('sheet')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">◱</div>
-      <div class="feature-card-title">SHEET METAL FLAT PATTERN</div>
-      <div class="feature-card-desc">Calculate the correct flat blank size before bending sheet metal. Enter your material, thickness, bend radius, and face dimensions — get the exact length to cut.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+      <div class="feature-card-title">Sheet Metal Flat Pattern</div>
+      <div class="feature-card-desc">Correct flat blank size before bending. Bend allowance with K-factor per material.</div>
     </div>
 
     <div class="feature-card" onclick="openTool('bend')">
+      <span class="feature-card-arrow">&rarr;</span>
       <div class="feature-card-icon">⌒</div>
-      <div class="feature-card-title">PIPE &amp; TUBE BENDING</div>
-      <div class="feature-card-desc">Calculate developed length and overbend angle for tube and pipe bending. Enter your diameter, wall thickness, bend radius, and angle — get exact marks before you bend.</div>
-      <div class="feature-card-arrow">OPEN TOOL &rarr;</div>
+      <div class="feature-card-title">Pipe &amp; Tube Bending</div>
+      <div class="feature-card-desc">Developed length and overbend angle — get exact marks before you bend.</div>
+    </div>
+
+    <div class="feature-card" onclick="openTool('settings')">
+      <span class="feature-card-arrow">&rarr;</span>
+      <div class="feature-card-icon">⚠</div>
+      <div class="feature-card-title">Weld Troubleshooter</div>
+      <div class="feature-card-desc">Fix porosity, spatter, burn-through — right now.</div>
     </div>
 
   </div>
@@ -3209,16 +3315,8 @@ footer { text-align: center; padding: 30px 18px 0; font-size: 11px; color: var(-
 </div>
 
 <footer>
-  <p>GapCalc — free forever. No login. No data stored.</p>
-  <p style="margin-top:4px;">Measure twice. Cut once. Build cool things.</p>
-  <p style="margin-top:8px;font-size:11px;">Built by <a href="https://brendanglover.github.io" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">Brendan Glover</a></p>
-  <p style="margin-top:8px;font-size:11px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
-    <a href="https://www.facebook.com/groups/theforgebuilds" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">The Forge Community</a>
-    <a href="https://github.com/brendanglover" target="_blank" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">GitHub</a>
-  </p>
-  <p style="margin-top:10px;"><a href="https://forms.gle/jSHBaHf1KLsHvRn78" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;letter-spacing:0.5px;">SUGGEST A FEATURE</a></p>
-  <p style="margin-top:8px;"><a href="/changelog.html" target="_blank" style="color:var(--text3);font-size:12px;text-decoration:none;border-bottom:1px solid var(--border);">What's new</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.8.0 &nbsp;·&nbsp; Updated 7 April 2026</p>
+  <span>GapCalc — free forever. No login. No data stored.</span>
+  <span>Built by Brendan Glover</span>
 </footer>
 
 <script>

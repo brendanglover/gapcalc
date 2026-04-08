@@ -17,25 +17,26 @@
   gtag('config', 'G-KEMY3NEYCQ');
 </script>
 
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #111;
-  --surface: #1c1c1c;
-  --surface2: #252525;
-  --surface3: #2e2e2e;
-  --border: #333;
-  --border2: #444;
-  --accent: #f5820a;
-  --accent-dim: rgba(245,130,10,0.15);
-  --green: #52c47a;
-  --blue: #5aabf5;
-  --red: #e05252;
-  --text: #efefef;
-  --text2: #888;
-  --text3: #555;
-  --r: 10px;
+  --bg:         #0f0f0d;
+  --surface:    #1a1a16;
+  --surface2:   #232320;
+  --surface3:   #2a2a25;
+  --border:     #2e2e2a;
+  --border2:    #3a3a35;
+  --accent:     #f5820a;
+  --accent-dim: rgba(245,130,10,0.12);
+  --green:      #52c47a;
+  --blue:       #5aabf5;
+  --red:        #e05252;
+  --text:       #e8e4dc;
+  --text2:      #666;
+  --text3:      #444;
+  --r:          10px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -44,18 +45,36 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 /* HEADER */
 header {
   background: var(--surface);
-  border-bottom: 3px solid var(--accent);
-  padding: 14px 18px;
-  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 28px;
+  height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
 }
-.logo-mark {
-  width: 44px; height: 44px; background: var(--accent); border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  text-decoration: none;
+.nav-left { display: flex; align-items: center; gap: 14px; }
+.logo-wordmark {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px; line-height: 1;
+  color: var(--text); text-decoration: none;
 }
-.logo-mark svg { width: 44px; height: 44px; }
-.logo-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; line-height: 1; }
-.logo-tagline { font-size: 10px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+.logo-wordmark span { color: var(--accent); }
+.nav-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid rgba(245,130,10,0.22);
+  padding: 2px 8px; border-radius: 99px;
+  letter-spacing: 0.5px;
+}
+.nav-links { display: flex; align-items: center; gap: 20px; list-style: none; }
+.nav-links a {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--text2); text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text); }
 
 /* MAIN */
 .page { max-width: 640px; margin: 0 auto; padding: 16px 18px; }
@@ -124,25 +143,29 @@ header {
 
 /* FOOTER */
 footer {
-  text-align: center; padding: 30px 18px 0;
-  font-size: 11px; color: var(--text3);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 20px 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--text3); letter-spacing: 0.5px;
 }
-footer a { color: var(--text3); text-decoration: none; border-bottom: 1px solid var(--border); }
-footer a:hover { color: var(--accent); }
+@media (max-width: 600px) {
+  footer { flex-direction: column; gap: 6px; text-align: center; padding: 20px 18px; }
+  header { padding: 0 18px; }
+  .nav-links { display: none; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <a href="index.html" class="logo-mark" aria-label="Back to GapCalc">
-    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-      <text x="18" y="27" font-family="'Bebas Neue', sans-serif" font-size="22" fill="#111" text-anchor="middle" letter-spacing="1">GC</text>
-    </svg>
-  </a>
-  <div>
-    <div class="logo-title">GAPCALC</div>
-    <div class="logo-tagline">What's New</div>
+  <div class="nav-left">
+    <a href="index.html" class="logo-wordmark">Gap<span>Calc</span></a>
+    <div class="nav-badge">v2.8.1</div>
   </div>
+  <ul class="nav-links">
+    <li><a href="index.html">All Tools</a></li>
+  </ul>
 </header>
 
 <div class="page">
@@ -150,6 +173,28 @@ footer a:hover { color: var(--accent); }
 
   <h1 class="page-heading">CHANGELOG</h1>
   <p class="page-sub">Every update, every fix, every new tool — documented.</p>
+
+  <!-- v2.8.1 -->
+  <div class="version-card">
+    <div class="version-header">
+      <span class="version-num">v2.8.1</span>
+      <span class="version-date">8 April 2026</span>
+    </div>
+    <div class="version-title">Homepage Redesign & Visual Overhaul</div>
+    <ul class="version-changes">
+      <li>Full homepage redesign — new colour palette, typography system, and layout</li>
+      <li>Nav rebuilt — Bebas Neue wordmark, IBM Plex Mono badge and links, version pill, no logo mark</li>
+      <li>Hero section — eyebrow label, large display heading, stat strip (15 Tools / Free Always / Zero Login Required), vertical stripe pattern</li>
+      <li>Tool grid reworked — 5-column layout with 1px dividers, positioned arrow, tighter card typography</li>
+      <li>Weld Troubleshooter added as a dedicated homepage card</li>
+      <li>Rod Estimator renamed to Welding Rod Estimator throughout</li>
+      <li>Paint Coverage description updated</li>
+      <li>Footer simplified — split left/right layout in IBM Plex Mono</li>
+      <li>Changelog page updated to match — nav, footer, and colour tokens aligned</li>
+      <li>Favicon removed — fixes inconsistency between gapcalc.com and www.gapcalc.com</li>
+      <li>GC logo mark removed from all page headers — wordmark only</li>
+    </ul>
+  </div>
 
   <!-- v2.8.0 -->
   <div class="version-card">
@@ -366,9 +411,8 @@ footer a:hover { color: var(--accent); }
 </div>
 
 <footer>
-  <p>GapCalc — free forever. No login. No data stored.</p>
-  <p style="margin-top:8px;"><a href="https://gapcalc.com">gapcalc.com</a></p>
-  <p style="margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:#3a3a3a;">v2.8.0</p>
+  <span>GapCalc — free forever. No login. No data stored.</span>
+  <span>Built by Brendan Glover</span>
 </footer>
 
 </body>
