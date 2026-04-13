@@ -741,32 +741,6 @@ body::before {
 /* ═══════════════════════════════
    JOB COSTING CALCULATOR
    ═══════════════════════════════ */
-.coming-soon-card {
-  background: var(--surface);
-  border: 2px dashed var(--border);
-  border-radius: var(--r);
-  padding: 18px 14px;
-  text-align: left;
-  display: flex; flex-direction: column; gap: 8px;
-  opacity: 0.6;
-  cursor: default;
-}
-.coming-soon-badge {
-  display: inline-block;
-  background: var(--surface3);
-  color: var(--text3);
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 11px; letter-spacing: 1.5px;
-  padding: 3px 8px; border-radius: 20px;
-  margin-bottom: 2px;
-}
-.coming-soon-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 17px; letter-spacing: 1.5px;
-  color: var(--text2); line-height: 1.1;
-}
-.coming-soon-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
-
 /* Line items */
 .line-items-wrap { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
 .line-item-row {
@@ -3348,15 +3322,6 @@ function setVal(id, val) {
 }
 
 // ════════════════════════════════════════
-// TAB SWITCHER — 3 tabs
-// ════════════════════════════════════════
-function switchTab(tab) {
-  const tabs = ['gaps','cutlist','weight','angle','rods','costing'];
-  document.querySelectorAll('.nav-btn').forEach((b,i) => b.classList.toggle('active', tabs[i] === tab));
-  tabs.forEach(t => { const el = document.getElementById('tab-'+t); if (el) el.classList.toggle('active', t === tab); });
-}
-
-// ════════════════════════════════════════
 // DIAGRAM
 // ════════════════════════════════════════
 function buildDiagram(n, w, g, L) {
@@ -3519,7 +3484,6 @@ function calcGaps() {
     <button class="reset-btn" onclick="resetTab('tab-gaps')">↺ Start over</button>
   `;
 
-  window._lastGap = { n, gActual: gActual.toFixed(2), L, w };
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -3590,7 +3554,6 @@ function calcCutList() {
   const offcutW = ((fullLengthOffcut / S) * 100).toFixed(1);
   const usedW = (100 - parseFloat(offcutW)).toFixed(1);
 
-  pendingSend = { section: 'materials', desc: `${(S/1000).toFixed(S%1000===0?0:2)}m stock — ${Q} × ${p}mm pieces`, qty: lengthsNeeded };
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">LENGTHS TO BUY</div>
@@ -3651,6 +3614,10 @@ function calcCutList() {
 // ════════════════════════════════════════
 function errorBox(msg) {
   return `<div class="result-hero error"><div class="rh-label">⚠ Can't calculate</div><div class="rh-value error-val">${msg}</div></div>`;
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function copyGapResult(n, g, L, w) {
@@ -3820,7 +3787,6 @@ function calcWeight() {
   const fillColor = fillPct<60?'var(--green)':fillPct<85?'var(--accent)':'var(--red)';
   const bakkieClass = fillPct<60?'ok':fillPct<85?'warn':'over';
   const bakkieMsg = totalWeight>BAKKIE_LIMIT ? '✗ Exceeds a standard vehicle payload (~750kg). Consider two trips or arrange delivery.' : fillPct>=85 ? '⚠ Close to the limit — check your vehicle\'s rated payload before loading.' : fillPct>=60 ? '⚠ Getting heavy — double-check your vehicle\'s rated payload.' : '✓ Well within your vehicle\'s payload (~750kg). Easy trip.';
-  pendingSend = { section: 'materials', desc: buildWeightDesc(L), qty: Q };
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">TOTAL ORDER WEIGHT</div>
@@ -3860,8 +3826,6 @@ function copyWeightResult(total,perPiece,perM,qty) {
 // ════════════════════════════════════════
 let aCutType = 'single';
 let aEndType = 'mitre';
-
-const ANGLE_WIDTH_PRESETS = [20,25,30,38,40,50,65,75,100];
 
 function setAnglePreset(val) {
   document.getElementById('a-angle').value = val;
@@ -4543,7 +4507,6 @@ function calcRodEstimator() {
 
   const skillLabels = { beginner:'Beginner (35% wastage added)', intermediate:'Intermediate (20% wastage added)', experienced:'Experienced (10% wastage added)' };
 
-  pendingSend = { section: 'consumables', desc: `${rodDiam}mm ${ROD_DB[rodMaterial].rec} rods`, qty: packs5kg };
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">RODS NEEDED</div>
@@ -4660,7 +4623,6 @@ let labourMode = 'hourly';
 let deliveryEnabled = false;
 let vatEnabled = false;
 let costingView = 'internal';
-let pendingSend = null;
 
 // Line item counters
 let matCount = 0;
@@ -4764,26 +4726,6 @@ function setCostingView(view) {
   document.getElementById('view-btn-quote').classList.toggle('active', view === 'quote');
   document.getElementById('costing-internal-view').style.display = view === 'internal' ? '' : 'none';
   document.getElementById('costing-quote-view').style.display = view === 'quote' ? '' : 'none';
-}
-
-function sendToJobCosting() {
-  if (!pendingSend) return;
-  const { section, desc, qty } = pendingSend;
-  switchTab('costing');
-  addLineItem(section);
-  const id = section === 'materials' ? matCount : consCount;
-  const descEl = document.getElementById(section + '-desc-' + id);
-  const qtyEl = document.getElementById(section + '-qty-' + id);
-  const priceEl = document.getElementById(section + '-price-' + id);
-  if (descEl) descEl.value = desc;
-  if (qtyEl) qtyEl.value = qty;
-  if (priceEl) {
-    priceEl.style.borderColor = 'var(--accent)';
-    priceEl.focus();
-    priceEl.addEventListener('input', () => { priceEl.style.borderColor = ''; }, { once: true });
-  }
-  const row = document.getElementById(section + '-row-' + id);
-  if (row) setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
 }
 
 function buildWeightDesc(L) {
@@ -4902,10 +4844,10 @@ function calcCosting() {
 
   // Build flat line items for quote
   const allLineItems = [
-    ...materials.map(i => `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(i.total)}</td></tr>`),
-    ...consumables.map(i => `<tr><td>${i.desc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(i.total)}</td></tr>`),
-    ...(labourCost > 0 ? [`<tr><td>Labour — ${labourDesc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(labourCost)}</td></tr>`] : []),
-    ...(deliveryEnabled && deliveryCost > 0 ? [`<tr><td>Delivery — ${deliveryDesc}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(deliveryCost)}</td></tr>`] : []),
+    ...materials.map(i => `<tr><td>${esc(i.desc)}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(i.total)}</td></tr>`),
+    ...consumables.map(i => `<tr><td>${esc(i.desc)}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(i.total)}</td></tr>`),
+    ...(labourCost > 0 ? [`<tr><td>Labour — ${esc(labourDesc)}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(labourCost)}</td></tr>`] : []),
+    ...(deliveryEnabled && deliveryCost > 0 ? [`<tr><td>Delivery — ${esc(deliveryDesc)}</td><td style="text-align:right;font-family:'DM Mono',monospace">${formatCurrency(deliveryCost)}</td></tr>`] : []),
   ].join('');
 
   box.innerHTML = `
@@ -4993,16 +4935,16 @@ function calcCosting() {
         <!-- HEADER -->
         <div class="quote-doc-header">
           <div>
-            ${bizName ? `<div class="quote-biz-name" style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:#f5820a">${bizName}</div>` : ''}
-            ${bizAddress ? `<div style="font-size:12px;color:#555;margin-top:2px">${bizAddress.replace(/\n/g,'<br>')}</div>` : ''}
-            ${(bizPhone || bizEmail) ? `<div style="font-size:12px;color:#555;margin-top:2px">${[bizPhone, bizEmail].filter(Boolean).join(' | ')}</div>` : ''}
-            ${bizWebsite ? `<div style="font-size:12px;color:#555;margin-top:2px">${bizWebsite}</div>` : ''}
-            ${vatEnabled && vatNum ? `<div class="quote-biz-vat">VAT Reg: ${vatNum}</div>` : ''}
+            ${bizName ? `<div class="quote-biz-name" style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:#f5820a">${esc(bizName)}</div>` : ''}
+            ${bizAddress ? `<div style="font-size:12px;color:#555;margin-top:2px">${esc(bizAddress).replace(/\n/g,'<br>')}</div>` : ''}
+            ${(bizPhone || bizEmail) ? `<div style="font-size:12px;color:#555;margin-top:2px">${[bizPhone, bizEmail].filter(Boolean).map(esc).join(' | ')}</div>` : ''}
+            ${bizWebsite ? `<div style="font-size:12px;color:#555;margin-top:2px">${esc(bizWebsite)}</div>` : ''}
+            ${vatEnabled && vatNum ? `<div class="quote-biz-vat">VAT Reg: ${esc(vatNum)}</div>` : ''}
           </div>
           <div class="quote-meta" style="text-align:right">
             <strong style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#111;display:block">QUOTATION</strong>
-            ${quoteNum ? `<span style="font-size:12px;color:#444">Quote #: ${quoteNum}</span><br>` : ''}
-            <span style="font-size:12px;color:#444">Date: ${dateFormatted}</span>${validUntilFormatted ? `<br><span style="font-size:12px;color:#444">Valid until: ${validUntilFormatted}</span>` : ''}
+            ${quoteNum ? `<span style="font-size:12px;color:#444">Quote #: ${esc(quoteNum)}</span><br>` : ''}
+            <span style="font-size:12px;color:#444">Date: ${esc(dateFormatted)}</span>${validUntilFormatted ? `<br><span style="font-size:12px;color:#444">Valid until: ${esc(validUntilFormatted)}</span>` : ''}
           </div>
         </div>
 
@@ -5010,12 +4952,12 @@ function calcCosting() {
         ${(client || contactPerson || clientAddress || clientPhone || clientEmail || clientVat || clientReg) ? `
         <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #eee">
           <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Billed to:</div>
-          ${client ? `<div style="font-size:14px;font-weight:700;color:#111">${client}</div>` : ''}
-          ${contactPerson ? `<div style="font-size:12px;color:#444">${contactPerson}</div>` : ''}
-          ${clientAddress ? `<div style="font-size:12px;color:#555">${clientAddress.replace(/\n/g,'<br>')}</div>` : ''}
-          ${(clientPhone || clientEmail) ? `<div style="font-size:12px;color:#555">${[clientPhone, clientEmail].filter(Boolean).join(' | ')}</div>` : ''}
-          ${clientVat ? `<div style="font-size:11px;color:#777">Client VAT: ${clientVat}</div>` : ''}
-          ${clientReg ? `<div style="font-size:11px;color:#777">Company Reg: ${clientReg}</div>` : ''}
+          ${client ? `<div style="font-size:14px;font-weight:700;color:#111">${esc(client)}</div>` : ''}
+          ${contactPerson ? `<div style="font-size:12px;color:#444">${esc(contactPerson)}</div>` : ''}
+          ${clientAddress ? `<div style="font-size:12px;color:#555">${esc(clientAddress).replace(/\n/g,'<br>')}</div>` : ''}
+          ${(clientPhone || clientEmail) ? `<div style="font-size:12px;color:#555">${[clientPhone, clientEmail].filter(Boolean).map(esc).join(' | ')}</div>` : ''}
+          ${clientVat ? `<div style="font-size:11px;color:#777">Client VAT: ${esc(clientVat)}</div>` : ''}
+          ${clientReg ? `<div style="font-size:11px;color:#777">Company Reg: ${esc(clientReg)}</div>` : ''}
         </div>` : ''}
 
         <!-- LINE ITEMS TABLE -->
@@ -5053,7 +4995,7 @@ function calcCosting() {
         <!-- PAYMENT TERMS -->
         ${paymentTermsText ? `
         <div style="margin-top:16px;padding-top:12px;border-top:1px solid #eee;font-size:12px;color:#555">
-          <strong style="color:#333">Payment Terms:</strong> ${paymentTermsText}
+          <strong style="color:#333">Payment Terms:</strong> ${esc(paymentTermsText)}
         </div>` : ''}
 
         <div class="quote-footer">
@@ -5149,83 +5091,47 @@ function initCosting() {
 }
 
 // ════════════════════════════════════════
-// SEND TO JOB COSTING — WEIGHT & CUTLIST
+// SEND TO JOB COSTING
 // ════════════════════════════════════════
-function sendWeightToCosting() {
-  const totalWeight = document.querySelector('#w-results .rh-value')?.textContent;
+function _sendLineToCosting(section, desc, qty, source) {
   openTool('costing');
   setTimeout(() => {
-    const wrap = document.getElementById('materials-wrap');
+    addLineItem(section);
+    const wrap = document.getElementById(section + '-wrap');
     if (!wrap) return;
-    addLineItem('materials');
     const rows = wrap.querySelectorAll('.line-item-row');
     const last = rows[rows.length - 1];
     if (!last) return;
-    const id = last.id.replace('materials-row-', '');
-    const desc = document.getElementById('materials-desc-' + id);
-    const qty = document.getElementById('materials-qty-' + id);
-    if (desc) desc.value = 'Steel/Timber order (' + (totalWeight || '') + 'kg)';
-    if (qty) qty.value = 1;
+    const id = last.id.replace(section + '-row-', '');
+    const descEl = document.getElementById(section + '-desc-' + id);
+    const qtyEl = document.getElementById(section + '-qty-' + id);
+    if (descEl) descEl.value = desc;
+    if (qtyEl) qtyEl.value = qty;
     last.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 300);
-  gtag('event', 'send_to_costing', { source: 'weight' });
+  gtag('event', 'send_to_costing', { source });
+}
+
+function sendWeightToCosting() {
+  const totalWeight = document.querySelector('#w-results .rh-value')?.textContent;
+  _sendLineToCosting('materials', 'Steel/Timber order (' + (totalWeight || '') + 'kg)', 1, 'weight');
 }
 
 function sendCutListToCosting() {
   const lengths = document.querySelector('#c-results .rh-value')?.textContent;
   const pieceLen = document.getElementById('c-piece')?.value;
   const stock = document.getElementById('c-stock')?.value;
-  openTool('costing');
-  setTimeout(() => {
-    const wrap = document.getElementById('materials-wrap');
-    if (!wrap) return;
-    addLineItem('materials');
-    const rows = wrap.querySelectorAll('.line-item-row');
-    const last = rows[rows.length - 1];
-    if (!last) return;
-    const id = last.id.replace('materials-row-', '');
-    const desc = document.getElementById('materials-desc-' + id);
-    const qty = document.getElementById('materials-qty-' + id);
-    if (desc) desc.value = (stock ? (stock / 1000).toFixed(1) + 'm lengths' : 'Steel lengths') +
-      (pieceLen ? ' cut to ' + pieceLen + 'mm' : '');
-    if (qty) qty.value = lengths || 1;
-    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 300);
-  gtag('event', 'send_to_costing', { source: 'cutlist' });
+  const desc = (stock ? (stock / 1000).toFixed(1) + 'm lengths' : 'Steel lengths') +
+    (pieceLen ? ' cut to ' + pieceLen + 'mm' : '');
+  _sendLineToCosting('materials', desc, lengths || 1, 'cutlist');
 }
 
 function sendRodToCosting() {
-  openTool('costing');
-  setTimeout(() => {
-    addLineItem('consumables');
-    const wrap = document.getElementById('consumables-wrap');
-    const rows = wrap.querySelectorAll('.line-item-row');
-    const last = rows[rows.length - 1];
-    const id = last.id.replace('consumables-row-', '');
-    const desc = document.getElementById('consumables-desc-' + id);
-    const qty = document.getElementById('consumables-qty-' + id);
-    if (desc) desc.value = rodDiam + 'mm welding rods';
-    if (qty) qty.value = 1;
-    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 300);
-  gtag('event', 'send_to_costing', { source: 'rods' });
+  _sendLineToCosting('consumables', rodDiam + 'mm welding rods', 1, 'rods');
 }
 
 function sendMIGToCosting() {
-  openTool('costing');
-  setTimeout(() => {
-    addLineItem('consumables');
-    const wrap = document.getElementById('consumables-wrap');
-    const rows = wrap.querySelectorAll('.line-item-row');
-    const last = rows[rows.length - 1];
-    const id = last.id.replace('consumables-row-', '');
-    const desc = document.getElementById('consumables-desc-' + id);
-    const qty = document.getElementById('consumables-qty-' + id);
-    if (desc) desc.value = migWire + 'mm MIG wire';
-    if (qty) qty.value = 1;
-    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 300);
-  gtag('event', 'send_to_costing', { source: 'mig' });
+  _sendLineToCosting('consumables', migWire + 'mm MIG wire', 1, 'mig');
 }
 
 
@@ -5273,7 +5179,7 @@ function startTimer() {
   timerRunning = true;
   timerPaused = false;
   timerStart = Date.now() - timerElapsed;
-  timerInterval = setInterval(updateTimerDisplay, 100);
+  timerInterval = setInterval(updateTimerDisplay, 1000);
   document.getElementById('timer-start-btn').style.display = 'none';
   document.getElementById('timer-pause-btn').style.display = '';
   document.getElementById('timer-stop-btn').style.display = '';
@@ -5294,7 +5200,7 @@ function pauseTimer() {
 
 function resumeTimer() {
   timerStart = Date.now() - timerElapsed;
-  timerInterval = setInterval(updateTimerDisplay, 100);
+  timerInterval = setInterval(updateTimerDisplay, 1000);
   timerRunning = true;
   timerPaused = false;
   const btn = document.getElementById('timer-pause-btn');
@@ -5368,8 +5274,8 @@ function renderTaskList() {
   } else {
     wrap.innerHTML = timerTasks.map(t => `
       <div class="task-row" id="task-row-${t.id}">
-        <span class="task-row-name">${t.name}</span>
-        <span class="task-row-dur">${t.durationFormatted}</span>
+        <span class="task-row-name">${esc(t.name)}</span>
+        <span class="task-row-dur">${esc(t.durationFormatted)}</span>
         <button class="remove-btn" onclick="deleteTask(${t.id})">×</button>
       </div>
     `).join('');
@@ -5674,20 +5580,7 @@ function calcPaint() {
 }
 
 function sendPaintToCosting(qty, desc) {
-  openTool('costing');
-  setTimeout(() => {
-    addLineItem('consumables');
-    const wrap = document.getElementById('consumables-wrap');
-    const rows = wrap.querySelectorAll('.line-item-row');
-    const last = rows[rows.length - 1];
-    const id = last.id.replace('consumables-row-', '');
-    const descEl = document.getElementById('consumables-desc-' + id);
-    const qtyEl = document.getElementById('consumables-qty-' + id);
-    if (descEl) descEl.value = desc;
-    if (qtyEl) qtyEl.value = 1;
-    last.scrollIntoView({behavior:'smooth',block:'center'});
-  }, 300);
-  gtag('event','send_to_costing',{source:'paint'});
+  _sendLineToCosting('consumables', desc, qty, 'paint');
 }
 
 function copyPaintResult(qty, unit, area) {
@@ -5741,7 +5634,7 @@ function initTimer() {
       if (nameEl && data.name) nameEl.value = data.name;
       timerStart = Date.now() - timerElapsed;
       timerRunning = true;
-      timerInterval = setInterval(updateTimerDisplay, 100);
+      timerInterval = setInterval(updateTimerDisplay, 1000);
       document.getElementById('timer-start-btn').style.display = 'none';
       document.getElementById('timer-pause-btn').style.display = '';
       document.getElementById('timer-stop-btn').style.display = '';
@@ -6117,25 +6010,6 @@ function getMigWeldLengthMm() {
   return joints * WELD_SIZE_MM[migWeldSize];
 }
 
-function getMigPassCount(t, joint) {
-  if (joint === 'lap') {
-    if (t <= 3) return 1;
-    if (t <= 6) return 2;
-    return 3;
-  }
-  if (joint === 'butt' || joint === 'corner') {
-    if (t <= 3) return 1;
-    if (t <= 6) return 2;
-    if (t <= 10) return 3;
-    return Math.ceil(t / 3.5);
-  }
-  // fillet
-  if (t <= 4) return 1;
-  if (t <= 8) return 2;
-  if (t <= 12) return 3;
-  return Math.ceil(t / 4);
-}
-
 function calcMIG() {
   const box = document.getElementById('mig-results');
   box.className = 'results show';
@@ -6153,7 +6027,7 @@ function calcMIG() {
     return;
   }
 
-  const passes = getMigPassCount(t, migJoint);
+  const passes = getPassCount(t, migJoint);
   const WIRE_EFFICIENCY = 0.88;
   const wastage = WASTAGE[migSkill];
   const weldLenCm = weldLen / 10;
@@ -6182,8 +6056,6 @@ function calcMIG() {
   const skillLabels = { beginner:'Beginner (35% wastage added)', intermediate:'Intermediate (20% wastage added)', experienced:'Experienced (10% wastage added)' };
   const wireLabel = migWire + 'mm wire';
   const gasLabel = migGas === 'c25' ? 'C25' : migGas === 'co2' ? 'Pure CO₂' : 'Pure Argon';
-
-  pendingSend = { section: 'consumables', desc: `${migWire}mm MIG wire — ${gasLabel}`, qty: reel5 || 1 };
 
   box.innerHTML = `
     <div class="result-hero">
@@ -6789,7 +6661,7 @@ document.getElementById('tab-sheet').addEventListener('keydown', e => { if (e.ke
 document.getElementById('tab-bend').addEventListener('keydown', e => { if (e.key === 'Enter') calcBend(); });
 
 // Init angle width presets
-renderChips('a-width-presets', ANGLE_WIDTH_PRESETS, 'a-width');
+renderChips('a-width-presets', BAR_PRESETS, 'a-width');
 
 // Init weight calculator dimensions
 renderDimFields('flatbar');
