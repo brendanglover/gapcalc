@@ -75,25 +75,54 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:          #0f0f0d;
-  --surface:     #1a1a16;
-  --surface2:    #232320;
-  --surface3:    #2a2a25;
-  --border:      #2e2e2a;
-  --border2:     #3a3a35;
-  --accent:      #f5820a;
-  --accent-dim:  rgba(245,130,10,0.12);
-  --green:       #52c47a;
-  --green-dim:   rgba(82,196,122,0.12);
-  --blue:        #5aabf5;
-  --blue-dim:    rgba(90,171,245,0.12);
-  --red:         #e05252;
-  --red-dim:     rgba(224,82,82,0.12);
-  --text:        #e8e4dc;
-  --text2:       #666;
-  --text3:       #444;
-  --r:           10px;
+  --bg:            #0f0f0d;
+  --surface:       #1a1a16;
+  --surface2:      #232320;
+  --surface3:      #2a2a25;
+  --border:        #2e2e2a;
+  --border2:       #3a3a35;
+  --border-subtle: rgba(255,255,255,0.06);
+  --accent:        #f5820a;
+  --accent-dim:    rgba(245,130,10,0.12);
+  --green:         #52c47a;
+  --green-dim:     rgba(82,196,122,0.12);
+  --blue:          #5aabf5;
+  --blue-dim:      rgba(90,171,245,0.12);
+  --red:           #e05252;
+  --red-dim:       rgba(224,82,82,0.12);
+  --text:          #e8e4dc;
+  --text2:         #666;
+  --text3:         #444;
+  --r:             10px;
 }
+
+[data-theme="light"] {
+  --bg:            #f0ede5;
+  --surface:       #ffffff;
+  --surface2:      #f5f2ea;
+  --surface3:      #ece8de;
+  --border:        #ddd9ce;
+  --border2:       #ccc8bc;
+  --border-subtle: rgba(0,0,0,0.07);
+  --accent:        #f5820a;
+  --accent-dim:    rgba(245,130,10,0.10);
+  --green:         #1c8a3e;
+  --green-dim:     rgba(28,138,62,0.10);
+  --blue:          #1a70c8;
+  --blue-dim:      rgba(26,112,200,0.10);
+  --red:           #c73030;
+  --red-dim:       rgba(199,48,48,0.10);
+  --text:          #1a1916;
+  --text2:         #5c5954;
+  --text3:         #9a968f;
+}
+
+/* Light mode overrides for hardcoded colours */
+[data-theme="light"] .note { color: #1a5fa0; }
+[data-theme="light"] .note strong { color: var(--blue); }
+[data-theme="light"] .marking-tip { color: #b35800; }
+[data-theme="light"] .rod-rec-tip { color: #1a5fa0; }
+[data-theme="light"] .gas-tip { color: #1a5fa0; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 60px; }
@@ -101,7 +130,7 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 /* HEADER */
 header {
   background: var(--surface);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--border-subtle);
   padding: 0 28px;
   height: 52px;
   display: flex; align-items: center; justify-content: space-between;
@@ -132,6 +161,13 @@ header {
   transition: color 0.15s;
 }
 .nav-links a:hover { color: var(--text); }
+.theme-toggle-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text2); font-size: 15px; line-height: 1;
+  padding: 4px 0; transition: color 0.15s;
+  display: flex; align-items: center;
+}
+.theme-toggle-btn:hover { color: var(--text); }
 
 /* NAV TABS */
 .nav {
@@ -336,7 +372,7 @@ header {
 
 /* FOOTER */
 footer {
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--border-subtle);
   padding: 20px 28px;
   max-width: 1140px; margin: 0 auto;
   display: flex; justify-content: space-between; align-items: center;
@@ -613,8 +649,8 @@ body::before {
   grid-template-columns: repeat(5, 1fr);
   gap: 1px;
   background: var(--bg);
-  border-top: 1px solid rgba(255,255,255,0.06);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
 .feature-card {
   background: var(--surface);
@@ -1126,18 +1162,29 @@ body::before {
 }
 
 </style>
+<script>
+/* Apply saved theme before first paint to prevent flash */
+(function(){
+  var saved = localStorage.getItem('gc_theme');
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === 'light' || (!saved && !prefersDark)) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
 </head>
 <body>
 
 <header onclick="goHome()" style="cursor:pointer;" title="Back to home">
   <div class="nav-left">
     <div class="logo-wordmark">Gap<span>Calc</span></div>
-    <div class="nav-badge">v2.8.3</div>
+    <div class="nav-badge">v2.9.0</div>
   </div>
   <ul class="nav-links" onclick="event.stopPropagation()">
     <li><a href="/changelog.html">Changelog</a></li>
     <li><a href="https://gloverbrendan.blogspot.com/" target="_blank" rel="noopener">Blog</a></li>
     <li><a href="https://www.facebook.com/groups/theforgebuilds" target="_blank" rel="noopener">Community</a></li>
+    <li><button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode"><span id="theme-icon">☀</span></button></li>
   </ul>
 </header>
 
@@ -3299,6 +3346,13 @@ body::before {
 
 <script>
 // ════════════════════════════════════════
+// THEME HELPER — reads live CSS variables so SVG diagrams adapt to light/dark
+// ════════════════════════════════════════
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+// ════════════════════════════════════════
 // PRESETS
 // ════════════════════════════════════════
 const BAR_PRESETS = [20,25,30,38,40,50,65,75,100];
@@ -3355,7 +3409,7 @@ function buildDiagram(n, w, g, L) {
   }
 
   return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
-    <rect width="${W}" height="${H}" fill="#252525" rx="6"/>
+    <rect width="${W}" height="${H}" fill="${cssVar('--surface2')}" rx="6"/>
     ${rects}${anno}
   </svg>`;
 }
@@ -4090,10 +4144,10 @@ function buildAngleDiagram(type, _, matW, L, deg, offset) {
   let svg = '';
 
   // Background
-  svg += `<rect width="${svgW}" height="${totalH}" fill="#1a1a1a" rx="6"/>`;
+  svg += `<rect width="${svgW}" height="${totalH}" fill="${cssVar('--surface')}" rx="6"/>`;
 
   // Piece fill
-  svg += `<polygon points="${points}" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>`;
+  svg += `<polygon points="${points}" fill="${cssVar('--surface2')}" stroke="${cssVar('--border2')}" stroke-width="1.5"/>`;
 
   // Cut line(s) — orange
   if (type === 'single') {
@@ -5691,7 +5745,7 @@ function buildBoltDiagram(n, d, g_ctc, g_ete, mode) {
   const labelY = 100;
 
   let circles = holeCentres.map(cx =>
-    `<circle cx="${cx.toFixed(1)}" cy="${cy}" r="${holeR}" fill="#1c1c1c" stroke="#f5820a" stroke-width="2"/>`
+    `<circle cx="${cx.toFixed(1)}" cy="${cy}" r="${holeR}" fill="${cssVar('--surface')}" stroke="#f5820a" stroke-width="2"/>`
   ).join('');
 
   // Dimension line between hole 0 and hole 1
@@ -5708,7 +5762,7 @@ function buildBoltDiagram(n, d, g_ctc, g_ete, mode) {
   `;
 
   return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
-    <rect width="${W}" height="${H}" fill="#252525" rx="6"/>
+    <rect width="${W}" height="${H}" fill="${cssVar('--surface2')}" rx="6"/>
     ${circles}${anno}
   </svg>`;
 }
@@ -6363,7 +6417,7 @@ function calcSettings() {
       <div class="note" style="margin-bottom:0">
         <strong>Torch angle:</strong> Hold the torch at 10–15° from vertical, pushing the weld pool slightly in the direction of travel. For vertical welds, point slightly upward and use a small side-to-side weave.
       </div>
-      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:#ffb066;line-height:1.5">
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:var(--accent);line-height:1.5">
         ${row.note}
       </div>
     </div>
@@ -6677,6 +6731,26 @@ initDrillGrids();
 initTimer();
 // Init paint
 initPaint();
+
+// ─── THEME TOGGLE ────────────────────────────────
+function toggleTheme() {
+  var html = document.documentElement;
+  var isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('gc_theme', 'dark');
+    document.getElementById('theme-icon').textContent = '☀';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('gc_theme', 'light');
+    document.getElementById('theme-icon').textContent = '☾';
+  }
+}
+// Sync icon with current theme on load
+(function(){
+  var icon = document.getElementById('theme-icon');
+  if (icon) icon.textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '☾' : '☀';
+})();
 </script>
 </body>
 </html>
