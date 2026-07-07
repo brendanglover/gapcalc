@@ -1178,7 +1178,7 @@ body::before {
 <header onclick="goHome()" style="cursor:pointer;" title="Back to home">
   <div class="nav-left">
     <div class="logo-wordmark">Gap<span>Calc</span></div>
-    <div class="nav-badge">v2.9.1</div>
+    <div class="nav-badge">v2.10.0</div>
   </div>
   <ul class="nav-links" onclick="event.stopPropagation()">
     <li><a href="/changelog.html">Changelog</a></li>
@@ -2029,7 +2029,7 @@ body::before {
       <div class="card-label" style="margin-bottom:0">YOUR BUSINESS DETAILS</div>
       <span id="biz-toggle-icon" style="color:var(--text3);font-size:20px;line-height:1">+</span>
     </div>
-    <div class="note" style="margin-top:8px;margin-bottom:0;font-size:11px">Tip: Keep your business details handy to paste in quickly — the app won't save these between sessions.</div>
+    <div class="note" style="margin-top:8px;margin-bottom:0;font-size:11px">Tip: These business details are remembered on this device between sessions, so you only need to enter them once. Client details below are not saved.</div>
     <div id="biz-details-body" style="display:none;margin-top:12px">
       <div class="input-group">
         <div class="input-meta"><span class="input-meta-label">Quote #</span></div>
@@ -3341,7 +3341,7 @@ body::before {
 </div>
 
 <footer>
-  <span>GapCalc — free forever. No login. No data stored.</span>
+  <span>GapCalc — free forever. No login. Nothing leaves your device.</span>
   <span>Built by <a href="https://x.com/brendanglover_x" target="_blank" rel="noopener">Brendan Glover</a></span>
 </footer>
 
@@ -3731,6 +3731,7 @@ const TIMBER_PRESETS = [[38,38],[69,69],[38,76],[38,114],[38,152],[69,114],[69,1
 
 function setWMaterial(mat) {
   wMaterial = mat;
+  localStorage.setItem('gc_saved_weight_material', mat);
   const isSteel = mat === 'steel';
   const sb = document.getElementById('wmat-steel'), wb = document.getElementById('wmat-wood');
   sb.style.cssText = isSteel ? 'flex:1;padding:12px;border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;' : 'flex:1;padding:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text2);border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;';
@@ -4652,6 +4653,7 @@ const WELD_SIZE_MM = { small: 25, medium: 50, large: 100, full: 150 };
 
 function setWeldMode(mode) {
   weldMode = mode;
+  localStorage.setItem('gc_saved_rods_mode', mode);
   document.getElementById('weld-simple-btn').classList.toggle('active', mode === 'simple');
   document.getElementById('weld-advanced-btn').classList.toggle('active', mode === 'advanced');
   document.getElementById('weld-simple-mode').style.display = mode === 'simple' ? '' : 'none';
@@ -4713,6 +4715,7 @@ function toggleDelivery() {
 
 function setLabourMode(mode) {
   labourMode = mode;
+  localStorage.setItem('gc_saved_costing_labourmode', mode);
   document.getElementById('labour-hourly-btn').classList.toggle('active', mode === 'hourly');
   document.getElementById('labour-flat-btn').classList.toggle('active', mode === 'flat');
   document.getElementById('labour-hourly-mode').style.display = mode === 'hourly' ? '' : 'none';
@@ -5446,6 +5449,7 @@ function setPaintType(type) {
 
 function setSprayCanMode(mode) {
   sprayCanMode = mode;
+  localStorage.setItem('gc_saved_paint_spraymode', mode);
   document.getElementById('spray-standard-btn').classList.toggle('active', mode === 'standard');
   document.getElementById('spray-custom-btn').classList.toggle('active', mode === 'custom');
   document.getElementById('spray-custom-input').style.display = mode === 'custom' ? '' : 'none';
@@ -5453,6 +5457,7 @@ function setSprayCanMode(mode) {
 
 function setPaintMode(mode) {
   paintMode = mode;
+  localStorage.setItem('gc_saved_paint_mode', mode);
   document.getElementById('mode-simple-btn').classList.toggle('active', mode === 'simple');
   document.getElementById('mode-build-btn').classList.toggle('active', mode === 'build');
   document.getElementById('paint-simple-mode').style.display = mode === 'simple' ? '' : 'none';
@@ -5720,6 +5725,7 @@ const BOLT_MODE_DESC = {
 
 function setBoltMode(mode) {
   boltMode = mode;
+  localStorage.setItem('gc_saved_bolts_mode', mode);
   document.getElementById('bmode-ctc').classList.toggle('active', mode === 'ctc');
   document.getElementById('bmode-ete').classList.toggle('active', mode === 'ete');
   document.getElementById('bmode-desc').textContent = BOLT_MODE_DESC[mode];
@@ -6047,6 +6053,7 @@ function setMigJoint(joint) {
 
 function setMigWeldMode(mode) {
   migWeldMode = mode;
+  localStorage.setItem('gc_saved_mig_mode', mode);
   document.getElementById('mweld-simple-btn').classList.toggle('active', mode === 'simple');
   document.getElementById('mweld-advanced-btn').classList.toggle('active', mode === 'advanced');
   document.getElementById('mweld-simple-mode').style.display = mode === 'simple' ? '' : 'none';
@@ -6732,6 +6739,65 @@ initDrillGrids();
 initTimer();
 // Init paint
 initPaint();
+
+// ─── PERSISTENT INPUTS ───────────────────────────
+// Remembers the last values entered per tool so returning users don't retype everything.
+const PERSIST_FIELDS = {
+  gaps:     ['g-L','g-w','g-gap','g-barlen','g-stock'],
+  cutlist:  ['c-stock','c-piece','c-qty','c-kerf'],
+  weight:   ['w-steel-material','w-species','w-custom-density','w-length','w-qty'],
+  angle:    ['a-width','a-length','a-angle'],
+  rods:     ['rod-thick','rod-joints','rod-weldlen'],
+  bolts:    ['b-L','b-d','b-g'],
+  mig:      ['mig-thick','mig-joints','mig-weldlen'],
+  settings: ['settings-material','settings-thick','ctrl-voltage','ctrl-wfs','ctrl-inductance'],
+  paint:    ['paint-can-ml','paint-area-direct','paint-shape','paint-length','paint-width','paint-box-l','paint-box-w','paint-box-h','paint-inside','paint-tube-d','paint-tube-l','paint-angle-w','paint-angle-h','paint-angle-l','paint-perim','paint-custom-l','paint-qty','paint-coats'],
+  sheet:    ['sheet-thickness','sheet-radius','sheet-angle','sheet-face-a','sheet-face-b'],
+  bend:     ['bend-od','bend-wall','bend-radius','bend-angle','bend-leg-a','bend-leg-b'],
+  costing:  ['currency-select','q-bizname','q-biz-address','q-biz-phone','q-biz-email','q-biz-website','q-vat','q-payment-terms','q-payment-custom','q-margin','vat-toggle','q-vat-rate']
+};
+const FIELD_TAB = {};
+Object.entries(PERSIST_FIELDS).forEach(([tab, ids]) => ids.forEach(id => FIELD_TAB[id] = tab));
+
+function savePersistedField(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const key = 'gc_saved_' + FIELD_TAB[id];
+  const store = JSON.parse(localStorage.getItem(key) || '{}');
+  store[id] = el.type === 'checkbox' ? el.checked : el.value;
+  localStorage.setItem(key, JSON.stringify(store));
+}
+// Delegated listeners so dynamically-rendered fields (e.g. weight profile dims) are covered too
+document.addEventListener('input', e => { if (e.target.id in FIELD_TAB) savePersistedField(e.target.id); });
+document.addEventListener('change', e => { if (e.target.id in FIELD_TAB) savePersistedField(e.target.id); });
+
+function restorePersistedFields() {
+  Object.keys(PERSIST_FIELDS).forEach(tab => {
+    const store = JSON.parse(localStorage.getItem('gc_saved_' + tab) || '{}');
+    Object.entries(store).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === 'checkbox') el.checked = val; else el.value = val;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+  // Button-driven modes that aren't native form fields
+  const savedWMat = localStorage.getItem('gc_saved_weight_material');
+  if (savedWMat) setWMaterial(savedWMat);
+  const savedWeldMode = localStorage.getItem('gc_saved_rods_mode');
+  if (savedWeldMode) setWeldMode(savedWeldMode);
+  const savedLabourMode = localStorage.getItem('gc_saved_costing_labourmode');
+  if (savedLabourMode) setLabourMode(savedLabourMode);
+  const savedBoltMode = localStorage.getItem('gc_saved_bolts_mode');
+  if (savedBoltMode) setBoltMode(savedBoltMode);
+  const savedMigMode = localStorage.getItem('gc_saved_mig_mode');
+  if (savedMigMode) setMigWeldMode(savedMigMode);
+  const savedSprayMode = localStorage.getItem('gc_saved_paint_spraymode');
+  if (savedSprayMode) setSprayCanMode(savedSprayMode);
+  const savedPaintMode = localStorage.getItem('gc_saved_paint_mode');
+  if (savedPaintMode) setPaintMode(savedPaintMode);
+}
+restorePersistedFields();
 
 // ─── THEME TOGGLE ────────────────────────────────
 function toggleTheme() {
