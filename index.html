@@ -169,6 +169,14 @@ header {
 }
 .theme-toggle-btn:hover { color: var(--text); }
 
+.unit-toggle-btn {
+  background: none; border: 1px solid var(--border); cursor: pointer;
+  color: var(--text2); font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 700;
+  padding: 4px 8px; border-radius: 6px; transition: color 0.15s, border-color 0.15s;
+  letter-spacing: 0.5px;
+}
+.unit-toggle-btn:hover { color: var(--accent); border-color: var(--accent); }
+
 /* NAV TABS */
 .nav {
   display: flex; gap: 0;
@@ -1178,13 +1186,14 @@ body::before {
 <header onclick="goHome()" style="cursor:pointer;" title="Back to home">
   <div class="nav-left">
     <div class="logo-wordmark">Gap<span>Calc</span></div>
-    <div class="nav-badge">v2.10.0</div>
+    <div class="nav-badge">v2.11.0</div>
   </div>
   <ul class="nav-links" onclick="event.stopPropagation()">
     <li><a href="/changelog.html">Changelog</a></li>
     <li><a href="https://gloverbrendan.blogspot.com/" target="_blank" rel="noopener">Blog</a></li>
     <li><a href="https://www.facebook.com/groups/theforgebuilds" target="_blank" rel="noopener">Community</a></li>
     <li><a href="https://docs.google.com/forms/d/13KtjihBsuhzGHCp8iPgzyfTiy97F9FvNgBoXLe_BQ6Q/viewform" target="_blank" rel="noopener">Suggest a Feature</a></li>
+    <li><button class="unit-toggle-btn" id="unit-toggle" onclick="toggleUnitSystem()" title="Toggle metric/imperial units">MM</button></li>
     <li><button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode"><span id="theme-icon">☀</span></button></li>
   </ul>
 </header>
@@ -1359,8 +1368,8 @@ body::before {
         <span class="input-meta-var">L</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="g-L" inputmode="decimal" placeholder="e.g. 901">
-        <span class="input-unit">mm</span>
+        <input type="text" id="g-L" inputmode="decimal" placeholder="e.g. 901" data-example-mm="901">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
     </div>
   </div>
@@ -1374,8 +1383,8 @@ body::before {
         <span class="input-meta-var">w</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="g-w" inputmode="decimal" placeholder="e.g. 40">
-        <span class="input-unit">mm</span>
+        <input type="text" id="g-w" inputmode="decimal" placeholder="e.g. 40" data-example-mm="40">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
       <div class="preset-row" id="g-w-presets"></div>
     </div>
@@ -1390,8 +1399,8 @@ body::before {
         <span class="input-meta-var">g</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="g-gap" inputmode="decimal" placeholder="e.g. 13">
-        <span class="input-unit">mm</span>
+        <input type="text" id="g-gap" inputmode="decimal" placeholder="e.g. 13" data-example-mm="13">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
       <div class="preset-row" id="g-gap-presets"></div>
     </div>
@@ -1406,8 +1415,8 @@ body::before {
         <span class="input-meta-var">b</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="g-barlen" inputmode="decimal" placeholder="e.g. 752">
-        <span class="input-unit">mm</span>
+        <input type="text" id="g-barlen" inputmode="decimal" placeholder="e.g. 752" data-example-mm="752">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
     </div>
     <div class="input-group">
@@ -1416,8 +1425,8 @@ body::before {
         <span class="input-meta-var">S</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="g-stock" inputmode="decimal" placeholder="6000">
-        <span class="input-unit">mm</span>
+        <input type="text" id="g-stock" inputmode="decimal" placeholder="e.g. 6000" data-example-mm="6000">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
     </div>
   </div>
@@ -1448,15 +1457,10 @@ body::before {
         <span class="input-meta-var">S</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="c-stock" inputmode="decimal" placeholder="e.g. 6000">
-        <span class="input-unit">mm</span>
+        <input type="text" id="c-stock" inputmode="decimal" placeholder="e.g. 6000" data-example-mm="6000">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('c-stock',6000)">6m length</button>
-        <button class="chip" onclick="setVal('c-stock',3000)">3m length</button>
-        <button class="chip" onclick="setVal('c-stock',2000)">2m length</button>
-        <button class="chip" onclick="setVal('c-stock',1200)">1.2m length</button>
-      </div>
+      <div class="preset-row" id="c-stock-presets"></div>
     </div>
   </div>
 
@@ -1469,8 +1473,8 @@ body::before {
         <span class="input-meta-var">p</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="c-piece" inputmode="decimal" placeholder="e.g. 752">
-        <span class="input-unit">mm</span>
+        <input type="text" id="c-piece" inputmode="decimal" placeholder="e.g. 752" data-example-mm="752">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
     </div>
   </div>
@@ -1499,15 +1503,10 @@ body::before {
         <span class="input-meta-var">k</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="c-kerf" inputmode="decimal" placeholder="1.5" value="1.5">
-        <span class="input-unit">mm</span>
+        <input type="text" id="c-kerf" inputmode="decimal" placeholder="1.5" value="1.5" data-example-mm="1.5">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('c-kerf',1)">Thin disc 1mm</button>
-        <button class="chip" onclick="setVal('c-kerf',1.5)">Grinder 1.5mm</button>
-        <button class="chip" onclick="setVal('c-kerf',2)">Standard 2mm</button>
-        <button class="chip" onclick="setVal('c-kerf',3)">Hacksaw 3mm</button>
-      </div>
+      <div class="preset-row" id="c-kerf-presets"></div>
     </div>
   </div>
 
@@ -1607,15 +1606,10 @@ body::before {
           <span class="input-meta-var">L</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="w-length" inputmode="decimal" placeholder="e.g. 752">
-          <span class="input-unit">mm</span>
+          <input type="text" id="w-length" inputmode="decimal" placeholder="e.g. 752" data-example-mm="752">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
-        <div class="preset-row">
-          <button class="chip" onclick="setVal('w-length',6000)">6m</button>
-          <button class="chip" onclick="setVal('w-length',3000)">3m</button>
-          <button class="chip" onclick="setVal('w-length',2000)">2m</button>
-          <button class="chip" onclick="setVal('w-length',1200)">1.2m</button>
-        </div>
+        <div class="preset-row" id="w-length-presets"></div>
       </div>
     </div>
     <div class="input-group">
@@ -1688,8 +1682,8 @@ body::before {
         <span class="input-meta-var">w</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="a-width" inputmode="decimal" placeholder="e.g. 40">
-        <span class="input-unit">mm</span>
+        <input type="text" id="a-width" inputmode="decimal" placeholder="e.g. 40" data-example-mm="40">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
       <div class="preset-row" id="a-width-presets"></div>
     </div>
@@ -1704,8 +1698,8 @@ body::before {
         <span class="input-meta-var">L</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="a-length" inputmode="decimal" placeholder="e.g. 500">
-        <span class="input-unit">mm</span>
+        <input type="text" id="a-length" inputmode="decimal" placeholder="e.g. 500" data-example-mm="500">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
     </div>
   </div>
@@ -1881,19 +1875,10 @@ body::before {
         <span class="input-meta-var">t</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="rod-thick" inputmode="decimal" placeholder="e.g. 3" oninput="suggestRodDiam()">
-        <span class="input-unit">mm</span>
+        <input type="text" id="rod-thick" inputmode="decimal" placeholder="e.g. 3" data-example-mm="3" oninput="suggestRodDiam()">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('rod-thick',1.5);suggestRodDiam()">1.5mm</button>
-        <button class="chip" onclick="setVal('rod-thick',2);suggestRodDiam()">2mm</button>
-        <button class="chip" onclick="setVal('rod-thick',3);suggestRodDiam()">3mm</button>
-        <button class="chip" onclick="setVal('rod-thick',4);suggestRodDiam()">4mm</button>
-        <button class="chip" onclick="setVal('rod-thick',5);suggestRodDiam()">5mm</button>
-        <button class="chip" onclick="setVal('rod-thick',6);suggestRodDiam()">6mm</button>
-        <button class="chip" onclick="setVal('rod-thick',8);suggestRodDiam()">8mm</button>
-        <button class="chip" onclick="setVal('rod-thick',10);suggestRodDiam()">10mm</button>
-      </div>
+      <div class="preset-row" id="rod-thick-presets"></div>
     </div>
   </div>
 
@@ -1979,15 +1964,10 @@ body::before {
           <span class="input-meta-var">W</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="rod-weldlen" inputmode="decimal" placeholder="e.g. 2400">
-          <span class="input-unit">mm</span>
+          <input type="text" id="rod-weldlen" inputmode="decimal" placeholder="e.g. 2400" data-example-mm="2400">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
-        <div class="preset-row">
-          <button class="chip" onclick="setVal('rod-weldlen',500)">500mm</button>
-          <button class="chip" onclick="setVal('rod-weldlen',1000)">1m</button>
-          <button class="chip" onclick="setVal('rod-weldlen',2000)">2m</button>
-          <button class="chip" onclick="setVal('rod-weldlen',5000)">5m</button>
-        </div>
+        <div class="preset-row" id="rod-weldlen-presets"></div>
       </div>
     </div>
   </div>
@@ -2345,8 +2325,8 @@ body::before {
         <span class="input-meta-var">L</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="b-L" inputmode="decimal" placeholder="e.g. 900">
-        <span class="input-unit">mm</span>
+        <input type="text" id="b-L" inputmode="decimal" placeholder="e.g. 900" data-example-mm="900">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
     </div>
   </div>
@@ -2360,18 +2340,10 @@ body::before {
         <span class="input-meta-var">d</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="b-d" inputmode="decimal" placeholder="e.g. 10">
-        <span class="input-unit">mm</span>
+        <input type="text" id="b-d" inputmode="decimal" placeholder="e.g. 10" data-example-mm="10">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('b-d',5)">M5</button>
-        <button class="chip" onclick="setVal('b-d',6)">M6</button>
-        <button class="chip" onclick="setVal('b-d',8)">M8</button>
-        <button class="chip" onclick="setVal('b-d',10)">M10</button>
-        <button class="chip" onclick="setVal('b-d',12)">M12</button>
-        <button class="chip" onclick="setVal('b-d',16)">M16</button>
-        <button class="chip" onclick="setVal('b-d',20)">M20</button>
-      </div>
+      <div class="preset-row" id="b-d-presets"></div>
     </div>
   </div>
 
@@ -2384,8 +2356,8 @@ body::before {
         <span class="input-meta-var">g</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="b-g" inputmode="decimal" placeholder="e.g. 150">
-        <span class="input-unit">mm</span>
+        <input type="text" id="b-g" inputmode="decimal" placeholder="e.g. 150" data-example-mm="150">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
     </div>
     <div style="margin-top:12px">
@@ -2541,19 +2513,10 @@ body::before {
         <span class="input-meta-var">t</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="mig-thick" inputmode="decimal" placeholder="e.g. 3" oninput="suggestMigWire()">
-        <span class="input-unit">mm</span>
+        <input type="text" id="mig-thick" inputmode="decimal" placeholder="e.g. 3" data-example-mm="3" oninput="suggestMigWire()">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('mig-thick',1.5);suggestMigWire()">1.5mm</button>
-        <button class="chip" onclick="setVal('mig-thick',2);suggestMigWire()">2mm</button>
-        <button class="chip" onclick="setVal('mig-thick',3);suggestMigWire()">3mm</button>
-        <button class="chip" onclick="setVal('mig-thick',4);suggestMigWire()">4mm</button>
-        <button class="chip" onclick="setVal('mig-thick',5);suggestMigWire()">5mm</button>
-        <button class="chip" onclick="setVal('mig-thick',6);suggestMigWire()">6mm</button>
-        <button class="chip" onclick="setVal('mig-thick',8);suggestMigWire()">8mm</button>
-        <button class="chip" onclick="setVal('mig-thick',10);suggestMigWire()">10mm</button>
-      </div>
+      <div class="preset-row" id="mig-thick-presets"></div>
     </div>
   </div>
 
@@ -2662,15 +2625,10 @@ body::before {
           <span class="input-meta-var">W</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="mig-weldlen" inputmode="decimal" placeholder="e.g. 2400">
-          <span class="input-unit">mm</span>
+          <input type="text" id="mig-weldlen" inputmode="decimal" placeholder="e.g. 2400" data-example-mm="2400">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
-        <div class="preset-row">
-          <button class="chip" onclick="setVal('mig-weldlen',500)">500mm</button>
-          <button class="chip" onclick="setVal('mig-weldlen',1000)">1m</button>
-          <button class="chip" onclick="setVal('mig-weldlen',2000)">2m</button>
-          <button class="chip" onclick="setVal('mig-weldlen',5000)">5m</button>
-        </div>
+        <div class="preset-row" id="mig-weldlen-presets"></div>
       </div>
     </div>
   </div>
@@ -2760,20 +2718,10 @@ body::before {
         <span class="input-meta-var">t</span>
       </div>
       <div class="input-wrap">
-        <input type="number" id="settings-thick" inputmode="decimal" placeholder="e.g. 3" oninput="suggestSettingsWire()">
-        <span class="input-unit">mm</span>
+        <input type="text" id="settings-thick" inputmode="decimal" placeholder="e.g. 3" data-example-mm="3" oninput="suggestSettingsWire()">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('settings-thick',0.8);suggestSettingsWire()">0.8mm</button>
-        <button class="chip" onclick="setVal('settings-thick',1.0);suggestSettingsWire()">1.0mm</button>
-        <button class="chip" onclick="setVal('settings-thick',1.5);suggestSettingsWire()">1.5mm</button>
-        <button class="chip" onclick="setVal('settings-thick',2.0);suggestSettingsWire()">2.0mm</button>
-        <button class="chip" onclick="setVal('settings-thick',3.0);suggestSettingsWire()">3.0mm</button>
-        <button class="chip" onclick="setVal('settings-thick',4.0);suggestSettingsWire()">4.0mm</button>
-        <button class="chip" onclick="setVal('settings-thick',6.0);suggestSettingsWire()">6.0mm</button>
-        <button class="chip" onclick="setVal('settings-thick',8.0);suggestSettingsWire()">8.0mm</button>
-        <button class="chip" onclick="setVal('settings-thick',10.0);suggestSettingsWire()">10.0mm</button>
-      </div>
+      <div class="preset-row" id="settings-thick-presets"></div>
     </div>
   </div>
 
@@ -2922,8 +2870,8 @@ body::before {
       <div class="input-group">
         <div class="input-meta"><span class="input-meta-label">Can size</span></div>
         <div class="input-wrap">
-          <input type="number" id="paint-can-ml" min="1" inputmode="decimal" placeholder="e.g. 400">
-          <span class="input-unit">ml</span>
+          <input type="number" id="paint-can-ml" min="1" inputmode="decimal" placeholder="e.g. 400" data-example-ml="400">
+          <span class="input-unit" data-unit="small-volume">ml</span>
         </div>
       </div>
     </div>
@@ -2942,8 +2890,8 @@ body::before {
       <div class="input-group">
         <div class="input-meta"><span class="input-meta-label">Total surface area</span></div>
         <div class="input-wrap">
-          <input type="number" id="paint-area-direct" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 2.5">
-          <span class="input-unit">m²</span>
+          <input type="number" id="paint-area-direct" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 2.5" data-example-m2="2.5">
+          <span class="input-unit" data-unit="area">m²</span>
         </div>
       </div>
     </div>
@@ -2966,15 +2914,15 @@ body::before {
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Length</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-length" min="0" inputmode="decimal" placeholder="e.g. 1200">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-length" inputmode="decimal" placeholder="e.g. 1200" data-example-mm="1200">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Width</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-width" min="0" inputmode="decimal" placeholder="e.g. 600">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-width" inputmode="decimal" placeholder="e.g. 600" data-example-mm="600">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div class="input-group">
@@ -2991,22 +2939,22 @@ body::before {
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Length</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-box-l" min="0" inputmode="decimal" placeholder="e.g. 1200">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-box-l" inputmode="decimal" placeholder="e.g. 1200" data-example-mm="1200">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Width</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-box-w" min="0" inputmode="decimal" placeholder="e.g. 800">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-box-w" inputmode="decimal" placeholder="e.g. 800" data-example-mm="800">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Height</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-box-h" min="0" inputmode="decimal" placeholder="e.g. 600">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-box-h" inputmode="decimal" placeholder="e.g. 600" data-example-mm="600">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
@@ -3023,15 +2971,15 @@ body::before {
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Outer diameter</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-tube-d" min="0" inputmode="decimal" placeholder="e.g. 50">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-tube-d" inputmode="decimal" placeholder="e.g. 50" data-example-mm="50">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Length</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-tube-l" min="0" inputmode="decimal" placeholder="e.g. 3000">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-tube-l" inputmode="decimal" placeholder="e.g. 3000" data-example-mm="3000">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
       </div>
@@ -3041,22 +2989,22 @@ body::before {
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Leg width</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-angle-w" min="0" inputmode="decimal" placeholder="e.g. 40">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-angle-w" inputmode="decimal" placeholder="e.g. 40" data-example-mm="40">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Leg height</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-angle-h" min="0" inputmode="decimal" placeholder="e.g. 40">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-angle-h" inputmode="decimal" placeholder="e.g. 40" data-example-mm="40">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Length</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-angle-l" min="0" inputmode="decimal" placeholder="e.g. 6000">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-angle-l" inputmode="decimal" placeholder="e.g. 6000" data-example-mm="6000">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
         <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Calculates both legs, outer faces only</div>
@@ -3067,16 +3015,16 @@ body::before {
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Section perimeter</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-perim" min="0" inputmode="decimal" placeholder="e.g. 200">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-perim" inputmode="decimal" placeholder="e.g. 200" data-example-mm="200">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
           <div style="font-size:11px;color:var(--text3);margin-top:4px">Measure around the outside of your section profile</div>
         </div>
         <div class="input-group">
           <div class="input-meta"><span class="input-meta-label">Length</span></div>
           <div class="input-wrap">
-            <input type="number" id="paint-custom-l" min="0" inputmode="decimal" placeholder="e.g. 6000">
-            <span class="input-unit">mm</span>
+            <input type="text" id="paint-custom-l" inputmode="decimal" placeholder="e.g. 6000" data-example-mm="6000">
+            <span class="input-unit" data-unit="length">mm</span>
           </div>
         </div>
       </div>
@@ -3148,18 +3096,10 @@ body::before {
     <div class="card-label">MATERIAL THICKNESS</div>
     <div class="input-group">
       <div class="input-wrap">
-        <input type="number" id="sheet-thickness" placeholder="e.g. 2" min="0" step="0.1">
-        <span class="input-unit">mm</span>
+        <input type="text" id="sheet-thickness" inputmode="decimal" placeholder="e.g. 2" data-example-mm="2" min="0" step="0.1">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
-      <div class="preset-row">
-        <button class="chip" onclick="setVal('sheet-thickness',0.8)">0.8mm</button>
-        <button class="chip" onclick="setVal('sheet-thickness',1.0)">1.0mm</button>
-        <button class="chip" onclick="setVal('sheet-thickness',1.2)">1.2mm</button>
-        <button class="chip" onclick="setVal('sheet-thickness',1.5)">1.5mm</button>
-        <button class="chip" onclick="setVal('sheet-thickness',2.0)">2.0mm</button>
-        <button class="chip" onclick="setVal('sheet-thickness',2.5)">2.5mm</button>
-        <button class="chip" onclick="setVal('sheet-thickness',3.0)">3.0mm</button>
-      </div>
+      <div class="preset-row" id="sheet-thickness-presets"></div>
     </div>
   </div>
 
@@ -3168,8 +3108,8 @@ body::before {
     <div class="card-label">INSIDE BEND RADIUS</div>
     <div class="input-group">
       <div class="input-wrap">
-        <input type="number" id="sheet-radius" placeholder="e.g. 2" min="0" step="0.5">
-        <span class="input-unit">mm</span>
+        <input type="text" id="sheet-radius" inputmode="decimal" placeholder="e.g. 2" data-example-mm="2" min="0" step="0.5">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
       <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5">The radius of your die or former — measure on the inside of the bend. A tighter radius increases springback.</div>
     </div>
@@ -3201,8 +3141,8 @@ body::before {
           <span class="input-meta-label">Face A</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="sheet-face-a" placeholder="e.g. 50" min="0" step="1">
-          <span class="input-unit">mm</span>
+          <input type="text" id="sheet-face-a" inputmode="decimal" placeholder="e.g. 50" data-example-mm="50" min="0" step="1">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
         <div style="font-size:11px;color:var(--text3);margin-top:6px">First flat face length</div>
       </div>
@@ -3211,8 +3151,8 @@ body::before {
           <span class="input-meta-label">Face B</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="sheet-face-b" placeholder="e.g. 80" min="0" step="1">
-          <span class="input-unit">mm</span>
+          <input type="text" id="sheet-face-b" inputmode="decimal" placeholder="e.g. 80" data-example-mm="80" min="0" step="1">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
         <div style="font-size:11px;color:var(--text3);margin-top:6px">Second flat face length</div>
       </div>
@@ -3262,8 +3202,8 @@ body::before {
           <span class="input-meta-label">Outside diameter (OD)</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="bend-od" placeholder="e.g. 25" min="0" step="0.5">
-          <span class="input-unit">mm</span>
+          <input type="text" id="bend-od" inputmode="decimal" placeholder="e.g. 25" data-example-mm="25" min="0" step="0.5">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
       </div>
       <div class="input-group">
@@ -3271,8 +3211,8 @@ body::before {
           <span class="input-meta-label">Wall thickness</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="bend-wall" placeholder="e.g. 1.6" min="0" step="0.1">
-          <span class="input-unit">mm</span>
+          <input type="text" id="bend-wall" inputmode="decimal" placeholder="e.g. 1.6" data-example-mm="1.6" min="0" step="0.1">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
       </div>
     </div>
@@ -3283,8 +3223,8 @@ body::before {
     <div class="card-label">CENTRELINE BEND RADIUS</div>
     <div class="input-group">
       <div class="input-wrap">
-        <input type="number" id="bend-radius" placeholder="e.g. 75" min="0" step="1">
-        <span class="input-unit">mm</span>
+        <input type="text" id="bend-radius" inputmode="decimal" placeholder="e.g. 75" data-example-mm="75" min="0" step="1">
+        <span class="input-unit" data-unit="length">mm</span>
       </div>
       <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5">Measure from the centre of the tube to the centre of the bend arc. Minimum recommended: 3 × outside diameter to avoid kinking.</div>
     </div>
@@ -3316,8 +3256,8 @@ body::before {
           <span class="input-meta-label">Leg A</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="bend-leg-a" placeholder="e.g. 200" min="0" step="1">
-          <span class="input-unit">mm</span>
+          <input type="text" id="bend-leg-a" inputmode="decimal" placeholder="e.g. 200" data-example-mm="200" min="0" step="1">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
         <div style="font-size:11px;color:var(--text3);margin-top:6px">Straight length before the bend</div>
       </div>
@@ -3326,8 +3266,8 @@ body::before {
           <span class="input-meta-label">Leg B</span>
         </div>
         <div class="input-wrap">
-          <input type="number" id="bend-leg-b" placeholder="e.g. 200" min="0" step="1">
-          <span class="input-unit">mm</span>
+          <input type="text" id="bend-leg-b" inputmode="decimal" placeholder="e.g. 200" data-example-mm="200" min="0" step="1">
+          <span class="input-unit" data-unit="length">mm</span>
         </div>
         <div style="font-size:11px;color:var(--text3);margin-top:6px">Straight length after the bend</div>
       </div>
@@ -3353,22 +3293,313 @@ function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
+// ─── UNIT SYSTEM (metric mm/kg/L ↔ imperial in/lb/gal) ───
+// Foundation for the site-wide imperial toggle. Individual tools wire themselves
+// up to this via the 'gc-units-changed' event as they're converted (see roadmap).
+// Declared this early so every calc function and preset-chip renderer below can use it.
+let unitSystem = 'metric'; // 'metric' | 'imperial'
+
+function mmToIn(mm) { return mm / 25.4; }
+function inToMm(inches) { return inches * 25.4; }
+function kgToLb(kg) { return kg * 2.20462; }
+function lbToKg(lb) { return lb / 2.20462; }
+function m2ToFt2(m2) { return m2 * 10.7639; }
+function ft2ToM2(ft2) { return ft2 / 10.7639; }
+function litresToGal(l) { return l / 3.78541; }
+function galToLitres(gal) { return gal * 3.78541; }
+function litresToQt(l) { return l / 0.946353; }
+function qtToLitres(qt) { return qt * 0.946353; }
+
+// Formats decimal inches as a fractional string rounded to the nearest 1/16", e.g. 3.7 -> `3-3/4"`
+function formatInches(decimalInches, denom = 16) {
+  if (decimalInches === '' || decimalInches == null || isNaN(decimalInches)) return '';
+  const neg = decimalInches < 0;
+  let val = Math.abs(decimalInches);
+  let whole = Math.floor(val);
+  let num = Math.round((val - whole) * denom);
+  let den = denom;
+  if (num === den) { whole += 1; num = 0; }
+  while (num > 0 && num % 2 === 0) { num /= 2; den /= 2; }
+  let str = whole > 0 ? String(whole) : '';
+  if (num > 0) str += (str ? '-' : '') + num + '/' + den;
+  if (!str) str = '0';
+  return (neg ? '-' : '') + str + '"';
+}
+
+// Parses a fractional or decimal inch string (e.g. `3-3/4"`, `3 3/4`, `3.75`) back to decimal inches
+function parseInches(str) {
+  if (str === '' || str == null) return NaN;
+  str = String(str).trim().replace(/"/g, '');
+  const neg = str.startsWith('-');
+  if (neg) str = str.slice(1);
+  const mixed = str.match(/^(\d+)[\s-]+(\d+)\/(\d+)$/);
+  if (mixed) return (neg ? -1 : 1) * (parseInt(mixed[1]) + parseInt(mixed[2]) / parseInt(mixed[3]));
+  const fracOnly = str.match(/^(\d+)\/(\d+)$/);
+  if (fracOnly) return (neg ? -1 : 1) * (parseInt(fracOnly[1]) / parseInt(fracOnly[2]));
+  const n = parseFloat(str);
+  return isNaN(n) ? NaN : (neg ? -1 : 1) * Math.abs(n);
+}
+
+// Registry of length-field ids across every tool, grown as each tool is converted.
+// Workpiece-scale dimensions (~5mm+): displayed as fractional inches (nearest 1/16") — matches how fabricators read a tape measure.
+const LENGTH_FIELD_IDS = ['g-L','g-w','g-gap','g-barlen','g-stock','c-stock','c-piece','a-width','a-length','b-L','b-d','b-g','sheet-face-a','sheet-face-b','bend-od','bend-radius','bend-leg-a','bend-leg-b','rod-weldlen',
+  'w-length','w-width','w-thick','w-outer','w-wall','w-rw','w-rh','w-rwall','w-diam','w-od','w-wall2','w-leg1','w-leg2','w-athick','w-tw','w-tt',
+  'paint-length','paint-width','paint-box-l','paint-box-w','paint-box-h','paint-tube-d','paint-tube-l','paint-angle-w','paint-angle-h','paint-angle-l','paint-perim','paint-custom-l','mig-weldlen'];
+// Thin/high-precision dimensions (kerf, wall thickness, sheet gauge...): fractional 1/16" is too coarse here
+// (it can round a 1mm kerf up to 1.5875mm — a 58% error), so these use decimal inches instead.
+const PRECISION_LENGTH_FIELD_IDS = ['c-kerf','sheet-thickness','sheet-radius','bend-wall','rod-thick','settings-thick','mig-thick'];
+
+// Reads a length input as canonical mm, regardless of whether it's showing decimal mm or fractional/decimal inches.
+function getLengthValue(id) {
+  const el = document.getElementById(id);
+  if (!el || el.value === '' || el.value == null) return NaN;
+  return unitSystem === 'imperial' ? inToMm(parseInches(el.value)) : parseFloat(el.value);
+}
+// Numeric/fractional part only, no unit suffix — for slotting into a value+unit pair of DOM elements.
+function lengthNum(mm, decimals = 2, sys = unitSystem) {
+  if (mm == null || isNaN(mm)) return '';
+  return sys === 'imperial' ? formatInches(mmToIn(mm)).slice(0, -1) : Number(mm.toFixed(decimals)).toString();
+}
+// Decimal-inch counterpart to lengthNum, for thin/precision dimensions (see PRECISION_LENGTH_FIELD_IDS).
+function precisionLengthNum(mm, decimals = 3, sys = unitSystem) {
+  if (mm == null || isNaN(mm)) return '';
+  return sys === 'imperial' ? Number(mmToIn(mm).toFixed(decimals)).toString() : Number(mm.toFixed(2)).toString();
+}
+function lengthUnit(sys = unitSystem) { return sys === 'imperial' ? '"' : 'mm'; }
+// Complete formatted string including unit — for inline text.
+function formatLength(mm, decimals = 2, sys = unitSystem) { return lengthNum(mm, decimals, sys) + lengthUnit(sys); }
+function formatPrecisionLength(mm, decimals = 3, sys = unitSystem) { return precisionLengthNum(mm, decimals, sys) + lengthUnit(sys); }
+// For stock/purchasing-scale lengths (metres vs feet) rather than workpiece-scale dimensions (mm vs inches) — e.g. "buy a 6m length" reads better as "20ft" than as a huge inch figure.
+function formatLongLength(mm, decimals = 2, sys = unitSystem) {
+  if (mm == null || isNaN(mm)) return '';
+  return sys === 'imperial' ? (mm / 304.8).toFixed(decimals) + 'ft' : (mm / 1000).toFixed(decimals) + 'm';
+}
+function inputLengthUnitLabel() { return unitSystem === 'imperial' ? 'in' : 'mm'; }
+
+// Weight (kg <-> lb) — for calculated output only, there's no free-text weight input field yet.
+function weightNum(kg, decimals = 2, sys = unitSystem) {
+  if (kg == null || isNaN(kg)) return '';
+  return sys === 'imperial' ? Number(kgToLb(kg).toFixed(decimals)).toString() : Number(kg.toFixed(decimals)).toString();
+}
+function weightUnit(sys = unitSystem) { return sys === 'imperial' ? 'lb' : 'kg'; }
+function formatWeight(kg, decimals = 2, sys = unitSystem) { return weightNum(kg, decimals, sys) + weightUnit(sys); }
+// Compound rate kg/m <-> lb/ft (1 kg/m = 0.671969 lb/ft)
+function weightPerLengthNum(kgPerM, decimals = 3, sys = unitSystem) {
+  if (kgPerM == null || isNaN(kgPerM)) return '';
+  return Number(((sys === 'imperial' ? kgPerM * 0.671969 : kgPerM)).toFixed(decimals)).toString();
+}
+function weightPerLengthUnit(sys = unitSystem) { return sys === 'imperial' ? 'lb/ft' : 'kg/m'; }
+function formatWeightPerLength(kgPerM, decimals = 3, sys = unitSystem) { return weightPerLengthNum(kgPerM, decimals, sys) + ' ' + weightPerLengthUnit(sys); }
+
+// Area (m² <-> ft²) — decimal input, no fractional convention needed for areas.
+const AREA_FIELD_IDS = ['paint-area-direct'];
+function getAreaValue(id) {
+  const el = document.getElementById(id);
+  if (!el || el.value === '') return NaN;
+  const v = parseFloat(el.value);
+  return unitSystem === 'imperial' ? ft2ToM2(v) : v;
+}
+function areaNum(m2, decimals = 2, sys = unitSystem) {
+  if (m2 == null || isNaN(m2)) return '';
+  return sys === 'imperial' ? Number(m2ToFt2(m2).toFixed(decimals)).toString() : Number(m2.toFixed(decimals)).toString();
+}
+function areaUnit(sys = unitSystem) { return sys === 'imperial' ? 'ft²' : 'm²'; }
+function formatArea(m2, decimals = 2, sys = unitSystem) { return areaNum(m2, decimals, sys) + areaUnit(sys); }
+
+// Volume (L <-> US gal) — for calculated paint totals.
+function volumeNum(litres, decimals = 2, sys = unitSystem) {
+  if (litres == null || isNaN(litres)) return '';
+  return sys === 'imperial' ? Number(litresToGal(litres).toFixed(decimals)).toString() : Number(litres.toFixed(decimals)).toString();
+}
+function volumeUnit(sys = unitSystem) { return sys === 'imperial' ? 'gal' : 'L'; }
+function formatVolume(litres, decimals = 2, sys = unitSystem) { return volumeNum(litres, decimals, sys) + volumeUnit(sys); }
+
+// Coverage rate (m²/L <-> ft²/gal). 1 m²/L = 40.7458 ft²/gal.
+function coverageRateNum(m2PerL, decimals = 1, sys = unitSystem) {
+  if (m2PerL == null || isNaN(m2PerL)) return '';
+  return sys === 'imperial' ? Number((m2PerL * 40.7458).toFixed(decimals)).toString() : Number(m2PerL.toFixed(decimals)).toString();
+}
+function coverageRateUnit(sys = unitSystem) { return sys === 'imperial' ? 'ft²/gal' : 'm²/L'; }
+function formatCoverageRate(m2PerL, decimals = 1, sys = unitSystem) { return coverageRateNum(m2PerL, decimals, sys) + ' ' + coverageRateUnit(sys); }
+
+// Small volumes (spray can size: ml <-> fl oz).
+function mlToFlOz(ml) { return ml / 29.5735; }
+function flOzToMl(floz) { return floz * 29.5735; }
+const SMALL_VOLUME_FIELD_IDS = ['paint-can-ml'];
+function getSmallVolumeValue(id) {
+  const el = document.getElementById(id);
+  if (!el || el.value === '') return NaN;
+  const v = parseFloat(el.value);
+  return unitSystem === 'imperial' ? flOzToMl(v) : v;
+}
+function smallVolumeNum(ml, decimals = 1, sys = unitSystem) {
+  if (ml == null || isNaN(ml)) return '';
+  return sys === 'imperial' ? Number(mlToFlOz(ml).toFixed(decimals)).toString() : Number(ml.toFixed(0)).toString();
+}
+function smallVolumeUnit(sys = unitSystem) { return sys === 'imperial' ? 'fl oz' : 'ml'; }
+function formatSmallVolume(ml, decimals = 1, sys = unitSystem) { return smallVolumeNum(ml, decimals, sys) + smallVolumeUnit(sys); }
+
+// Converts every registered length field's displayed value from oldSystem to newSystem in place.
+function convertLengthFieldsOnToggle(oldSystem, newSystem) {
+  // Every branch dispatches 'input' after rewriting the value so (a) the persistence layer immediately
+  // re-saves the freshly-converted string — otherwise a reload right after a toggle would restore the
+  // stale pre-toggle string and reinterpret it under the new unit system — and (b) any field-specific
+  // oninput handlers (suggestRodDiam, suggestMigWire...) re-run.
+  LENGTH_FIELD_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || el.value === '') return;
+    const mm = oldSystem === 'imperial' ? inToMm(parseInches(el.value)) : parseFloat(el.value);
+    if (isNaN(mm)) return;
+    el.value = lengthNum(mm, 2, newSystem);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  PRECISION_LENGTH_FIELD_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || el.value === '') return;
+    const mm = oldSystem === 'imperial' ? inToMm(parseInches(el.value)) : parseFloat(el.value);
+    if (isNaN(mm)) return;
+    el.value = precisionLengthNum(mm, 3, newSystem);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  AREA_FIELD_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || el.value === '') return;
+    const v = parseFloat(el.value);
+    if (isNaN(v)) return;
+    const m2 = oldSystem === 'imperial' ? ft2ToM2(v) : v;
+    el.value = areaNum(m2, 2, newSystem);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  SMALL_VOLUME_FIELD_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || el.value === '') return;
+    const v = parseFloat(el.value);
+    if (isNaN(v)) return;
+    const ml = oldSystem === 'imperial' ? flOzToMl(v) : v;
+    el.value = smallVolumeNum(ml, 1, newSystem);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+
+// Updates unit-badge labels and example placeholders across the whole page (all tools, not just the visible one).
+function refreshLengthFieldsUI() {
+  document.querySelectorAll('[data-unit="length"]').forEach(el => { el.textContent = inputLengthUnitLabel(); });
+  document.querySelectorAll('[data-unit="area"]').forEach(el => { el.textContent = areaUnit(); });
+  document.querySelectorAll('[data-unit="small-volume"]').forEach(el => { el.textContent = smallVolumeUnit(); });
+  document.querySelectorAll('input[data-example-mm]').forEach(el => {
+    const mm = parseFloat(el.dataset.exampleMm);
+    if (isNaN(mm)) return;
+    el.placeholder = 'e.g. ' + (PRECISION_LENGTH_FIELD_IDS.includes(el.id) ? precisionLengthNum(mm, 3) : lengthNum(mm, 0));
+  });
+  document.querySelectorAll('input[data-example-m2]').forEach(el => {
+    const m2 = parseFloat(el.dataset.exampleM2);
+    if (isNaN(m2)) return;
+    el.placeholder = 'e.g. ' + areaNum(m2, 2);
+  });
+  document.querySelectorAll('input[data-example-ml]').forEach(el => {
+    const ml = parseFloat(el.dataset.exampleMl);
+    if (isNaN(ml)) return;
+    el.placeholder = 'e.g. ' + smallVolumeNum(ml, 1);
+  });
+}
+
+function detectDefaultUnitSystem() {
+  try {
+    const locale = navigator.language || navigator.userLanguage || '';
+    return /-US$/i.test(locale) ? 'imperial' : 'metric';
+  } catch (e) { return 'metric'; }
+}
+
+function applyUnitSystemUI() {
+  const btn = document.getElementById('unit-toggle');
+  if (btn) btn.textContent = unitSystem === 'metric' ? 'MM' : 'IN';
+  refreshLengthFieldsUI();
+  CHIP_RENDERERS.forEach(fn => fn());
+  // Drill Reference has its own metric/imperial toggle (bolt sizes are catalog standards, not a formula
+  // conversion) — the global toggle sets its default, but setDrillUnit() stays independently clickable.
+  if (typeof setDrillUnit === 'function') setDrillUnit(unitSystem === 'imperial' ? 'imperial' : 'metric');
+  document.dispatchEvent(new CustomEvent('gc-units-changed', { detail: { unitSystem } }));
+}
+
+function toggleUnitSystem() {
+  const oldSystem = unitSystem;
+  const newSystem = unitSystem === 'metric' ? 'imperial' : 'metric';
+  convertLengthFieldsOnToggle(oldSystem, newSystem);
+  unitSystem = newSystem;
+  localStorage.setItem('gc_units', unitSystem);
+  applyUnitSystemUI();
+  gtag('event', 'toggle_units', { system: unitSystem });
+}
+
+function initUnitSystem() {
+  unitSystem = localStorage.getItem('gc_units') || detectDefaultUnitSystem();
+  applyUnitSystemUI();
+}
+
 // ════════════════════════════════════════
 // PRESETS
 // ════════════════════════════════════════
 const BAR_PRESETS = [20,25,30,38,40,50,65,75,100];
 const GAP_PRESETS = [8,10,13,15,20,25,30];
 
-function renderChips(containerId, values, inputId, unit='mm') {
+// valuesMm are always canonical mm; the chip label and the value written into the field
+// both follow the active unit system so presets stay correct after a unit toggle.
+function renderChips(containerId, valuesMm, inputId) {
   const c = document.getElementById(containerId);
+  if (!c) return;
   c.innerHTML = '';
-  values.forEach(v => {
+  valuesMm.forEach(v => {
     const b = document.createElement('button');
     b.className = 'chip';
-    b.textContent = v + unit;
-    b.onclick = () => { setVal(inputId, v); highlightChip(containerId, b); };
+    b.textContent = formatLength(v, 0);
+    b.onclick = () => { setVal(inputId, lengthNum(v)); highlightChip(containerId, b); document.getElementById(inputId).dispatchEvent(new Event('input',{bubbles:true})); };
     c.appendChild(b);
   });
+}
+const CHIP_RENDERERS = [];
+function registerChips(containerId, valuesMm, inputId) {
+  const render = () => renderChips(containerId, valuesMm, inputId);
+  CHIP_RENDERERS.push(render);
+  render();
+}
+
+// Presets with a descriptive label prefix/suffix rather than just a bare value — kerf ("Grinder 1.5mm") and stock length ("6m length").
+function registerLabeledChips(containerId, inputId, items, precision = false) {
+  const fmt = precision ? formatPrecisionLength : formatLength;
+  const num = precision ? precisionLengthNum : lengthNum;
+  const render = () => {
+    const c = document.getElementById(containerId);
+    if (!c) return;
+    c.innerHTML = '';
+    items.forEach(item => {
+      const b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = item.label(fmt(item.mm, precision ? 3 : (item.mm < 10 ? 2 : 0)));
+      b.onclick = () => { setVal(inputId, num(item.mm, precision ? 3 : 2)); highlightChip(containerId, b); document.getElementById(inputId).dispatchEvent(new Event('input', { bubbles: true })); };
+      c.appendChild(b);
+    });
+  };
+  CHIP_RENDERERS.push(render);
+  render();
+}
+
+// Catalog-style presets where the imperial equivalent is a genuinely different standard size, not a formula
+// conversion (e.g. metric bolt "M8" vs. imperial fastener "5/16\"" — swap the whole preset list by unit system).
+function registerCatalogChips(containerId, inputId, metricList, imperialList) {
+  const render = () => {
+    const c = document.getElementById(containerId);
+    if (!c) return;
+    c.innerHTML = '';
+    (unitSystem === 'imperial' ? imperialList : metricList).forEach(item => {
+      const b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = item.label;
+      b.onclick = () => { setVal(inputId, lengthNum(item.mm)); highlightChip(containerId, b); document.getElementById(inputId).dispatchEvent(new Event('input', { bubbles: true })); };
+      c.appendChild(b);
+    });
+  };
+  CHIP_RENDERERS.push(render);
+  render();
 }
 
 function highlightChip(containerId, btn) {
@@ -3405,7 +3636,7 @@ function buildDiagram(n, w, g, L) {
       <line x1="${gx1.toFixed(1)}" y1="${ay}" x2="${gx2.toFixed(1)}" y2="${ay}" stroke="#52c47a" stroke-width="1.5"/>
       <polygon points="${(gx1+4).toFixed(1)},${ay-3} ${gx1.toFixed(1)},${ay} ${(gx1+4).toFixed(1)},${ay+3}" fill="#52c47a"/>
       <polygon points="${(gx2-4).toFixed(1)},${ay-3} ${gx2.toFixed(1)},${ay} ${(gx2-4).toFixed(1)},${ay+3}" fill="#52c47a"/>
-      <text x="${((gx1+gx2)/2).toFixed(1)}" y="${ay-4}" text-anchor="middle" fill="#52c47a" font-size="9" font-family="DM Mono,monospace">${g.toFixed(1)}mm</text>
+      <text x="${((gx1+gx2)/2).toFixed(1)}" y="${ay-4}" text-anchor="middle" fill="#52c47a" font-size="9" font-family="DM Mono,monospace">${formatLength(g)}</text>
     `;
   }
 
@@ -3419,11 +3650,11 @@ function buildDiagram(n, w, g, L) {
 // GAP CALCULATOR
 // ════════════════════════════════════════
 function calcGaps() {
-  const L = parseFloat(document.getElementById('g-L').value);
-  const w = parseFloat(document.getElementById('g-w').value);
-  const gTarget = parseFloat(document.getElementById('g-gap').value);
-  const barLen = parseFloat(document.getElementById('g-barlen').value) || null;
-  const stock = parseFloat(document.getElementById('g-stock').value) || 6000;
+  const L = getLengthValue('g-L');
+  const w = getLengthValue('g-w');
+  const gTarget = getLengthValue('g-gap');
+  const barLen = getLengthValue('g-barlen') || null;
+  const stock = getLengthValue('g-stock') || 6000;
   const box = document.getElementById('g-results');
   box.className = 'results show';
 
@@ -3437,7 +3668,7 @@ function calcGaps() {
     return;
   }
 
-  // FORMULA — edge to edge, n-1 gaps
+  // FORMULA — edge to edge, n-1 gaps (all internal math stays in canonical mm)
   const n = Math.floor((L + gTarget) / (w + gTarget));
 
   if (n < 2) {
@@ -3458,7 +3689,6 @@ function calcGaps() {
     const lengthsNeeded = Math.ceil(n / cutsPerLength);
     const offcutMm = stock - cutsPerLength * barLen;
     const totalMetreMm = n * barLen;
-    const totalM = (totalMetreMm / 1000).toFixed(2);
 
     materialsHtml = `
       <hr class="section-divider">
@@ -3466,23 +3696,23 @@ function calcGaps() {
       <div class="stat-grid">
         <div class="stat">
           <div class="stat-label">Bar cut length</div>
-          <div class="stat-val">${barLen} <span class="u">mm each</span></div>
+          <div class="stat-val">${formatLength(barLen)} <span class="u">each</span></div>
         </div>
         <div class="stat">
           <div class="stat-label">Total flat bar</div>
-          <div class="stat-val">${totalM} <span class="u">m</span></div>
+          <div class="stat-val">${formatLongLength(totalMetreMm)}</div>
         </div>
         <div class="stat">
-          <div class="stat-label">Cuts per ${(stock/1000).toFixed(1)}m length</div>
+          <div class="stat-label">Cuts per ${formatLongLength(stock)} length</div>
           <div class="stat-val">${cutsPerLength} <span class="u">cuts</span></div>
         </div>
         <div class="stat">
           <div class="stat-label">Lengths to buy</div>
-          <div class="stat-val">${lengthsNeeded} <span class="u">× ${(stock/1000).toFixed(1)}m</span></div>
+          <div class="stat-val">${lengthsNeeded} <span class="u">× ${formatLongLength(stock)}</span></div>
         </div>
         <div class="stat" style="grid-column:1/-1">
           <div class="stat-label">Offcut per length</div>
-          <div class="stat-val">${offcutMm} <span class="u">mm (${(offcutMm/1000).toFixed(3)}m left over)</span></div>
+          <div class="stat-val">${formatLength(offcutMm)} <span class="u">(${formatLongLength(offcutMm, 3)} left over)</span></div>
         </div>
       </div>
     `;
@@ -3498,16 +3728,16 @@ function calcGaps() {
         <div class="rh-value">${n}</div>
         <div class="rh-unit">bars</div>
       </div>
-      <div class="rh-sub">Edge to edge across ${L}mm, with ${n-1} gaps between them</div>
+      <div class="rh-sub">Edge to edge across ${formatLength(L)}, with ${n-1} gaps between them</div>
     </div>
 
     <div class="result-hero ${gValueClass}" style="${gValueClass?'':'border-color:var(--green)'}">
       <div class="rh-label">ACTUAL GAP YOU'LL GET</div>
       <div style="display:flex;align-items:baseline;gap:8px">
-        <div class="rh-value ${gValueClass}">${gActual.toFixed(2)}</div>
-        <div class="rh-unit">mm</div>
+        <div class="rh-value ${gValueClass}">${lengthNum(gActual)}</div>
+        <div class="rh-unit">${lengthUnit()}</div>
       </div>
-      <div class="rh-sub">You asked for ${gTarget}mm — difference: ${diff >= 0 ? '+' : ''}${diff.toFixed(2)}mm ${Math.abs(diff) < 1 ? '✓ close enough' : '— acceptable for steel'}</div>
+      <div class="rh-sub">You asked for ${formatLength(gTarget)} — difference: ${diff >= 0 ? '+' : ''}${formatLength(diff)} ${Math.abs(diff) < 1 ? '✓ close enough' : '— acceptable for steel'}</div>
     </div>
 
     <div class="stat-grid">
@@ -3517,11 +3747,11 @@ function calcGaps() {
       </div>
       <div class="stat">
         <div class="stat-label">Total bar width</div>
-        <div class="stat-val">${totalBarMm} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(totalBarMm)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Total gap space</div>
-        <div class="stat-val">${totalGapMm.toFixed(1)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(totalGapMm)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Frame fill</div>
@@ -3538,7 +3768,7 @@ function calcGaps() {
 
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
-      <button class="act-btn" onclick="copyGapResult(${n},${gActual.toFixed(2)},${L},${w})">Copy result</button>
+      <button class="act-btn" onclick="copyGapResult(${n},${gActual},${L},${w})">Copy result</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-gaps')">↺ Start over</button>
   `;
@@ -3550,10 +3780,10 @@ function calcGaps() {
 // CUT LIST CALCULATOR
 // ════════════════════════════════════════
 function calcCutList() {
-  const S = parseFloat(document.getElementById('c-stock').value);
-  const p = parseFloat(document.getElementById('c-piece').value);
+  const S = getLengthValue('c-stock');
+  const p = getLengthValue('c-piece');
   const Q = parseInt(document.getElementById('c-qty').value);
-  const k = parseFloat(document.getElementById('c-kerf').value) || 0;
+  const k = getLengthValue('c-kerf') || 0;
   const box = document.getElementById('c-results');
   box.className = 'results show';
 
@@ -3562,7 +3792,7 @@ function calcCutList() {
     return;
   }
   if (p > S) {
-    box.innerHTML = errorBox(`Piece (${p}mm) is longer than your stock (${S}mm). Check your values.`);
+    box.innerHTML = errorBox(`Piece (${formatLength(p)}) is longer than your stock (${formatLength(S)}). Check your values.`);
     return;
   }
 
@@ -3575,7 +3805,7 @@ function calcCutList() {
   const cutsPerLength = Math.floor((S + k) / (p + k));
 
   if (cutsPerLength === 0) {
-    box.innerHTML = errorBox(`Can't get even one piece from a ${(S/1000).toFixed(1)}m length. Your piece (${p}mm) is too long.`);
+    box.innerHTML = errorBox(`Can't get even one piece from a ${formatLongLength(S, 1)} length. Your piece (${formatLength(p)}) is too long.`);
     return;
   }
 
@@ -3600,8 +3830,8 @@ function calcCutList() {
       <div class="cut-row">
         <div class="cut-num">${i}</div>
         <div class="cut-info">
-          <div class="cut-desc">Cut ${pieces} × ${p}mm pieces</div>
-          <div class="cut-sub">${pieces * p}mm used${k > 0 ? ` + ${(pieces-1)*k}mm kerf` : ''} — offcut: ${offcut.toFixed(0)}mm</div>
+          <div class="cut-desc">Cut ${pieces} × ${formatLength(p)} pieces</div>
+          <div class="cut-sub">${formatLength(pieces * p)} used${k > 0 ? ` + ${formatPrecisionLength((pieces-1)*k)} kerf` : ''} — offcut: ${formatLength(offcut, 0)}</div>
         </div>
         <div class="cut-badge ${offcut > p ? 'green' : ''}">${offcut > p ? 'REUSE' : offcut > 0 ? 'scrap' : 'no waste'}</div>
       </div>
@@ -3618,7 +3848,7 @@ function calcCutList() {
       <div class="rh-label">LENGTHS TO BUY</div>
       <div style="display:flex;align-items:baseline;gap:8px">
         <div class="rh-value">${lengthsNeeded}</div>
-        <div class="rh-unit">× ${(S/1000).toFixed(S%1000===0?0:2)}m</div>
+        <div class="rh-unit">× ${formatLongLength(S, S%1000===0?0:2)}</div>
       </div>
       <div class="rh-sub">${cutsPerLength} piece${cutsPerLength>1?'s':''} per length — ${Q} pieces total</div>
     </div>
@@ -3630,11 +3860,11 @@ function calcCutList() {
       </div>
       <div class="stat">
         <div class="stat-label">Offcut per full length</div>
-        <div class="stat-val">${fullLengthOffcut.toFixed(0)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(fullLengthOffcut, 0)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Total stock bought</div>
-        <div class="stat-val">${(totalStockUsed/1000).toFixed(2)} <span class="u">m</span></div>
+        <div class="stat-val">${formatLongLength(totalStockUsed)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Waste</div>
@@ -3649,8 +3879,8 @@ function calcCutList() {
         ${offcutW > 0 ? `<div class="stock-seg seg-offcut" style="width:${offcutW}%;flex:0 0 ${offcutW}%">${offcutW}%</div>` : ''}
       </div>
       <div class="stock-legend">
-        <span><div class="dot" style="background:var(--accent)"></div>Pieces (${barTotal.toFixed(0)}mm)</span>
-        ${fullLengthOffcut > 0 ? `<span><div class="dot" style="background:var(--surface3);border:1px solid var(--border)"></div>Offcut (${fullLengthOffcut.toFixed(0)}mm)</span>` : ''}
+        <span><div class="dot" style="background:var(--accent)"></div>Pieces (${formatLength(barTotal, 0)})</span>
+        ${fullLengthOffcut > 0 ? `<span><div class="dot" style="background:var(--surface3);border:1px solid var(--border)"></div>Offcut (${formatLength(fullLengthOffcut, 0)})</span>` : ''}
       </div>
     </div>
 
@@ -3659,7 +3889,7 @@ function calcCutList() {
 
     <div class="action-row" style="margin-top:10px">
       <button class="act-btn" onclick="window.print()">Print cut list</button>
-      <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut.toFixed(0)})">Copy</button>
+      <button class="act-btn" onclick="copyCutList(${lengthsNeeded},${cutsPerLength},${p},${S},${Q},${fullLengthOffcut})">Copy</button>
     </div>
     <button class="send-to-costing-btn" onclick="sendCutListToCosting()">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetTab('tab-cutlist')">↺ Start over</button>
@@ -3680,12 +3910,12 @@ function esc(s) {
 }
 
 function copyGapResult(n, g, L, w) {
-  const txt = `GapCalc — Gap Calculator\n---\nFrame: ${L}mm | Bar width: ${w}mm\nBars that fit: ${n}\nActual gap: ${g}mm\nNumber of gaps: ${n-1}\n\ngapcalc.app`;
+  const txt = `GapCalc — Gap Calculator\n---\nFrame: ${formatLength(L)} | Bar width: ${formatLength(w)}\nBars that fit: ${n}\nActual gap: ${formatLength(g)}\nNumber of gaps: ${n-1}\n\ngapcalc.app`;
   copy(txt, event.target);
 }
 
 function copyCutList(lengths, cps, p, S, Q, offcut) {
-  const txt = `GapCalc — Cut List\n---\nStock: ${(S/1000).toFixed(S%1000===0?0:2)}m | Piece: ${p}mm | Qty: ${Q}\nLengths to buy: ${lengths}\nCuts per length: ${cps}\nOffcut per length: ${offcut}mm\n\ngapcalc.app`;
+  const txt = `GapCalc — Cut List\n---\nStock: ${formatLongLength(S, S%1000===0?0:2)} | Piece: ${formatLength(p)} | Qty: ${Q}\nLengths to buy: ${lengths}\nCuts per length: ${cps}\nOffcut per length: ${formatLength(offcut, 0)}\n\ngapcalc.app`;
   copy(txt, event.target);
 }
 
@@ -3701,8 +3931,88 @@ function copy(txt, btn) {
 // ════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════
-renderChips('g-w-presets', BAR_PRESETS, 'g-w');
-renderChips('g-gap-presets', GAP_PRESETS, 'g-gap');
+registerChips('g-w-presets', BAR_PRESETS, 'g-w');
+registerChips('g-gap-presets', GAP_PRESETS, 'g-gap');
+registerLabeledChips('c-stock-presets', 'c-stock', [
+  { mm: 6000, label: v => v + ' length' },
+  { mm: 3000, label: v => v + ' length' },
+  { mm: 2000, label: v => v + ' length' },
+  { mm: 1200, label: v => v + ' length' },
+]);
+registerLabeledChips('c-kerf-presets', 'c-kerf', [
+  { mm: 1,   label: v => 'Thin disc ' + v },
+  { mm: 1.5, label: v => 'Grinder ' + v },
+  { mm: 2,   label: v => 'Standard ' + v },
+  { mm: 3,   label: v => 'Hacksaw ' + v },
+], true);
+registerCatalogChips('b-d-presets', 'b-d',
+  [ {mm:5,label:'M5'}, {mm:6,label:'M6'}, {mm:8,label:'M8'}, {mm:10,label:'M10'}, {mm:12,label:'M12'}, {mm:16,label:'M16'}, {mm:20,label:'M20'} ],
+  [ {mm:3.18,label:'1/8"'}, {mm:4.76,label:'3/16"'}, {mm:6.35,label:'1/4"'}, {mm:7.94,label:'5/16"'}, {mm:9.53,label:'3/8"'}, {mm:12.7,label:'1/2"'}, {mm:15.88,label:'5/8"'}, {mm:19.05,label:'3/4"'} ]
+);
+registerLabeledChips('sheet-thickness-presets', 'sheet-thickness', [
+  { mm: 0.8, label: v => v },
+  { mm: 1.0, label: v => v },
+  { mm: 1.2, label: v => v },
+  { mm: 1.5, label: v => v },
+  { mm: 2.0, label: v => v },
+  { mm: 2.5, label: v => v },
+  { mm: 3.0, label: v => v },
+], true);
+registerLabeledChips('rod-thick-presets', 'rod-thick', [
+  { mm: 1.5, label: v => v }, { mm: 2, label: v => v }, { mm: 3, label: v => v }, { mm: 4, label: v => v },
+  { mm: 5, label: v => v }, { mm: 6, label: v => v }, { mm: 8, label: v => v }, { mm: 10, label: v => v },
+], true);
+registerChips('rod-weldlen-presets', [500, 1000, 2000, 5000], 'rod-weldlen');
+registerLabeledChips('settings-thick-presets', 'settings-thick', [
+  { mm: 0.8, label: v => v }, { mm: 1.0, label: v => v }, { mm: 1.5, label: v => v }, { mm: 2.0, label: v => v },
+  { mm: 3.0, label: v => v }, { mm: 4.0, label: v => v }, { mm: 6.0, label: v => v }, { mm: 8.0, label: v => v }, { mm: 10.0, label: v => v },
+], true);
+registerChips('w-length-presets', [6000, 3000, 2000, 1200], 'w-length');
+registerLabeledChips('mig-thick-presets', 'mig-thick', [
+  { mm: 1.5, label: v => v }, { mm: 2, label: v => v }, { mm: 3, label: v => v }, { mm: 4, label: v => v },
+  { mm: 5, label: v => v }, { mm: 6, label: v => v }, { mm: 8, label: v => v }, { mm: 10, label: v => v },
+], true);
+registerChips('mig-weldlen-presets', [500, 1000, 2000, 5000], 'mig-weldlen');
+
+// Rod diameter is a fixed selector (buttons, not free text) mapping to standard stick-electrode sizes.
+// The underlying mm value passed to setRodDiam() never changes — only the displayed badge follows the unit system.
+const ROD_DIAM_US_LABEL = { 2.5: '3/32"', 3.15: '1/8"', 4: '5/32"', 5: '3/16"' };
+function rodDiamLabel(mm, sys = unitSystem) {
+  return sys === 'imperial' ? (ROD_DIAM_US_LABEL[mm] || formatPrecisionLength(mm)) : (Number(mm.toFixed(2)) + 'mm');
+}
+function refreshRodDiamLabels() {
+  [['rd-25',2.5],['rd-315',3.15],['rd-40',4],['rd-50',5]].forEach(([id, mm]) => {
+    const codeEl = document.querySelector('#' + id + ' .rod-opt-code');
+    if (codeEl) codeEl.textContent = rodDiamLabel(mm);
+  });
+}
+CHIP_RENDERERS.push(refreshRodDiamLabels);
+refreshRodDiamLabels();
+
+// MIG/flux-core wire diameter is also a fixed selector mapping to standard wire sizes. Same treatment as
+// rod diameter: the underlying mm-string value passed to setMigWire()/setSettingsWire() never changes.
+// FCAW uses its own table since "1.0mm" sits alongside "0.9mm" there and needs a distinct US label to avoid a duplicate badge.
+const MIG_WIRE_US_LABEL = { '0.6': '0.023"', '0.8': '0.030"', '1.0': '0.035"', '1.2': '0.045"' };
+const FCAW_WIRE_US_LABEL = { '0.8': '0.030"', '0.9': '0.035"', '1.0': '0.045"' };
+function wireDiamLabel(mmKey, table = MIG_WIRE_US_LABEL, sys = unitSystem) {
+  return sys === 'imperial' ? (table[mmKey] || (mmKey + 'mm')) : (mmKey + 'mm');
+}
+function refreshWireDiamLabels() {
+  [['mwire-06','0.6'],['mwire-08','0.8'],['mwire-10','1.0'],['mwire-12','1.2']].forEach(([id, key]) => {
+    const el = document.querySelector('#' + id + ' .wire-opt-code');
+    if (el) el.textContent = wireDiamLabel(key, MIG_WIRE_US_LABEL);
+  });
+  [['swire-06','0.6'],['swire-08','0.8'],['swire-10','1.0'],['swire-12','1.2']].forEach(([id, key]) => {
+    const el = document.querySelector('#' + id + ' .wire-opt-code');
+    if (el) el.textContent = wireDiamLabel(key, MIG_WIRE_US_LABEL);
+  });
+  [['swire-f08','0.8'],['swire-f09','0.9'],['swire-f10','1.0']].forEach(([id, key]) => {
+    const el = document.querySelector('#' + id + ' .wire-opt-code');
+    if (el) el.textContent = wireDiamLabel(key, FCAW_WIRE_US_LABEL);
+  });
+}
+CHIP_RENDERERS.push(refreshWireDiamLabels);
+refreshWireDiamLabels();
 
 
 // ════════════════════════════════════════
@@ -3758,7 +4068,7 @@ function renderDimFields(profile) {
   const label = document.getElementById('w-dims-label');
   const names = {flatbar:'Flat Bar Dimensions',sqtube:'Square Tube Dimensions',recttube:'Rectangular Tube Dimensions',roundbar:'Round Bar Dimensions',roundtube:'Round Tube Dimensions',angle:'Angle Iron Dimensions',timber:'Timber Section Dimensions'};
   label.textContent = names[profile] || 'Dimensions';
-  const field = f => `<div class="input-group"><div class="input-meta"><span class="input-meta-label">${f.label}</span></div><div class="input-wrap"><input type="number" id="${f.id}" inputmode="decimal" placeholder="${f.placeholder}"><span class="input-unit">${f.unit}</span></div></div>`;
+  const field = f => `<div class="input-group"><div class="input-meta"><span class="input-meta-label">${f.label}</span></div><div class="input-wrap"><input type="text" inputmode="decimal" id="${f.id}" placeholder="${f.placeholder}" data-example-mm="${f.placeholder.replace('e.g. ','')}"><span class="input-unit" data-unit="length">${f.unit}</span></div></div>`;
   let html = '';
   if (fields.length === 2) { html = `<div class="dim-row">${fields.map(field).join('')}</div>`; }
   else if (fields.length === 3) { html = `<div class="dim-row">${field(fields[0])}${field(fields[1])}</div>${field(fields[2])}`; }
@@ -3766,6 +4076,7 @@ function renderDimFields(profile) {
   if (profile === 'timber') html += `<div class="preset-row" id="timber-size-presets"></div>`;
   container.innerHTML = html;
   if (profile === 'timber') renderTimberPresets();
+  refreshLengthFieldsUI(); // newly-injected fields start with metric placeholders; sync them to the active unit system
 }
 
 function renderTimberPresets() {
@@ -3774,11 +4085,17 @@ function renderTimberPresets() {
   container.innerHTML = '';
   TIMBER_PRESETS.forEach(([w,t]) => {
     const btn = document.createElement('button');
-    btn.className = 'chip'; btn.textContent = `${w}x${t}`;
-    btn.onclick = () => { const wEl=document.getElementById('w-tw'),tEl=document.getElementById('w-tt'); if(wEl)wEl.value=w; if(tEl)tEl.value=t; document.querySelectorAll('#timber-size-presets .chip').forEach(c=>c.classList.remove('on')); btn.classList.add('on'); };
+    btn.className = 'chip'; btn.textContent = `${lengthNum(w,0)}x${lengthNum(t,0)}${lengthUnit()}`;
+    btn.onclick = () => {
+      const wEl=document.getElementById('w-tw'),tEl=document.getElementById('w-tt');
+      if(wEl){ wEl.value=lengthNum(w); wEl.dispatchEvent(new Event('input',{bubbles:true})); }
+      if(tEl){ tEl.value=lengthNum(t); tEl.dispatchEvent(new Event('input',{bubbles:true})); }
+      document.querySelectorAll('#timber-size-presets .chip').forEach(c=>c.classList.remove('on')); btn.classList.add('on');
+    };
     container.appendChild(btn);
   });
 }
+CHIP_RENDERERS.push(renderTimberPresets);
 
 function updateSpeciesNote() {
   document.getElementById('w-custom-density-wrap').style.display = document.getElementById('w-species').value === 'custom' ? '' : 'none';
@@ -3786,14 +4103,14 @@ function updateSpeciesNote() {
 
 function getCrossSectionCm2() {
   const c = v => v/10;
-  if (wMaterial === 'wood') { const w=c(parseFloat(document.getElementById('w-tw')?.value)),t=c(parseFloat(document.getElementById('w-tt')?.value)); return (w&&t)?w*t:null; }
+  if (wMaterial === 'wood') { const w=c(getLengthValue('w-tw')),t=c(getLengthValue('w-tt')); return (w&&t)?w*t:null; }
   switch(wProfile) {
-    case 'flatbar': { const w=c(parseFloat(document.getElementById('w-width')?.value)),t=c(parseFloat(document.getElementById('w-thick')?.value)); return (w&&t)?w*t:null; }
-    case 'sqtube': { const o=c(parseFloat(document.getElementById('w-outer')?.value)),wt=c(parseFloat(document.getElementById('w-wall')?.value)); if(!o||!wt)return null; const i=o-2*wt; return i>0?o*o-i*i:null; }
-    case 'recttube': { const rw=c(parseFloat(document.getElementById('w-rw')?.value)),rh=c(parseFloat(document.getElementById('w-rh')?.value)),wt=c(parseFloat(document.getElementById('w-rwall')?.value)); if(!rw||!rh||!wt)return null; const iw=rw-2*wt,ih=rh-2*wt; return (iw>0&&ih>0)?rw*rh-iw*ih:null; }
-    case 'roundbar': { const d=c(parseFloat(document.getElementById('w-diam')?.value)); return d?Math.PI*(d/2)*(d/2):null; }
-    case 'roundtube': { const od=c(parseFloat(document.getElementById('w-od')?.value)),wt=c(parseFloat(document.getElementById('w-wall2')?.value)); if(!od||!wt)return null; const id=od-2*wt; return id>0?Math.PI*((od/2)*(od/2)-(id/2)*(id/2)):null; }
-    case 'angle': { const l1=c(parseFloat(document.getElementById('w-leg1')?.value)),l2=c(parseFloat(document.getElementById('w-leg2')?.value)),t=c(parseFloat(document.getElementById('w-athick')?.value)); return (l1&&l2&&t)?(l1+l2-t)*t:null; }
+    case 'flatbar': { const w=c(getLengthValue('w-width')),t=c(getLengthValue('w-thick')); return (w&&t)?w*t:null; }
+    case 'sqtube': { const o=c(getLengthValue('w-outer')),wt=c(getLengthValue('w-wall')); if(!o||!wt)return null; const i=o-2*wt; return i>0?o*o-i*i:null; }
+    case 'recttube': { const rw=c(getLengthValue('w-rw')),rh=c(getLengthValue('w-rh')),wt=c(getLengthValue('w-rwall')); if(!rw||!rh||!wt)return null; const iw=rw-2*wt,ih=rh-2*wt; return (iw>0&&ih>0)?rw*rh-iw*ih:null; }
+    case 'roundbar': { const d=c(getLengthValue('w-diam')); return d?Math.PI*(d/2)*(d/2):null; }
+    case 'roundtube': { const od=c(getLengthValue('w-od')),wt=c(getLengthValue('w-wall2')); if(!od||!wt)return null; const id=od-2*wt; return id>0?Math.PI*((od/2)*(od/2)-(id/2)*(id/2)):null; }
+    case 'angle': { const l1=c(getLengthValue('w-leg1')),l2=c(getLengthValue('w-leg2')),t=c(getLengthValue('w-athick')); return (l1&&l2&&t)?(l1+l2-t)*t:null; }
   }
   return null;
 }
@@ -3826,7 +4143,7 @@ function calcWeight() {
   box.className = 'results show';
   // Clear any previous highlights
   document.querySelectorAll('#tab-weight input').forEach(el => el.style.borderColor = '');
-  const L = parseFloat(document.getElementById('w-length').value);
+  const L = getLengthValue('w-length');
   const Q = parseInt(document.getElementById('w-qty').value);
   const density = getDensity(), area = getCrossSectionCm2();
   if (!L||!Q||L<=0||Q<=0) {
@@ -3842,32 +4159,33 @@ function calcWeight() {
   const weightPerMetre = weightPerPiece/(L/1000);
   const totalWeight = weightPerPiece*Q;
   const isSteel = wMaterial==='steel';
-  const BAKKIE_LIMIT = 750;
-  const fillPct = Math.min((totalWeight/BAKKIE_LIMIT)*100,100);
+  const BAKKIE_LIMIT_KG = 750;
+  const fillPct = Math.min((totalWeight/BAKKIE_LIMIT_KG)*100,100);
   const fillColor = fillPct<60?'var(--green)':fillPct<85?'var(--accent)':'var(--red)';
   const bakkieClass = fillPct<60?'ok':fillPct<85?'warn':'over';
-  const bakkieMsg = totalWeight>BAKKIE_LIMIT ? '✗ Exceeds a standard vehicle payload (~750kg). Consider two trips or arrange delivery.' : fillPct>=85 ? '⚠ Close to the limit — check your vehicle\'s rated payload before loading.' : fillPct>=60 ? '⚠ Getting heavy — double-check your vehicle\'s rated payload.' : '✓ Well within your vehicle\'s payload (~750kg). Easy trip.';
+  const limitLabel = formatWeight(BAKKIE_LIMIT_KG, 0);
+  const bakkieMsg = totalWeight>BAKKIE_LIMIT_KG ? `✗ Exceeds a standard vehicle payload (~${limitLabel}). Consider two trips or arrange delivery.` : fillPct>=85 ? '⚠ Close to the limit — check your vehicle\'s rated payload before loading.' : fillPct>=60 ? '⚠ Getting heavy — double-check your vehicle\'s rated payload.' : `✓ Well within your vehicle's payload (~${limitLabel}). Easy trip.`;
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">TOTAL ORDER WEIGHT</div>
-      <div style="display:flex;align-items:baseline;gap:8px"><div class="rh-value">${totalWeight.toFixed(1)}</div><div class="rh-unit">kg</div></div>
-      <div class="rh-sub">${Q} ${isSteel?'length':'piece'}${Q>1?'s':''} × ${weightPerPiece.toFixed(2)}kg each</div>
+      <div style="display:flex;align-items:baseline;gap:8px"><div class="rh-value">${weightNum(totalWeight)}</div><div class="rh-unit">${weightUnit()}</div></div>
+      <div class="rh-sub">${Q} ${isSteel?'length':'piece'}${Q>1?'s':''} × ${formatWeight(weightPerPiece)} each</div>
     </div>
     <div class="stat-grid">
-      <div class="stat"><div class="stat-label">Weight per metre</div><div class="stat-val">${weightPerMetre.toFixed(3)} <span class="u">kg/m</span></div></div>
-      <div class="stat"><div class="stat-label">${isSteel?'Weight per length':'Weight per piece'}</div><div class="stat-val">${weightPerPiece.toFixed(2)} <span class="u">kg</span></div></div>
+      <div class="stat"><div class="stat-label">Weight per metre</div><div class="stat-val">${formatWeightPerLength(weightPerMetre)}</div></div>
+      <div class="stat"><div class="stat-label">${isSteel?'Weight per length':'Weight per piece'}</div><div class="stat-val">${formatWeight(weightPerPiece)}</div></div>
       <div class="stat"><div class="stat-label">Quantity</div><div class="stat-val">${Q} <span class="u">${isSteel?'lengths':'pieces'}</span></div></div>
-      <div class="stat"><div class="stat-label">Piece length</div><div class="stat-val">${L} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">Piece length</div><div class="stat-val">${formatLength(L)}</div></div>
     </div>
     <div class="bakkie-wrap">
-      <div class="bakkie-label-row"><span class="bakkie-title">Vehicle load indicator</span><span class="bakkie-kg">${totalWeight.toFixed(1)}kg / ${BAKKIE_LIMIT}kg</span></div>
+      <div class="bakkie-label-row"><span class="bakkie-title">Vehicle load indicator</span><span class="bakkie-kg">${formatWeight(totalWeight)} / ${limitLabel}</span></div>
       <div class="bakkie-track"><div class="bakkie-fill" style="width:${fillPct.toFixed(1)}%;background:${fillColor}"></div></div>
-      <div class="bakkie-markers"><span>0</span><span>250kg</span><span>500kg</span><span>750kg</span></div>
+      <div class="bakkie-markers"><span>0</span><span>${formatWeight(BAKKIE_LIMIT_KG/3,0)}</span><span>${formatWeight(BAKKIE_LIMIT_KG*2/3,0)}</span><span>${limitLabel}</span></div>
       <div class="bakkie-note ${bakkieClass}">${bakkieMsg}</div>
     </div>
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
-      <button class="act-btn" onclick="copyWeightResult(${totalWeight.toFixed(2)},${weightPerPiece.toFixed(2)},${weightPerMetre.toFixed(3)},${Q})">Copy</button>
+      <button class="act-btn" onclick="copyWeightResult(${totalWeight},${weightPerPiece},${weightPerMetre},${Q})">Copy</button>
     </div>
     <button class="send-to-costing-btn" onclick="sendWeightToCosting()">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetTab('tab-weight')">↺ Start over</button>`;
@@ -3876,7 +4194,7 @@ function calcWeight() {
 
 function copyWeightResult(total,perPiece,perM,qty) {
   const isSteel = wMaterial==='steel';
-  const txt = `GapCalc — Weight Calculator\n---\nTotal order weight: ${total}kg\n${isSteel?'Weight per length':'Weight per piece'}: ${perPiece}kg\nWeight per metre: ${perM}kg/m\nQuantity: ${qty}\n\ngapcalc.com`;
+  const txt = `GapCalc — Weight Calculator\n---\nTotal order weight: ${formatWeight(total)}\n${isSteel?'Weight per length':'Weight per piece'}: ${formatWeight(perPiece)}\nWeight per metre: ${formatWeightPerLength(perM)}\nQuantity: ${qty}\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -3914,8 +4232,8 @@ function calcAngle() {
   const box = document.getElementById('a-results');
   box.className = 'results show';
 
-  const w = parseFloat(document.getElementById('a-width').value);
-  const L = parseFloat(document.getElementById('a-length').value);
+  const w = getLengthValue('a-width');
+  const L = getLengthValue('a-length');
   const deg = parseFloat(document.getElementById('a-angle').value);
 
   // Clear highlights
@@ -3984,29 +4302,29 @@ function calcAngle() {
     <div class="result-hero">
       <div class="rh-label">CUT FACE LENGTH</div>
       <div style="display:flex;align-items:baseline;gap:8px">
-        <div class="rh-value">${cutFace.toFixed(1)}</div>
-        <div class="rh-unit">mm</div>
+        <div class="rh-value">${lengthNum(cutFace)}</div>
+        <div class="rh-unit">${lengthUnit()}</div>
       </div>
-      <div class="rh-sub">The diagonal cut line across your ${w}mm material at ${deg}°</div>
+      <div class="rh-sub">The diagonal cut line across your ${formatLength(w)} material at ${deg}°</div>
     </div>
 
     <div class="stat-grid">
       <div class="stat">
         <div class="stat-label">Short point</div>
-        <div class="stat-val">${shortPt.toFixed(1)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(shortPt)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Long point</div>
-        <div class="stat-val">${longPt.toFixed(1)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(longPt)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Offset (SP→LP)</div>
-        <div class="stat-val">${offset.toFixed(1)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(offset)}</div>
       </div>
       ${aCutType === 'double' && aEndType === 'mitre' ? `
       <div class="stat">
         <div class="stat-label">Long pt to long pt</div>
-        <div class="stat-val">${overallLP.toFixed(1)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(overallLP)}</div>
       </div>` : `
       <div class="stat">
         <div class="stat-label">Cut angle</div>
@@ -4022,7 +4340,7 @@ function calcAngle() {
 
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
-      <button class="act-btn" onclick="copyAngleResult(${cutFace.toFixed(1)},${shortPt.toFixed(1)},${longPt.toFixed(1)},${offset.toFixed(1)},${deg})">Copy</button>
+      <button class="act-btn" onclick="copyAngleResult(${cutFace},${shortPt},${longPt},${offset},${deg})">Copy</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-angle')">↺ Start over</button>
   `;
@@ -4183,15 +4501,15 @@ function buildAngleDiagram(type, _, matW, L, deg, offset) {
     svg += tickLine(xOff, pieceBot, dimY_bot+4, '#52c47a');
     svg += tickLine(xShort, pieceBot, dimY_bot+4, '#52c47a');
     svg += `<line x1="${xOff}" y1="${dimY_bot}" x2="${xShort}" y2="${dimY_bot}" stroke="#52c47a" stroke-width="1.5" marker-end="url(#arr-green)" marker-start="url(#a-start)"/>`;
-    svg += `<text x="${(xOff+xShort)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">SP ${L.toFixed(0)}mm</text>`;
+    svg += `<text x="${(xOff+xShort)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">SP ${formatLength(L, 0)}</text>`;
     // Long point (top) — blue
     svg += tickLine(xOff, pieceTop, dimY_top-4, '#5aabf5');
     svg += tickLine(xLong, pieceTop, dimY_top-4, '#5aabf5');
     svg += `<line x1="${xOff}" y1="${dimY_top}" x2="${xLong}" y2="${dimY_top}" stroke="#5aabf5" stroke-width="1.5" marker-end="url(#arr-blue)" marker-start="url(#a-start)"/>`;
-    svg += `<text x="${(xOff+xLong)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">LP ${(L+offset).toFixed(1)}mm</text>`;
+    svg += `<text x="${(xOff+xLong)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">LP ${formatLength(L+offset)}</text>`;
     // Width label on left side
     svg += `<line x1="${xOff-8}" y1="${pieceTop}" x2="${xOff-8}" y2="${pieceBot}" stroke="#888" stroke-width="1"/>`;
-    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${matW}mm</text>`;
+    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${formatLength(matW, 0)}</text>`;
 
   } else if (type === 'double-mitre') {
     const x0Short = xOff;
@@ -4202,15 +4520,15 @@ function buildAngleDiagram(type, _, matW, L, deg, offset) {
     svg += tickLine(x0Short, pieceBot, dimY_bot+4, '#52c47a');
     svg += tickLine(xRLong, pieceBot, dimY_bot+4, '#52c47a');
     svg += `<line x1="${x0Short}" y1="${dimY_bot}" x2="${xRLong}" y2="${dimY_bot}" stroke="#52c47a" stroke-width="1.5" marker-end="url(#arr-green)" marker-start="url(#a-start)"/>`;
-    svg += `<text x="${(x0Short+xRLong)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">LP→LP ${(L+2*offset).toFixed(1)}mm</text>`;
+    svg += `<text x="${(x0Short+xRLong)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">LP→LP ${formatLength(L+2*offset)}</text>`;
     // SP to SP top — blue
     svg += tickLine(x0Long, pieceTop, dimY_top-4, '#5aabf5');
     svg += tickLine(xRShort, pieceTop, dimY_top-4, '#5aabf5');
     svg += `<line x1="${x0Long}" y1="${dimY_top}" x2="${xRShort}" y2="${dimY_top}" stroke="#5aabf5" stroke-width="1.5" marker-end="url(#arr-blue)" marker-start="url(#a-start)"/>`;
-    svg += `<text x="${(x0Long+xRShort)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">SP→SP ${L.toFixed(0)}mm</text>`;
+    svg += `<text x="${(x0Long+xRShort)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">SP→SP ${formatLength(L, 0)}</text>`;
     // Width label
     svg += `<line x1="${xOff-8}" y1="${pieceTop}" x2="${xOff-8}" y2="${pieceBot}" stroke="#888" stroke-width="1"/>`;
-    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${matW}mm</text>`;
+    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${formatLength(matW, 0)}</text>`;
 
   } else {
     // double-parallel
@@ -4222,15 +4540,15 @@ function buildAngleDiagram(type, _, matW, L, deg, offset) {
     svg += tickLine(blx, pieceBot, dimY_bot+4, '#52c47a');
     svg += tickLine(brx, pieceBot, dimY_bot+4, '#52c47a');
     svg += `<line x1="${blx}" y1="${dimY_bot}" x2="${brx}" y2="${dimY_bot}" stroke="#52c47a" stroke-width="1.5" marker-end="url(#arr-green)" marker-start="url(#a-start)"/>`;
-    svg += `<text x="${(blx+brx)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">SP ${L.toFixed(0)}mm</text>`;
+    svg += `<text x="${(blx+brx)/2}" y="${dimY_bot+13}" text-anchor="middle" fill="#52c47a" font-size="10" font-family="DM Mono,monospace">SP ${formatLength(L, 0)}</text>`;
     // LP to LP top — blue
     svg += tickLine(tlx, pieceTop, dimY_top-4, '#5aabf5');
     svg += tickLine(trx, pieceTop, dimY_top-4, '#5aabf5');
     svg += `<line x1="${tlx}" y1="${dimY_top}" x2="${trx}" y2="${dimY_top}" stroke="#5aabf5" stroke-width="1.5" marker-end="url(#arr-blue)" marker-start="url(#a-start)"/>`;
-    svg += `<text x="${(tlx+trx)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">LP ${(L+offset).toFixed(1)}mm</text>`;
+    svg += `<text x="${(tlx+trx)/2}" y="${dimY_top-5}" text-anchor="middle" fill="#5aabf5" font-size="10" font-family="DM Mono,monospace">LP ${formatLength(L+offset)}</text>`;
     // Width label
     svg += `<line x1="${xOff-8}" y1="${pieceTop}" x2="${xOff-8}" y2="${pieceBot}" stroke="#888" stroke-width="1"/>`;
-    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${matW}mm</text>`;
+    svg += `<text x="${xOff-14}" y="${(pieceTop+pieceBot)/2+4}" text-anchor="middle" fill="#888" font-size="9" font-family="DM Mono,monospace" transform="rotate(-90,${xOff-14},${(pieceTop+pieceBot)/2+4})">${formatLength(matW, 0)}</text>`;
   }
 
   // Legend
@@ -4251,7 +4569,7 @@ function buildAngleDiagram(type, _, matW, L, deg, offset) {
 }
 
 function copyAngleResult(face, sp, lp, offset, deg) {
-  const txt = `GapCalc — Angle Cuts\n---\nCut angle: ${deg}°\nCut face length: ${face}mm\nShort point: ${sp}mm\nLong point: ${lp}mm\nOffset (SP to LP): ${offset}mm\n\ngapcalc.com`;
+  const txt = `GapCalc — Angle Cuts\n---\nCut angle: ${deg}°\nCut face length: ${formatLength(face)}\nShort point: ${formatLength(sp)}\nLong point: ${formatLength(lp)}\nOffset (SP to LP): ${formatLength(offset)}\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -4526,7 +4844,7 @@ function calcRodEstimator() {
   const box = document.getElementById('rod-estimator-results');
   box.className = 'results show';
 
-  const thickness = parseFloat(document.getElementById('rod-thick').value);
+  const thickness = getLengthValue('rod-thick');
   const weldLen = getWeldLengthMm();
 
   document.querySelectorAll('#tab-rods input').forEach(el => el.style.borderColor = '');
@@ -4574,7 +4892,7 @@ function calcRodEstimator() {
         <div class="rh-value">${rodsNeeded}</div>
         <div class="rh-unit">rods</div>
       </div>
-      <div class="rh-sub">${rodDiam}mm rods — ${passes} pass${passes>1?'es':''} — ${skillLabels[rodSkill]}</div>
+      <div class="rh-sub">${rodDiamLabel(rodDiam)} rods — ${passes} pass${passes>1?'es':''} — ${skillLabels[rodSkill]}</div>
     </div>
 
     <div class="stat-grid">
@@ -4584,15 +4902,15 @@ function calcRodEstimator() {
       </div>
       <div class="stat">
         <div class="stat-label">Total weld length</div>
-        <div class="stat-val">${(totalWeldMm/1000).toFixed(2)} <span class="u">m</span></div>
+        <div class="stat-val">${formatLongLength(totalWeldMm)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Rod length</div>
-        <div class="stat-val">${rodLenMm} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(rodLenMm, 0)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Usable per rod</div>
-        <div class="stat-val">${usableRodMm} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(usableRodMm, 0)}</div>
       </div>
     </div>
 
@@ -4630,7 +4948,7 @@ function calcRodEstimator() {
 }
 
 function copyRodEst(rods, p5, p500, diam) {
-  const txt = `GapCalc — Rod Estimator\n---\nRods needed: ${rods} × ${diam}mm\n5kg packs: ${p5}\n500g packs: ${p500}\n\ngapcalc.com`;
+  const txt = `GapCalc — Rod Estimator\n---\nRods needed: ${rods} × ${rodDiamLabel(diam)}\n5kg packs: ${p5}\n500g packs: ${p500}\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -4669,7 +4987,7 @@ function setWeldSize(size) {
 
 function getWeldLengthMm() {
   if (weldMode === 'advanced') {
-    return parseFloat(document.getElementById('rod-weldlen').value) || null;
+    return getLengthValue('rod-weldlen') || null;
   }
   const joints = parseInt(document.getElementById('rod-joints').value);
   if (!joints) return null;
@@ -5176,24 +5494,24 @@ function _sendLineToCosting(section, desc, qty, source) {
 
 function sendWeightToCosting() {
   const totalWeight = document.querySelector('#w-results .rh-value')?.textContent;
-  _sendLineToCosting('materials', 'Steel/Timber order (' + (totalWeight || '') + 'kg)', 1, 'weight');
+  _sendLineToCosting('materials', 'Steel/Timber order (' + (totalWeight || '') + weightUnit() + ')', 1, 'weight');
 }
 
 function sendCutListToCosting() {
   const lengths = document.querySelector('#c-results .rh-value')?.textContent;
-  const pieceLen = document.getElementById('c-piece')?.value;
-  const stock = document.getElementById('c-stock')?.value;
-  const desc = (stock ? (stock / 1000).toFixed(1) + 'm lengths' : 'Steel lengths') +
-    (pieceLen ? ' cut to ' + pieceLen + 'mm' : '');
+  const pieceLen = getLengthValue('c-piece');
+  const stock = getLengthValue('c-stock');
+  const desc = (stock ? formatLongLength(stock) + ' lengths' : 'Steel lengths') +
+    (pieceLen ? ' cut to ' + formatLength(pieceLen) : '');
   _sendLineToCosting('materials', desc, lengths || 1, 'cutlist');
 }
 
 function sendRodToCosting() {
-  _sendLineToCosting('consumables', rodDiam + 'mm welding rods', 1, 'rods');
+  _sendLineToCosting('consumables', rodDiamLabel(rodDiam) + ' welding rods', 1, 'rods');
 }
 
 function sendMIGToCosting() {
-  _sendLineToCosting('consumables', migWire + 'mm MIG wire', 1, 'mig');
+  _sendLineToCosting('consumables', wireDiamLabel(migWire) + ' MIG wire', 1, 'mig');
 }
 
 
@@ -5487,45 +5805,50 @@ function calcSurfaceArea() {
   const qty = parseFloat(document.getElementById('paint-qty')?.value) || 1;
 
   if (paintMode === 'simple') {
-    return parseFloat(document.getElementById('paint-area-direct')?.value) || 0;
+    return getAreaValue('paint-area-direct') || 0;
   }
 
   let areaMm2 = 0;
 
   if (paintShape === 'flat') {
-    const l = parseFloat(document.getElementById('paint-length')?.value) || 0;
-    const w = parseFloat(document.getElementById('paint-width')?.value) || 0;
+    const l = getLengthValue('paint-length') || 0;
+    const w = getLengthValue('paint-width') || 0;
     const sides = paintSides === 'both' ? 2 : 1;
     areaMm2 = l * w * sides * qty;
   } else if (paintShape === 'box') {
-    const l = parseFloat(document.getElementById('paint-box-l')?.value) || 0;
-    const w = parseFloat(document.getElementById('paint-box-w')?.value) || 0;
-    const h = parseFloat(document.getElementById('paint-box-h')?.value) || 0;
+    const l = getLengthValue('paint-box-l') || 0;
+    const w = getLengthValue('paint-box-w') || 0;
+    const h = getLengthValue('paint-box-h') || 0;
     const inside = document.getElementById('paint-inside')?.checked ? 2 : 1;
     areaMm2 = inside * (2*l*w + 2*l*h + 2*w*h) * qty;
   } else if (paintShape === 'tube') {
-    const d = parseFloat(document.getElementById('paint-tube-d')?.value) || 0;
-    const len = parseFloat(document.getElementById('paint-tube-l')?.value) || 0;
+    const d = getLengthValue('paint-tube-d') || 0;
+    const len = getLengthValue('paint-tube-l') || 0;
     areaMm2 = Math.PI * d * len * qty;
   } else if (paintShape === 'angle') {
-    const aw = parseFloat(document.getElementById('paint-angle-w')?.value) || 0;
-    const ah = parseFloat(document.getElementById('paint-angle-h')?.value) || 0;
-    const al = parseFloat(document.getElementById('paint-angle-l')?.value) || 0;
+    const aw = getLengthValue('paint-angle-w') || 0;
+    const ah = getLengthValue('paint-angle-h') || 0;
+    const al = getLengthValue('paint-angle-l') || 0;
     areaMm2 = (aw + ah) * al * qty;
   } else if (paintShape === 'custom') {
-    const p = parseFloat(document.getElementById('paint-perim')?.value) || 0;
-    const cl = parseFloat(document.getElementById('paint-custom-l')?.value) || 0;
+    const p = getLengthValue('paint-perim') || 0;
+    const cl = getLengthValue('paint-custom-l') || 0;
     areaMm2 = p * cl * qty;
   }
 
   return areaMm2 / 1_000_000;
 }
 
-function calcOptimalTins(totalLitres) {
-  const tins = [5, 2.5, 1, 0.5, 0.25];
-  let remaining = totalLitres;
+// Retail container sizes are genuinely different between systems (metric litre tins vs. US gallon/quart cans),
+// not a pure conversion — same category as bolt/rod/wire catalog sizes elsewhere in the app.
+const TIN_SIZES_METRIC = [5, 2.5, 1, 0.5, 0.25]; // litres
+const TIN_SIZES_IMPERIAL = [5, 1, 0.5, 0.25]; // US gallons (5gal bucket, 1gal, half-gal, quart)
+
+function calcOptimalTins(totalLitres, sys = unitSystem) {
+  const sizes = sys === 'imperial' ? TIN_SIZES_IMPERIAL : TIN_SIZES_METRIC;
+  let remaining = sys === 'imperial' ? litresToGal(totalLitres) : totalLitres;
   const result = [];
-  tins.forEach(size => {
+  sizes.forEach(size => {
     const count = Math.floor(remaining / size);
     if (count > 0) {
       result.push({ size, count });
@@ -5533,17 +5856,23 @@ function calcOptimalTins(totalLitres) {
     }
   });
   if (remaining > 0.01) {
-    const smallest = tins[tins.length - 1];
+    const smallest = sizes[sizes.length - 1];
     const last = result.find(r => r.size === smallest);
     if (last) last.count++;
     else result.push({ size: smallest, count: 1 });
   }
-  return result;
+  return result; // sizes are in native units: litres if metric, gallons if imperial
 }
 
-function formatTinSize(litres) {
-  if (litres >= 1) return litres + 'L';
-  return (litres * 1000) + 'ml';
+function formatTinSize(size, sys = unitSystem) {
+  if (sys === 'imperial') {
+    if (size >= 1) return size + ' gal';
+    if (Math.abs(size - 0.5) < 0.001) return '1/2 gal';
+    if (Math.abs(size - 0.25) < 0.001) return '1 qt';
+    return (size * 128).toFixed(0) + 'fl oz';
+  }
+  if (size >= 1) return size + 'L';
+  return (size * 1000) + 'ml';
 }
 
 function calcPaint() {
@@ -5567,7 +5896,7 @@ function calcPaint() {
     let canCoverage = SPRAY_CAN_COVERAGE;
     let canMl = SPRAY_CAN_ML;
     if (sprayCanMode === 'custom') {
-      canMl = parseFloat(document.getElementById('paint-can-ml')?.value) || 300;
+      canMl = getSmallVolumeValue('paint-can-ml') || 300;
       canCoverage = SPRAY_CAN_COVERAGE * (canMl / SPRAY_CAN_ML);
     }
     const cansPerCoat = Math.ceil(area / canCoverage);
@@ -5577,18 +5906,18 @@ function calcPaint() {
       <div class="result-hero">
         <div class="rh-label">SPRAY CANS NEEDED</div>
         <div class="rh-value">${totalCans}</div>
-        <div class="rh-sub">${cansPerCoat} can${cansPerCoat>1?'s':''} per coat × ${coats} coat${coats>1?'s':''} — ${area.toFixed(2)}m² total area</div>
+        <div class="rh-sub">${cansPerCoat} can${cansPerCoat>1?'s':''} per coat × ${coats} coat${coats>1?'s':''} — ${formatArea(area)} total area</div>
       </div>
       <div class="stat-grid">
-        <div class="stat"><div class="stat-label">AREA TO PAINT</div><div class="stat-val">${area.toFixed(2)} <span class="u">m²</span></div></div>
-        <div class="stat"><div class="stat-label">CAN SIZE</div><div class="stat-val">${canMl} <span class="u">ml</span></div></div>
-        <div class="stat"><div class="stat-label">COVERAGE PER CAN</div><div class="stat-val">${canCoverage.toFixed(1)} <span class="u">m²</span></div></div>
+        <div class="stat"><div class="stat-label">AREA TO PAINT</div><div class="stat-val">${formatArea(area)}</div></div>
+        <div class="stat"><div class="stat-label">CAN SIZE</div><div class="stat-val">${formatSmallVolume(canMl)}</div></div>
+        <div class="stat"><div class="stat-label">COVERAGE PER CAN</div><div class="stat-val">${formatArea(canCoverage)}</div></div>
         <div class="stat"><div class="stat-label">NUMBER OF COATS</div><div class="stat-val">${coats}</div></div>
       </div>
       <div class="note" style="margin-top:12px"><strong>Buy at least one extra can.</strong> Spray coverage varies significantly with spray distance, technique, surface texture, and temperature.</div>
       <div class="action-row">
         <button class="act-btn" onclick="window.print()">Print</button>
-        <button class="act-btn" onclick="copyPaintResult(${totalCans},'cans',${area.toFixed(2)})">Copy</button>
+        <button class="act-btn" onclick="copyPaintResult(${totalCans},'cans',${area})">Copy</button>
       </div>
       <button class="send-to-costing-btn" onclick="sendPaintToCosting(${totalCans},'spray cans')">+ Add to Job Costing</button>
       <button class="reset-btn" onclick="resetPaintCalc(true)">↺ Start over</button>
@@ -5604,7 +5933,8 @@ function calcPaint() {
   const totalLitres = litresPerCoat * coats;
   const tins = calcOptimalTins(totalLitres);
   const tinsStr = tins.map(t => t.count + ' × ' + formatTinSize(t.size) + ' tin' + (t.count > 1 ? 's' : '')).join(', ');
-  const tinsCover = tins.reduce((s, t) => s + t.count * t.size, 0);
+  const tinsCoverNative = tins.reduce((s, t) => s + t.count * t.size, 0);
+  const tinsCoverStr = tinsCoverNative.toFixed(2) + (unitSystem === 'imperial' ? 'gal' : 'L');
 
   const paintTypeNames = {
     primer: 'Bare Metal Primer',
@@ -5616,26 +5946,26 @@ function calcPaint() {
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">TOTAL PAINT NEEDED</div>
-      <div class="rh-value">${totalLitres.toFixed(2)}<span style="font-size:24px">L</span></div>
-      <div class="rh-sub">${litresPerCoat.toFixed(2)}L per coat × ${coats} coat${coats>1?'s':''} — ${area.toFixed(2)}m² total area</div>
+      <div class="rh-value">${volumeNum(totalLitres)}<span style="font-size:24px">${volumeUnit()}</span></div>
+      <div class="rh-sub">${formatVolume(litresPerCoat)} per coat × ${coats} coat${coats>1?'s':''} — ${formatArea(area)} total area</div>
     </div>
     <div class="stat-grid">
-      <div class="stat"><div class="stat-label">AREA TO PAINT</div><div class="stat-val">${area.toFixed(2)} <span class="u">m²</span></div></div>
-      <div class="stat"><div class="stat-label">COVERAGE RATE</div><div class="stat-val">${coverage} <span class="u">m²/L</span></div></div>
-      <div class="stat"><div class="stat-label">LITRES PER COAT</div><div class="stat-val">${litresPerCoat.toFixed(2)} <span class="u">L</span></div></div>
+      <div class="stat"><div class="stat-label">AREA TO PAINT</div><div class="stat-val">${formatArea(area)}</div></div>
+      <div class="stat"><div class="stat-label">COVERAGE RATE</div><div class="stat-val">${formatCoverageRate(coverage)}</div></div>
+      <div class="stat"><div class="stat-label">${unitSystem === 'imperial' ? 'GALLONS' : 'LITRES'} PER COAT</div><div class="stat-val">${formatVolume(litresPerCoat)}</div></div>
       <div class="stat"><div class="stat-label">NUMBER OF COATS</div><div class="stat-val">${coats}</div></div>
     </div>
     <div class="card" style="margin-top:10px">
       <div class="card-label">RECOMMENDED TINS TO BUY</div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);letter-spacing:1px;margin:8px 0">${tinsStr}</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.6">Total: ${totalLitres.toFixed(2)}L needed — tins cover ${tinsCover.toFixed(2)}L</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">Total: ${formatVolume(totalLitres)} needed — tins cover ${tinsCoverStr}</div>
     </div>
     <div class="note" style="margin-top:10px"><strong>We recommend buying one extra tin.</strong> Coverage varies with application method, surface texture, temperature, and how porous the surface is.</div>
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
-      <button class="act-btn" onclick="copyPaintResult(${totalLitres.toFixed(2)},'litres',${area.toFixed(2)})">Copy</button>
+      <button class="act-btn" onclick="copyPaintResult(${totalLitres},'litres',${area})">Copy</button>
     </div>
-    <button class="send-to-costing-btn" onclick="sendPaintToCosting(${totalLitres.toFixed(2)},'${paintTypeNames[paintType]}')">+ Add to Job Costing</button>
+    <button class="send-to-costing-btn" onclick="sendPaintToCosting(${volumeNum(totalLitres)},'${paintTypeNames[paintType]} (${volumeUnit()})')">+ Add to Job Costing</button>
     <button class="reset-btn" onclick="resetPaintCalc(true)">↺ Start over</button>
   `;
 
@@ -5648,7 +5978,8 @@ function sendPaintToCosting(qty, desc) {
 }
 
 function copyPaintResult(qty, unit, area) {
-  const txt = 'GapCalc — Paint & Primer Coverage\n---\nTotal needed: ' + qty + ' ' + unit + '\nSurface area: ' + area + 'm²\ngapcalc.com';
+  const amount = unit === 'cans' ? qty + ' cans' : formatVolume(qty);
+  const txt = 'GapCalc — Paint & Primer Coverage\n---\nTotal needed: ' + amount + '\nSurface area: ' + formatArea(area) + '\ngapcalc.com';
   copy(txt, event.target);
 }
 
@@ -5656,7 +5987,7 @@ function resetPaintCalc(fullReset) {
   const r = document.getElementById('paint-results');
   r.className = 'results';
   r.innerHTML = '';
-  document.querySelectorAll('#tab-paint input[type="number"]').forEach(el => el.value = '');
+  document.querySelectorAll('#tab-paint input[type="number"], #tab-paint input[type="text"]').forEach(el => el.value = '');
   document.getElementById('paint-coats').value = 1;
   document.getElementById('paint-qty').value = 1;
   if (fullReset) {
@@ -5735,7 +6066,7 @@ function buildBoltDiagram(n, d, g_ctc, g_ete, mode) {
   const W = 500, H = 110;
   const isCtc = mode === 'ctc';
   const colour = isCtc ? '#52c47a' : '#5aabf5';
-  const spacingLabel = isCtc ? `${g_ctc.toFixed(1)}mm C-C` : `${g_ete.toFixed(1)}mm E-E`;
+  const spacingLabel = isCtc ? `${formatLength(g_ctc)} C-C` : `${formatLength(g_ete)} E-E`;
 
   // Always draw exactly 3 illustrative holes
   const margin = 60;
@@ -5775,9 +6106,9 @@ function buildBoltDiagram(n, d, g_ctc, g_ete, mode) {
 }
 
 function calcBolts() {
-  const L = parseFloat(document.getElementById('b-L').value);
-  const d = parseFloat(document.getElementById('b-d').value);
-  const gInput = parseFloat(document.getElementById('b-g').value);
+  const L = getLengthValue('b-L');
+  const d = getLengthValue('b-d');
+  const gInput = getLengthValue('b-g');
   const box = document.getElementById('b-results');
   box.className = 'results show';
 
@@ -5830,34 +6161,34 @@ function calcBolts() {
         <div class="rh-value">${n}</div>
         <div class="rh-unit">fixings</div>
       </div>
-      <div class="rh-sub">Along ${L}mm with ${n-1} spaces between them</div>
+      <div class="rh-sub">Along ${formatLength(L)} with ${n-1} spaces between them</div>
     </div>
 
     <div class="result-hero">
       <div class="rh-label">ACTUAL SPACING (${modeLabel.toUpperCase()})</div>
       <div style="display:flex;align-items:baseline;gap:8px">
-        <div class="rh-value">${displaySpacing.toFixed(2)}</div>
-        <div class="rh-unit">mm</div>
+        <div class="rh-value">${lengthNum(displaySpacing)}</div>
+        <div class="rh-unit">${lengthUnit()}</div>
       </div>
-      <div class="rh-sub">You asked for ${displayTarget}mm — difference: ${diff >= 0 ? '+' : ''}${diff.toFixed(2)}mm ${Math.abs(diff) < 1 ? '✓ close enough' : ''}</div>
+      <div class="rh-sub">You asked for ${formatLength(displayTarget)} — difference: ${diff >= 0 ? '+' : ''}${formatLength(diff)} ${Math.abs(diff) < 1 ? '✓ close enough' : ''}</div>
     </div>
 
     <div class="stat-grid">
       <div class="stat">
         <div class="stat-label">Edge-to-edge spacing</div>
-        <div class="stat-val">${gActual_ete.toFixed(2)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(gActual_ete)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Centre-to-centre</div>
-        <div class="stat-val">${gActual_ctc.toFixed(2)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(gActual_ctc)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">First hole edge from end</div>
-        <div class="stat-val">${firstPos.toFixed(1)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(firstPos)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Total coverage</div>
-        <div class="stat-val">${totalCoverage.toFixed(1)} <span class="u">mm</span></div>
+        <div class="stat-val">${formatLength(totalCoverage)}</div>
       </div>
     </div>
 
@@ -5868,7 +6199,7 @@ function calcBolts() {
 
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
-      <button class="act-btn" onclick="copyBolts(${n},${displaySpacing.toFixed(2)},${gActual_ctc.toFixed(2)},${gActual_ete.toFixed(2)},${L})">Copy result</button>
+      <button class="act-btn" onclick="copyBolts(${n},${displaySpacing},${gActual_ctc},${gActual_ete},${L})">Copy result</button>
     </div>
     <button class="reset-btn" onclick="resetTab('tab-bolts')">↺ Start over</button>
   `;
@@ -5878,7 +6209,7 @@ function calcBolts() {
 }
 
 function copyBolts(n, spacing, ctc, ete, L) {
-  const txt = `GapCalc — Bolt Spacing\n---\nLength: ${L}mm | Fixings: ${n}\nCentre-to-centre: ${ctc}mm\nEdge-to-edge: ${ete}mm\n\ngapcalc.com`;
+  const txt = `GapCalc — Bolt Spacing\n---\nLength: ${formatLength(L)} | Fixings: ${n}\nCentre-to-centre: ${formatLength(ctc)}\nEdge-to-edge: ${formatLength(ete)}\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -6069,7 +6400,7 @@ function setMigWeldSize(size) {
 
 function getMigWeldLengthMm() {
   if (migWeldMode === 'advanced') {
-    return parseFloat(document.getElementById('mig-weldlen').value) || null;
+    return getLengthValue('mig-weldlen') || null;
   }
   const joints = parseInt(document.getElementById('mig-joints').value);
   if (!joints) return null;
@@ -6080,7 +6411,7 @@ function calcMIG() {
   const box = document.getElementById('mig-results');
   box.className = 'results show';
 
-  const t = parseFloat(document.getElementById('mig-thick').value);
+  const t = getLengthValue('mig-thick');
   const weldLen = getMigWeldLengthMm();
 
   document.querySelectorAll('#tab-mig input').forEach(el => el.style.borderColor = '');
@@ -6120,7 +6451,7 @@ function calcMIG() {
   const reel15  = Math.ceil(wireKg / 15);
 
   const skillLabels = { beginner:'Beginner (35% wastage added)', intermediate:'Intermediate (20% wastage added)', experienced:'Experienced (10% wastage added)' };
-  const wireLabel = migWire + 'mm wire';
+  const wireLabel = wireDiamLabel(migWire) + ' wire';
   const gasLabel = migGas === 'c25' ? 'C25' : migGas === 'co2' ? 'Pure CO₂' : 'Pure Argon';
 
   box.innerHTML = `
@@ -6140,11 +6471,11 @@ function calcMIG() {
       </div>
       <div class="stat">
         <div class="stat-label">Total weld length</div>
-        <div class="stat-val">${(weldLen * passes / 1000).toFixed(2)} <span class="u">m</span></div>
+        <div class="stat-val">${formatLongLength(weldLen * passes)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Wire diameter</div>
-        <div class="stat-val">${migWire} <span class="u">mm</span></div>
+        <div class="stat-val">${wireDiamLabel(migWire)}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Shielding gas</div>
@@ -6190,7 +6521,7 @@ function calcMIG() {
 }
 
 function copyMIG(kg, r5, r05, wire) {
-  const txt = `GapCalc — MIG Wire Estimator\n---\nWire needed: ${kg}kg (${wire}mm)\n5kg reels: ${r5}\n0.5kg spools: ${r05}\n\ngapcalc.com`;
+  const txt = `GapCalc — MIG Wire Estimator\n---\nWire needed: ${kg}kg (${wireDiamLabel(wire)})\n5kg reels: ${r5}\n0.5kg spools: ${r05}\n\ngapcalc.com`;
   copy(txt, event.target);
 }
 
@@ -6208,7 +6539,7 @@ function resetMIG() {
 // AUTO-SUGGEST ROD DIAMETER FROM THICKNESS
 // ════════════════════════════════════════
 function suggestRodDiam() {
-  const t = parseFloat(document.getElementById('rod-thick').value);
+  const t = getLengthValue('rod-thick');
   if (!t || t <= 0) return;
   let suggested;
   if (t <= 3) suggested = 'rd-25';
@@ -6226,7 +6557,7 @@ function suggestRodDiam() {
 // AUTO-SUGGEST MIG WIRE FROM THICKNESS
 // ════════════════════════════════════════
 function suggestMigWire() {
-  const t = parseFloat(document.getElementById('mig-thick').value);
+  const t = getLengthValue('mig-thick');
   if (!t || t <= 0) return;
   let suggested;
   if (t <= 1.5) suggested = 'mwire-06';
@@ -6324,7 +6655,7 @@ function updateSettingsMaterial() {
 }
 
 function suggestSettingsWire() {
-  const t = parseFloat(document.getElementById('settings-thick').value);
+  const t = getLengthValue('settings-thick');
   if (!t || t <= 0) return;
   if (settingsProcess === 'mig') {
     let suggested;
@@ -6360,7 +6691,7 @@ function calcSettings() {
   const box = document.getElementById('settings-results');
   box.className = 'results show';
 
-  const t = parseFloat(document.getElementById('settings-thick').value);
+  const t = getLengthValue('settings-thick');
   if (!t || t <= 0) {
     box.innerHTML = errorBox('Enter your material thickness to get settings.');
     return;
@@ -6372,7 +6703,7 @@ function calcSettings() {
 
   const row = getSettingsRow(t, settingsWire);
   const processLabel = settingsProcess === 'mig' ? 'MIG (GMAW)' : 'Flux Core (FCAW — E71T-GS gasless)';
-  const wireLabel = settingsWire + 'mm wire';
+  const wireLabel = wireDiamLabel(settingsWire, settingsProcess === 'fcaw' ? FCAW_WIRE_US_LABEL : MIG_WIRE_US_LABEL) + ' wire';
 
   let settingsRows = '';
   if (hasVoltage) {
@@ -6414,7 +6745,7 @@ function calcSettings() {
   box.innerHTML = `
     <div class="card" style="margin-bottom:10px">
       <div class="card-label" style="color:var(--green)">RECOMMENDED SETTINGS</div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${processLabel} · ${wireLabel} · ${t}mm material</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${processLabel} · ${wireLabel} · ${formatPrecisionLength(t)} material</div>
       <div class="stat-grid" style="margin-bottom:10px">
         ${settingsRows}
       </div>
@@ -6458,7 +6789,7 @@ function toggleTroubleshooter() {
 function copySettings() {
   const d = window._lastSettings;
   if (!d) return;
-  let txt = `GapCalc — Settings Guide\n---\nProcess: ${d.process}\nWire: ${d.wire}\nMaterial thickness: ${d.thick}mm\n`;
+  let txt = `GapCalc — Settings Guide\n---\nProcess: ${d.process}\nWire: ${d.wire}\nMaterial thickness: ${formatPrecisionLength(d.thick)}\n`;
   if (d.v) txt += `Voltage: ${d.v}\n`;
   if (d.wfs) txt += `Wire feed speed: ${d.wfs}\n`;
   txt += `Note: ${d.note}\n\ngapcalc.com`;
@@ -6496,11 +6827,11 @@ function calcSheet() {
     return;
   }
 
-  const t = parseFloat(document.getElementById('sheet-thickness')?.value) || 0;
-  const r = parseFloat(document.getElementById('sheet-radius')?.value) || 0;
+  const t = getLengthValue('sheet-thickness') || 0;
+  const r = getLengthValue('sheet-radius') || 0;
   const angle = parseFloat(document.getElementById('sheet-angle')?.value) || 0;
-  const faceA = parseFloat(document.getElementById('sheet-face-a')?.value) || 0;
-  const faceB = parseFloat(document.getElementById('sheet-face-b')?.value) || 0;
+  const faceA = getLengthValue('sheet-face-a') || 0;
+  const faceB = getLengthValue('sheet-face-b') || 0;
 
   if (!t || !r || !angle || !faceA || !faceB) {
     box.innerHTML = errorBox('Fill in all fields to calculate the flat pattern.');
@@ -6544,20 +6875,20 @@ function calcSheet() {
     <text x="${xFold1 + scaleBA/2}" y="${rectY + rectH/2 + 5}" font-family="'DM Mono',monospace" font-size="10" fill="var(--accent)" text-anchor="middle">BA</text>
     <text x="${xFold2 + scaleB/2}" y="${rectY + rectH/2 + 5}" font-family="'Bebas Neue',sans-serif" font-size="13" fill="var(--text)" text-anchor="middle">FACE B</text>
     <line x1="${x0}" y1="${rectY + rectH + 18}" x2="${x1}" y2="${rectY + rectH + 18}" stroke="var(--text3)" stroke-width="1"/>
-    <text x="${x0 + drawWidth/2}" y="${rectY + rectH + 30}" font-family="'DM Mono',monospace" font-size="11" fill="var(--text2)" text-anchor="middle">${totalLength.toFixed(1)}mm total</text>
+    <text x="${x0 + drawWidth/2}" y="${rectY + rectH + 30}" font-family="'DM Mono',monospace" font-size="11" fill="var(--text2)" text-anchor="middle">${formatLength(totalLength)} total</text>
   </svg>`;
 
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">FLAT BLANK LENGTH</div>
-      <div class="rh-value">${totalLength.toFixed(1)}<span style="font-size:24px">mm</span></div>
-      <div class="rh-sub">Face A ${faceA}mm + BA ${BA.toFixed(2)}mm + Face B ${faceB}mm</div>
+      <div class="rh-value">${lengthNum(totalLength)}<span style="font-size:24px">${lengthUnit()}</span></div>
+      <div class="rh-sub">Face A ${formatLength(faceA)} + BA ${formatPrecisionLength(BA)} + Face B ${formatLength(faceB)}</div>
     </div>
     ${svg}
     <div class="stat-grid">
-      <div class="stat"><div class="stat-label">BEND ALLOWANCE</div><div class="stat-val">${BA.toFixed(2)} <span class="u">mm</span></div></div>
-      <div class="stat"><div class="stat-label">FOLD LINE FROM END A</div><div class="stat-val">${faceA.toFixed(1)} <span class="u">mm</span></div></div>
-      <div class="stat"><div class="stat-label">FOLD LINE FROM END B</div><div class="stat-val">${faceB.toFixed(1)} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">BEND ALLOWANCE</div><div class="stat-val">${formatPrecisionLength(BA)}</div></div>
+      <div class="stat"><div class="stat-label">FOLD LINE FROM END A</div><div class="stat-val">${formatLength(faceA)}</div></div>
+      <div class="stat"><div class="stat-label">FOLD LINE FROM END B</div><div class="stat-val">${formatLength(faceB)}</div></div>
       <div class="stat"><div class="stat-label">OVERBEND TO ACHIEVE ${angle}°</div><div class="stat-val">${overbendAngle} <span class="u">°</span></div></div>
       <div class="stat"><div class="stat-label">K-FACTOR USED</div><div class="stat-val">${k}</div></div>
       <div class="stat"><div class="stat-label">MATERIAL</div><div class="stat-val" style="font-size:14px">${matNames[sheetMaterial]}</div></div>
@@ -6565,7 +6896,7 @@ function calcSheet() {
     <div class="note" style="margin-top:12px"><strong>Always do a test bend first.</strong> Bend allowance varies with your specific tooling, material grade, and temper. These calculations use standard K-factors — verify on scrap material before cutting your final piece.</div>
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
-      <button class="act-btn" onclick="copySheetResult(${totalLength.toFixed(1)},${BA.toFixed(2)},${faceA},${faceB})">Copy</button>
+      <button class="act-btn" onclick="copySheetResult(${totalLength},${BA},${faceA},${faceB})">Copy</button>
     </div>
     <button class="reset-btn" onclick="resetSheet()">↺ Start over</button>
   `;
@@ -6575,7 +6906,7 @@ function calcSheet() {
 }
 
 function copySheetResult(total, ba, faceA, faceB) {
-  const txt = 'GapCalc — Sheet Metal Flat Pattern\n---\nFlat blank length: ' + total + 'mm\nBend allowance: ' + ba + 'mm\nFace A: ' + faceA + 'mm\nFace B: ' + faceB + 'mm\ngapcalc.com';
+  const txt = 'GapCalc — Sheet Metal Flat Pattern\n---\nFlat blank length: ' + formatLength(total) + '\nBend allowance: ' + formatPrecisionLength(ba) + '\nFace A: ' + formatLength(faceA) + '\nFace B: ' + formatLength(faceB) + '\ngapcalc.com';
   copy(txt, event.target);
 }
 
@@ -6609,12 +6940,12 @@ function calcBend() {
     return;
   }
 
-  const od = parseFloat(document.getElementById('bend-od')?.value) || 0;
-  const wall = parseFloat(document.getElementById('bend-wall')?.value) || 0;
-  const radius = parseFloat(document.getElementById('bend-radius')?.value) || 0;
+  const od = getLengthValue('bend-od') || 0;
+  const wall = getLengthValue('bend-wall') || 0;
+  const radius = getLengthValue('bend-radius') || 0;
   const angle = parseFloat(document.getElementById('bend-angle')?.value) || 0;
-  const legA = parseFloat(document.getElementById('bend-leg-a')?.value) || 0;
-  const legB = parseFloat(document.getElementById('bend-leg-b')?.value) || 0;
+  const legA = getLengthValue('bend-leg-a') || 0;
+  const legB = getLengthValue('bend-leg-b') || 0;
 
   if (!od || !wall || !radius || !angle || !legA || !legB) {
     box.innerHTML = errorBox('Fill in all fields to calculate the bend.');
@@ -6627,7 +6958,7 @@ function calcBend() {
   }
 
   if (radius < od) {
-    box.innerHTML = errorBox('Bend radius is very tight for this tube size — risk of kinking or collapse. Minimum recommended radius is 3 × outside diameter (' + (od * 3) + 'mm).');
+    box.innerHTML = errorBox('Bend radius is very tight for this tube size — risk of kinking or collapse. Minimum recommended radius is 3 × outside diameter (' + formatLength(od * 3) + ').');
     return;
   }
 
@@ -6656,9 +6987,9 @@ function calcBend() {
     <line x1="${startX}" y1="${startY}" x2="${legAEndX}" y2="${legAEndY}" stroke="var(--text2)" stroke-width="6" stroke-linecap="round"/>
     <path d="M ${legAEndX} ${startY} A ${bendR} ${bendR} 0 0 1 ${arcEndX} ${arcCY}" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/>
     <line x1="${arcEndX}" y1="${arcCY}" x2="${arcEndX}" y2="${legBEndY}" stroke="var(--text2)" stroke-width="6" stroke-linecap="round"/>
-    <text x="${startX + legLen/2}" y="${startY + 20}" font-family="'Bebas Neue',sans-serif" font-size="12" fill="var(--text2)" text-anchor="middle">LEG A ${legA}mm</text>
+    <text x="${startX + legLen/2}" y="${startY + 20}" font-family="'Bebas Neue',sans-serif" font-size="12" fill="var(--text2)" text-anchor="middle">LEG A ${formatLength(legA)}</text>
     <text x="${legAEndX + bendR/2}" y="${startY - bendR/2}" font-family="'DM Mono',monospace" font-size="10" fill="var(--accent)" text-anchor="middle">${angle}°</text>
-    <text x="${arcEndX + 35}" y="${arcCY - legLen/2}" font-family="'Bebas Neue',sans-serif" font-size="12" fill="var(--text2)" text-anchor="middle">LEG B ${legB}mm</text>
+    <text x="${arcEndX + 35}" y="${arcCY - legLen/2}" font-family="'Bebas Neue',sans-serif" font-size="12" fill="var(--text2)" text-anchor="middle">LEG B ${formatLength(legB)}</text>
     <line x1="${legAEndX}" y1="${startY - 12}" x2="${legAEndX}" y2="${startY + 12}" stroke="var(--green)" stroke-width="2" stroke-dasharray="3,2"/>
     <line x1="${arcEndX}" y1="${arcCY - 12}" x2="${arcEndX}" y2="${arcCY + 12}" stroke="var(--green)" stroke-width="2" stroke-dasharray="3,2"/>
     <text x="${svgW - 10}" y="${svgH - 10}" font-family="'DM Sans',sans-serif" font-size="9" fill="var(--text3)" text-anchor="end">Diagram illustrative — not to scale</text>
@@ -6667,30 +6998,30 @@ function calcBend() {
   box.innerHTML = `
     <div class="result-hero">
       <div class="rh-label">TOTAL DEVELOPED LENGTH</div>
-      <div class="rh-value">${totalLength.toFixed(1)}<span style="font-size:24px">mm</span></div>
-      <div class="rh-sub">Leg A ${legA}mm + Arc ${BA.toFixed(1)}mm + Leg B ${legB}mm</div>
+      <div class="rh-value">${lengthNum(totalLength)}<span style="font-size:24px">${lengthUnit()}</span></div>
+      <div class="rh-sub">Leg A ${formatLength(legA)} + Arc ${formatLength(BA)} + Leg B ${formatLength(legB)}</div>
     </div>
     ${svg}
     <div class="stat-grid">
-      <div class="stat"><div class="stat-label">ARC LENGTH (BA)</div><div class="stat-val">${BA.toFixed(1)} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">ARC LENGTH (BA)</div><div class="stat-val">${formatLength(BA)}</div></div>
       <div class="stat"><div class="stat-label">OVERBEND TO ACHIEVE ${angle}°</div><div class="stat-val">${overbendAngle} <span class="u">°</span></div></div>
-      <div class="stat"><div class="stat-label">MARK BEND START</div><div class="stat-val">${markStart.toFixed(1)} <span class="u">mm</span></div></div>
-      <div class="stat"><div class="stat-label">MARK BEND END</div><div class="stat-val">${markEnd.toFixed(1)} <span class="u">mm</span></div></div>
-      <div class="stat"><div class="stat-label">CENTRELINE RADIUS</div><div class="stat-val">${radius} <span class="u">mm</span></div></div>
+      <div class="stat"><div class="stat-label">MARK BEND START</div><div class="stat-val">${formatLength(markStart)}</div></div>
+      <div class="stat"><div class="stat-label">MARK BEND END</div><div class="stat-val">${formatLength(markEnd)}</div></div>
+      <div class="stat"><div class="stat-label">CENTRELINE RADIUS</div><div class="stat-val">${formatLength(radius)}</div></div>
       <div class="stat"><div class="stat-label">MATERIAL</div><div class="stat-val" style="font-size:14px">${matNames[bendMaterial]}</div></div>
     </div>
     <div class="card" style="margin-top:10px;border-left:3px solid var(--green)">
       <div class="card-label">HOW TO MARK YOUR TUBE</div>
       <div style="font-size:13px;color:var(--text2);line-height:1.8">
-        1. Measure <strong style="color:var(--text)">${markStart.toFixed(1)}mm</strong> from the end of Leg A — mark this as your <strong style="color:var(--green)">bend start.</strong><br>
-        2. Measure a further <strong style="color:var(--text)">${BA.toFixed(1)}mm</strong> from that mark — this is your <strong style="color:var(--green)">bend end.</strong><br>
+        1. Measure <strong style="color:var(--text)">${formatLength(markStart)}</strong> from the end of Leg A — mark this as your <strong style="color:var(--green)">bend start.</strong><br>
+        2. Measure a further <strong style="color:var(--text)">${formatLength(BA)}</strong> from that mark — this is your <strong style="color:var(--green)">bend end.</strong><br>
         3. Set your bender to <strong style="color:var(--accent)">${overbendAngle}°</strong> to achieve a finished ${angle}° after springback.
       </div>
     </div>
     <div class="note" style="margin-top:12px"><strong>Always do a test bend first.</strong> Springback varies with material grade, wall thickness, and your specific bender. These are calculated starting points — verify on scrap tube before bending your final piece.</div>
     <div class="action-row">
       <button class="act-btn" onclick="window.print()">Print</button>
-      <button class="act-btn" onclick="copyBendResult(${totalLength.toFixed(1)},${BA.toFixed(1)},${markStart.toFixed(1)},${markEnd.toFixed(1)},${overbendAngle})">Copy</button>
+      <button class="act-btn" onclick="copyBendResult(${totalLength},${BA},${markStart},${markEnd},${overbendAngle})">Copy</button>
     </div>
     <button class="reset-btn" onclick="resetBend()">↺ Start over</button>
   `;
@@ -6700,7 +7031,7 @@ function calcBend() {
 }
 
 function copyBendResult(total, ba, markStart, markEnd, overbend) {
-  const txt = 'GapCalc — Pipe & Tube Bending\n---\nTotal developed length: ' + total + 'mm\nArc length: ' + ba + 'mm\nMark bend start: ' + markStart + 'mm from end\nMark bend end: ' + markEnd + 'mm from end\nOverbend to: ' + overbend + '°\ngapcalc.com';
+  const txt = 'GapCalc — Pipe & Tube Bending\n---\nTotal developed length: ' + formatLength(total) + '\nArc length: ' + formatLength(ba) + '\nMark bend start: ' + formatLength(markStart) + ' from end\nMark bend end: ' + formatLength(markEnd) + ' from end\nOverbend to: ' + overbend + '°\ngapcalc.com';
   copy(txt, event.target);
 }
 
@@ -6727,7 +7058,7 @@ document.getElementById('tab-sheet').addEventListener('keydown', e => { if (e.ke
 document.getElementById('tab-bend').addEventListener('keydown', e => { if (e.key === 'Enter') calcBend(); });
 
 // Init angle width presets
-renderChips('a-width-presets', BAR_PRESETS, 'a-width');
+registerChips('a-width-presets', BAR_PRESETS, 'a-width');
 
 // Init weight calculator dimensions
 renderDimFields('flatbar');
@@ -6739,6 +7070,8 @@ initDrillGrids();
 initTimer();
 // Init paint
 initPaint();
+
+initUnitSystem();
 
 // ─── PERSISTENT INPUTS ───────────────────────────
 // Remembers the last values entered per tool so returning users don't retype everything.
